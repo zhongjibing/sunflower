@@ -1,0 +1,27 @@
+server:
+  port: 13520
+  servlet:
+    context-path: /sunflower
+spring:
+  application:
+    name: zeus
+  config:
+    import: optional:file:/usr/local/etc/sunflower/application.properties
+  profiles:
+    active: prod
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    open-in-view: false
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info
+  zipkin:
+    tracing:
+      endpoint: http://111.229.10.87:9411/api/v2/spans
+logging:
+  level:
+    root: debug
+

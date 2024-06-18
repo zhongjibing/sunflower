@@ -1,0 +1,110 @@
+plugins {
+    id 'java'
+    id 'java-library'
+    id 'org.springframework.boot' version '3.1.0'
+    id 'io.spring.dependency-management' version '1.1.0'
+    id 'maven-publish'
+}
+
+group = 'com.icezhg'
+version = '1.0.0'
+description = 'sunflower'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+compileJava.options.encoding = 'utf-8'
+compileTestJava.options.encoding = 'utf-8'
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+
+tasks.withType(Javadoc).configureEach {
+    options.encoding = 'UTF-8'
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+    implementation 'org.springframework.boot:spring-boot-starter-quartz'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.session:spring-session-data-redis'
+    compileOnly 'org.projectlombok:lombok'
+    runtimeOnly 'com.mysql:mysql-connector-j'
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
+
+    implementation 'com.icezhg:spring-boot-starter-encryptor:1.0.0'
+    implementation 'com.nimbusds:nimbus-jose-jwt:9.24.4'
+    implementation 'commons-codec:commons-codec:1.15'
+    implementation 'org.apache.commons:commons-lang3:3.12.0'
+    implementation 'org.apache.commons:commons-collections4:4.4'
+    implementation 'es.moki.ratelimitj:ratelimitj-inmemory:0.7.0'
+    implementation 'eu.bitwalker:UserAgentUtils:1.21'
+    implementation 'com.alibaba.fastjson2:fastjson2:2.0.20'
+}
+
+
+configurations.configureEach() {
+    resolutionStrategy {
+        failOnVersionConflict()
+    }
+}
+
+tasks.withType(Test).configureEach {
+    useJUnitPlatform()
+}
+
+java {
+    withSourcesJar()
+}
+
+repositories {
+    mavenLocal()
+    maven {
+        name = 'release'
+        url 'https://packages.aliyun.com/maven/repository/2027113-release-yjsA6r/'
+        credentials(PasswordCredentials)
+    }
+    maven {
+        name = 'snapshot'
+        url 'https://packages.aliyun.com/maven/repository/2027113-snapshot-4NJMQr/'
+        credentials(PasswordCredentials)
+    }
+    maven { url 'https://repo1.maven.org/maven2/' }
+    maven { url 'https://maven.aliyun.com/repository/public' }
+    mavenCentral()
+}
+
+publishing {
+    publications {
+        library(MavenPublication) {
+            from components.java
+        }
+    }
+    repositories {
+        mavenLocal()
+        maven {
+            name = 'aliyun'
+            def releasesRepoUrl = 'https://packages.aliyun.com/maven/repository/2027113-release-yjsA6r/'
+            def snapshotsRepoUrl = 'https://packages.aliyun.com/maven/repository/2027113-snapshot-4NJMQr/'
+            url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+            credentials(PasswordCredentials)
+        }
+    }
+}

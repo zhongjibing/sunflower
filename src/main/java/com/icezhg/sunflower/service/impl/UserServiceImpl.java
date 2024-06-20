@@ -24,7 +24,6 @@ import com.icezhg.sunflower.util.IpUtil;
 import com.icezhg.sunflower.util.MaskSensitiveUtil;
 import com.icezhg.sunflower.util.Requests;
 import com.icezhg.sunflower.util.SecurityUtil;
-import jakarta.transaction.Transactional;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -33,6 +32,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Calendar;
 import java.util.Date;

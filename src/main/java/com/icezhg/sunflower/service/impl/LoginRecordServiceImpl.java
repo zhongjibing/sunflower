@@ -3,16 +3,18 @@ package com.icezhg.sunflower.service.impl;
 import com.icezhg.sunflower.common.Constant;
 import com.icezhg.sunflower.dao.LoginRecordDao;
 import com.icezhg.sunflower.domain.LoginRecord;
+import com.icezhg.sunflower.pojo.query.Query;
 import com.icezhg.sunflower.service.LoginRecordService;
 import eu.bitwalker.useragentutils.UserAgent;
-import jakarta.transaction.Transactional;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -39,7 +41,8 @@ public class LoginRecordServiceImpl implements LoginRecordService {
     @Override
     @Transactional
     public void saveLoginInfo(Long userId, String username, String status, String msg, Map<String, String> attributes) {
-        log.info("save login info: userId={}, username={}, status={}, msg={}, attributes={}", userId, username, status, msg, attributes);
+        log.info("save login info: userId={}, username={}, status={}, msg={}, attributes={}", userId, username,
+                status, msg, attributes);
 
         LoginRecord loginRecord = new LoginRecord();
         loginRecord.setUserId(userId != null ? userId : -1L);
@@ -77,5 +80,15 @@ public class LoginRecordServiceImpl implements LoginRecordService {
         }
 
         loginRecordDao.save(loginRecord);
+    }
+
+    @Override
+    public int count(Query query) {
+        return loginRecordDao.count(query.toMap());
+    }
+
+    @Override
+    public List<LoginRecord> find(Query query) {
+        return loginRecordDao.find(query.toMap());
     }
 }

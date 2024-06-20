@@ -42,4 +42,8 @@ public class Role extends BaseEntity {
      * 角色状态（0正常 1停用）
      */
     private String status;
+
+    public boolean isAdmin() {
+        return id != null && id == 1;
+    }
 }

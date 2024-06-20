@@ -4,7 +4,7 @@ server:
     context-path: /sunflower
 spring:
   application:
-    name: zeus
+    name: sunflower
   config:
     import: optional:file:/usr/local/etc/sunflower/application.properties
   profiles:
@@ -13,15 +13,11 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     open-in-view: false
+  quartz:
+    job-store-type: jdbc
+    wait-for-jobs-to-complete-on-shutdown: true
 management:
   endpoints:
     web:
       exposure:
         include: health, info
-  zipkin:
-    tracing:
-      endpoint: http://111.229.10.87:9411/api/v2/spans
-logging:
-  level:
-    root: debug
-

@@ -10,6 +10,7 @@ import java.util.Collection;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserInfo {
     private String id;
+    private String username;
     private String name;
     private String nickname;
     private String gender;
@@ -28,6 +29,14 @@ public class UserInfo {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getName() {
@@ -125,6 +134,7 @@ public class UserInfo {
     public static class UserInfoBuilder {
 
         private String id;
+        private String username;
         private String name;
         private String nickname;
         private String gender;
@@ -142,6 +152,11 @@ public class UserInfo {
 
         public UserInfoBuilder id(String id) {
             this.id = id;
+            return this;
+        }
+
+        public UserInfoBuilder username(String username) {
+            this.username = username;
             return this;
         }
 
@@ -203,6 +218,7 @@ public class UserInfo {
         public UserInfo build() {
             UserInfo userinfo = new UserInfo();
             userinfo.setId(this.id);
+            userinfo.setUsername(this.username);
             userinfo.setName(this.name);
             userinfo.setNickname(this.nickname);
             userinfo.setGender(this.gender);

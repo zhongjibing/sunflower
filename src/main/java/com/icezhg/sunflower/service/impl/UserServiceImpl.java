@@ -107,12 +107,14 @@ public class UserServiceImpl implements UserService {
         return location;
     }
 
+    @Override
+    public User findUserByUsername(String username) {
+        return userRepository.findUserByUsername(username);
+    }
+
+    @Override
     @Transactional
     public void updateLastLoginTime(String username) {
         userRepository.updateLastLoginTime(username, new Date());
-    }
-
-    public User findUserByUsername(String username) {
-        return userRepository.findUserByUsername(username);
     }
 }

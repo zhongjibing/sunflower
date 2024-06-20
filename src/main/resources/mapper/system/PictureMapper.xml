@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.icezhg.sunflower.dao.PictureDao">
+
+    <resultMap id="BaseResultMap" type="com.icezhg.sunflower.domain.Picture">
+            <id property="id" column="id" jdbcType="VARCHAR"/>
+            <result property="name" column="name" jdbcType="VARCHAR"/>
+            <result property="md5" column="md5" jdbcType="VARCHAR"/>
+            <result property="type" column="type" jdbcType="VARCHAR"/>
+            <result property="createBy" column="create_by" jdbcType="VARCHAR"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateBy" column="update_by" jdbcType="VARCHAR"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="remark" column="remark" jdbcType="VARCHAR"/>
+            <result property="data" column="data" jdbcType="BLOB" typeHandler="org.apache.ibatis.type.BlobTypeHandler"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        p.id, p.name, p.md5,
+        p.type, p.create_by, p.create_time,
+        p.update_by, p.update_time, p.remark,
+        b.data
+    </sql>
+
+    <select id="findById" parameterType="string" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from sys_picture p, sys_binary_data b
+        where p.md5 = b.md5 and p.id = #{id,jdbcType=VARCHAR}
+    </select>
+
+    <delete id="deleteById" parameterType="string">
+        delete from sys_picture
+        where  id = #{id,jdbcType=VARCHAR}
+    </delete>
+
+    <insert id="insert" parameterType="com.icezhg.sunflower.domain.Picture">
+        insert into sys_picture
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="name != null">name,</if>
+            <if test="md5 != null">md5,</if>
+            <if test="type != null">type,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id,jdbcType=VARCHAR},</if>
+            <if test="name != null">#{name,jdbcType=VARCHAR},</if>
+            <if test="md5 != null">#{md5,jdbcType=VARCHAR},</if>
+            <if test="type != null">#{type,jdbcType=VARCHAR},</if>
+            <if test="createBy != null">#{createBy,jdbcType=VARCHAR},</if>
+            <if test="createTime != null">#{createTime,jdbcType=TIMESTAMP},</if>
+            <if test="updateBy != null">#{updateBy,jdbcType=VARCHAR},</if>
+            <if test="updateTime != null">#{updateTime,jdbcType=TIMESTAMP},</if>
+            <if test="remark != null">#{remark,jdbcType=VARCHAR},</if>
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="com.icezhg.sunflower.domain.Picture">
+        update sys_picture
+        <set>
+                <if test="name != null">
+                    name = #{name,jdbcType=VARCHAR},
+                </if>
+                <if test="type != null">
+                    type = #{type,jdbcType=VARCHAR},
+                </if>
+                <if test="updateBy != null">
+                    update_by = #{updateBy,jdbcType=VARCHAR},
+                </if>
+                <if test="updateTime != null">
+                    update_time = #{updateTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="remark != null">
+                    remark = #{remark,jdbcType=VARCHAR},
+                </if>
+        </set>
+        where   id = #{id,jdbcType=VARCHAR}
+    </update>
+
+    <sql id="findCondition">
+        <where>
+            <if test="name != null">
+                and locate(#{key,jdbcType=VARCHAR}, name) > 0
+            </if>
+        </where>
+    </sql>
+
+    <select id="count" parameterType="map" resultType="int">
+        select
+        count(*)
+        from sys_picture
+        <include refid="findCondition" />
+    </select>
+
+    <select id="find" parameterType="map" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_picture
+        <include refid="findCondition" />
+        ORDER BY id ASC
+        LIMIT #{offset,jdbcType=INTEGER}, #{pageSize,jdbcType=INTEGER}
+    </select>
+
+    <select id="findByAvatar" parameterType="string" resultType="com.icezhg.sunflower.domain.Picture">
+        select
+        <include refid="Base_Column_List" />
+        from sys_picture p, sys_binary_data b, sys_avatar_picture a
+        where p.md5 = b.md5 and p.id = a.picture_id and a.avatar = #{avatar,jdbcType=VARCHAR}
+    </select>
+
+</mapper>

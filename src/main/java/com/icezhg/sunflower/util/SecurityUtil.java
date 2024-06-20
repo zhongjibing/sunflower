@@ -1,7 +1,7 @@
 package com.icezhg.sunflower.util;
 
-import com.icezhg.sunflower.pojo.UserDetail;
-import com.icezhg.sunflower.pojo.UserInfo;
+import com.icezhg.sunflower.security.UserDetail;
+import com.icezhg.sunflower.security.UserInfo;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -29,8 +29,6 @@ public class SecurityUtil {
             return false;
         }
 
-        addCsrfTokenHeader();
-
         return true;
     }
 
@@ -54,7 +52,7 @@ public class SecurityUtil {
 
     public static UserInfo currentUserInfo() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null && authentication.getPrincipal() instanceof UserDetail detail) {
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetail detail) {
             return UserInfo.builder()
                     .id(detail.getId())
                     .username(detail.getUsername())

@@ -1,11 +1,11 @@
 package com.icezhg.sunflower.service.impl;
 
 
-import com.icezhg.sunflower.entity.OperationLog;
+import com.icezhg.sunflower.dao.OperationLogDao;
+import com.icezhg.sunflower.domain.OperationLog;
+import com.icezhg.sunflower.pojo.OperationInfo;
 import com.icezhg.sunflower.pojo.query.Query;
-import com.icezhg.sunflower.repository.OperationLogRepository;
 import com.icezhg.sunflower.service.OperationLogService;
-import org.apache.tomcat.util.modeler.OperationInfo;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -17,10 +17,10 @@ import java.util.List;
 @Service
 public class OperationLogServiceImpl implements OperationLogService {
 
-    private final OperationLogRepository operationLogRepository;
+    private final OperationLogDao operationLogDao;
 
-    public OperationLogServiceImpl(OperationLogRepository operationLogRepository) {
-        this.operationLogRepository = operationLogRepository;
+    public OperationLogServiceImpl(OperationLogDao operationLogDao) {
+        this.operationLogDao = operationLogDao;
     }
 
     @Override
@@ -28,17 +28,17 @@ public class OperationLogServiceImpl implements OperationLogService {
         if (operationLog.getCreateTime() == null) {
             operationLog.setCreateTime(new Date());
         }
-        operationLogRepository.save(operationLog);
+        operationLogDao.insert(operationLog);
         return operationLog;
     }
 
     @Override
     public int count(Query query) {
-        return operationLogRepository.count(query.toMap());
+        return operationLogDao.count(query.toMap());
     }
 
     @Override
     public List<OperationInfo> find(Query query) {
-        return operationLogRepository.find(query.toMap());
+        return operationLogDao.find(query.toMap());
     }
 }

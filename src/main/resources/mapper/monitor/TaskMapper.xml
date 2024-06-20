@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.icezhg.sunflower.dao.TaskDao">
+
+    <resultMap id="BaseResultMap" type="com.icezhg.sunflower.pojo.TaskInfo">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="taskName" column="task_name" jdbcType="VARCHAR"/>
+            <result property="taskGroup" column="task_group" jdbcType="VARCHAR"/>
+            <result property="invokeTarget" column="invoke_target" jdbcType="VARCHAR"/>
+            <result property="cronExpression" column="cron_expression" jdbcType="VARCHAR"/>
+            <result property="misfirePolicy" column="misfire_policy" jdbcType="VARCHAR"/>
+            <result property="concurrent" column="concurrent" jdbcType="CHAR"/>
+            <result property="status" column="status" jdbcType="CHAR"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="remark" column="remark" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,task_name,task_group,
+        invoke_target,cron_expression,misfire_policy,
+        concurrent,status,create_by,
+        create_time,update_by,update_time,
+        remark
+    </sql>
+
+    <insert id="insert" parameterType="com.icezhg.sunflower.domain.Task" useGeneratedKeys="true" keyProperty="id">
+        insert into t_task
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="id != null">id,</if>
+                <if test="taskName != null">task_name,</if>
+                <if test="taskGroup != null">task_group,</if>
+                <if test="invokeTarget != null">invoke_target,</if>
+                <if test="cronExpression != null">cron_expression,</if>
+                <if test="misfirePolicy != null">misfire_policy,</if>
+                <if test="concurrent != null">concurrent,</if>
+                <if test="status != null">status,</if>
+                <if test="createBy != null">create_by,</if>
+                <if test="createTime != null">create_time,</if>
+                <if test="updateBy != null">update_by,</if>
+                <if test="updateTime != null">update_time,</if>
+                <if test="remark != null">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="id != null">#{id,jdbcType=BIGINT},</if>
+                <if test="taskName != null">#{taskName,jdbcType=VARCHAR},</if>
+                <if test="taskGroup != null">#{taskGroup,jdbcType=VARCHAR},</if>
+                <if test="invokeTarget != null">#{invokeTarget,jdbcType=VARCHAR},</if>
+                <if test="cronExpression != null">#{cronExpression,jdbcType=VARCHAR},</if>
+                <if test="misfirePolicy != null">#{misfirePolicy,jdbcType=VARCHAR},</if>
+                <if test="concurrent != null">#{concurrent,jdbcType=CHAR},</if>
+                <if test="status != null">#{status,jdbcType=CHAR},</if>
+                <if test="createBy != null">#{createBy,jdbcType=VARCHAR},</if>
+                <if test="createTime != null">#{createTime,jdbcType=TIMESTAMP},</if>
+                <if test="updateBy != null">#{updateBy,jdbcType=VARCHAR},</if>
+                <if test="updateTime != null">#{updateTime,jdbcType=TIMESTAMP},</if>
+                <if test="remark != null">#{remark,jdbcType=VARCHAR},</if>
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="com.icezhg.sunflower.domain.Task">
+        update t_task
+        <set>
+                <if test="taskName != null">
+                    task_name = #{taskName,jdbcType=VARCHAR},
+                </if>
+                <if test="taskGroup != null">
+                    task_group = #{taskGroup,jdbcType=VARCHAR},
+                </if>
+                <if test="invokeTarget != null">
+                    invoke_target = #{invokeTarget,jdbcType=VARCHAR},
+                </if>
+                <if test="cronExpression != null">
+                    cron_expression = #{cronExpression,jdbcType=VARCHAR},
+                </if>
+                <if test="misfirePolicy != null">
+                    misfire_policy = #{misfirePolicy,jdbcType=VARCHAR},
+                </if>
+                <if test="concurrent != null">
+                    concurrent = #{concurrent,jdbcType=CHAR},
+                </if>
+                <if test="status != null">
+                    status = #{status,jdbcType=CHAR},
+                </if>
+                <if test="createBy != null">
+                    create_by = #{createBy,jdbcType=VARCHAR},
+                </if>
+                <if test="createTime != null">
+                    create_time = #{createTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="updateBy != null">
+                    update_by = #{updateBy,jdbcType=VARCHAR},
+                </if>
+                <if test="updateTime != null">
+                    update_time = #{updateTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="remark != null">
+                    remark = #{remark,jdbcType=VARCHAR},
+                </if>
+        </set>
+        where   id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <select id="findById" parameterType="long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from t_task
+        where  id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <delete id="delete" parameterType="long">
+        delete from t_task
+        where  id = #{id,jdbcType=BIGINT}
+    </delete>
+
+    <sql id="findCondition">
+        <where>
+            <if test="taskName != null and taskName != ''">
+                and LOCATE(#{taskName,jdbcType=VARCHAR}, task_name) > 0
+            </if>
+            <if test="taskGroup != null and taskGroup != ''">
+                and task_group = #{taskGroup,jdbcType=VARCHAR}
+            </if>
+            <if test="status != null and status != ''">
+                and status = #{status,jdbcType=CHAR}
+            </if>
+        </where>
+    </sql>
+
+    <select id="count" parameterType="map" resultType="_int">
+        select count(*)
+        from t_task
+        <include refid="findCondition" />
+    </select>
+
+    <select id="find" parameterType="map" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from t_task
+        <include refid="findCondition" />
+        order by id asc
+        limit #{offset,jdbcType=INTEGER}, #{pageSize,jdbcType=INTEGER}
+    </select>
+
+</mapper>

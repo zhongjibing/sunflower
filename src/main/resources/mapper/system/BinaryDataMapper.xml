@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.icezhg.sunflower.dao.BinaryDataDao">
+
+    <insert id="insert" parameterType="com.icezhg.sunflower.domain.BinaryData" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_binary_data(
+          id, md5, data
+        ) values (
+          #{id,jdbcType=BIGINT},#{md5,jdbcType=VARCHAR},#{data,jdbcType=BLOB,typeHandler=org.apache.ibatis.type.BlobTypeHandler}
+        )
+    </insert>
+
+    <select id="findByMd5" parameterType="string" resultType="com.icezhg.sunflower.domain.BinaryData">
+        select id, md5 from sys_binary_data where md5 = #{md5}
+    </select>
+</mapper>

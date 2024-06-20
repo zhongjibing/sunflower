@@ -1,12 +1,5 @@
-package com.icezhg.sunflower.entity;
+package com.icezhg.sunflower.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-
-import java.io.Serial;
-import java.io.Serializable;
 import java.util.Date;
 
 
@@ -15,16 +8,11 @@ import java.util.Date;
  *
  * @TableName t_ip_location
  */
-@Entity
-@Table(name = "t_ip_location")
-public class IpLocation implements Serializable {
-    @Serial
-    private static final long serialVersionUID = 5206140876642538731L;
+public class IpLocation {
 
     /**
      * ip地址
      */
-    @Id
     private String ip;
 
     /**
@@ -35,13 +23,11 @@ public class IpLocation implements Serializable {
     /**
      * 创建时间
      */
-    @Column(name = "create_time")
     private Date createTime;
 
     /**
      * 更新时间
      */
-    @Column(name = "update_time")
     private Date updateTime;
 
     public IpLocation() {

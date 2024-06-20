@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.icezhg.sunflower.dao.MenuDao">
+    <sql id="BaseColumns">
+        id, `name`, parent_id, order_num, `path`, component, `query`, is_frame, is_cache, `type`, visible, `status`,
+        perms, icon, remark, create_time
+    </sql>
+
+    <resultMap id="BaseResultMap" type="com.icezhg.sunflower.pojo.MenuInfo">
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="parentId" column="parent_id" jdbcType="INTEGER"/>
+        <result property="orderNum" column="order_num" jdbcType="INTEGER"/>
+        <result property="path" column="path" jdbcType="VARCHAR"/>
+        <result property="component" column="component" jdbcType="VARCHAR"/>
+        <result property="query" column="query" jdbcType="VARCHAR"/>
+        <result property="isFrame" column="is_frame" jdbcType="TINYINT"/>
+        <result property="isCache" column="is_cache" jdbcType="TINYINT"/>
+        <result property="type" column="type" jdbcType="CHAR"/>
+        <result property="visible" column="visible" jdbcType="CHAR"/>
+        <result property="status" column="status" jdbcType="CHAR"/>
+        <result property="perms" column="perms" jdbcType="VARCHAR"/>
+        <result property="icon" column="icon" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="remark" column="remark" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <select id="list" parameterType="map" resultMap="BaseResultMap">
+        SELECT <include refid="BaseColumns"/> FROM sys_menu
+        <where>
+            <if test="isFuzzyQuery">
+                <if test="name != null">
+                    AND LOCATE(#{name,jdbcType=VARCHAR}, `name`) > 0
+                </if>
+            </if>
+            <if test="!isFuzzyQuery">
+                <if test="name != null">
+                    AND `name` = #{name,jdbcType=VARCHAR}
+                </if>
+            </if>
+            <if test="status != null">
+                AND `status` = #{status,jdbcType=CHAR}
+            </if>
+            <if test="types != null and types.size() > 0">
+                AND `type` IN <foreach collection="types" item="item" open="(" separator="," close=")">#{item,jdbcType=CHAR}</foreach>
+            </if>
+            <if test="userId != null">
+                AND id IN (
+                    SELECT menu_id
+                    FROM sys_role_menu rm, sys_user_role  ur
+                    WHERE rm.role_id = ur.role_id AND ur.user_id = #{userId,jdbcType=BIGINT}
+                )
+            </if>
+        </where>
+    </select>
+
+    <select id="findById" parameterType="int" resultMap="BaseResultMap">
+        select
+        <include refid="BaseColumns" />
+        from sys_menu
+        where  id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <select id="hasChildren" parameterType="int" resultType="_boolean">
+        select count(*) from (select id from sys_menu where parent_id = #{parentId,jdbcType=INTEGER} limit 1) t
+    </select>
+
+    <delete id="deleteById" parameterType="int">
+        delete from sys_menu
+        where  id = #{id,jdbcType=INTEGER}
+    </delete>
+
+    <insert id="insert" parameterType="com.icezhg.sunflower.domain.Menu" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_menu
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="name != null">name,</if>
+            <if test="parentId != null">parent_id,</if>
+            <if test="orderNum != null">order_num,</if>
+            <if test="path != null">path,</if>
+            <if test="component != null">component,</if>
+            <if test="query != null">query,</if>
+            <if test="isFrame != null">is_frame,</if>
+            <if test="isCache != null">is_cache,</if>
+            <if test="type != null">type,</if>
+            <if test="visible != null">visible,</if>
+            <if test="status != null">status,</if>
+            <if test="perms != null">perms,</if>
+            <if test="icon != null">icon,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id,jdbcType=INTEGER},</if>
+            <if test="name != null">#{name,jdbcType=VARCHAR},</if>
+            <if test="parentId != null">#{parentId,jdbcType=INTEGER},</if>
+            <if test="orderNum != null">#{orderNum,jdbcType=INTEGER},</if>
+            <if test="path != null">#{path,jdbcType=VARCHAR},</if>
+            <if test="component != null">#{component,jdbcType=VARCHAR},</if>
+            <if test="query != null">#{query,jdbcType=VARCHAR},</if>
+            <if test="isFrame != null">#{isFrame,jdbcType=TINYINT},</if>
+            <if test="isCache != null">#{isCache,jdbcType=TINYINT},</if>
+            <if test="type != null">#{type,jdbcType=CHAR},</if>
+            <if test="visible != null">#{visible,jdbcType=CHAR},</if>
+            <if test="status != null">#{status,jdbcType=CHAR},</if>
+            <if test="perms != null">#{perms,jdbcType=VARCHAR},</if>
+            <if test="icon != null">#{icon,jdbcType=VARCHAR},</if>
+            <if test="createBy != null">#{createBy,jdbcType=VARCHAR},</if>
+            <if test="createTime != null">#{createTime,jdbcType=TIMESTAMP},</if>
+            <if test="updateBy != null">#{updateBy,jdbcType=VARCHAR},</if>
+            <if test="updateTime != null">#{updateTime,jdbcType=TIMESTAMP},</if>
+            <if test="remark != null">#{remark,jdbcType=VARCHAR},</if>
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="com.icezhg.sunflower.domain.Menu">
+        update sys_menu
+        <set>
+            <if test="name != null">
+                `name` = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="parentId != null">
+                parent_id = #{parentId,jdbcType=INTEGER},
+            </if>
+            <if test="orderNum != null">
+                order_num = #{orderNum,jdbcType=INTEGER},
+            </if>
+            <if test="path != null">
+                `path` = #{path,jdbcType=VARCHAR},
+            </if>
+            <if test="component != null">
+                component = #{component,jdbcType=VARCHAR},
+            </if>
+            <if test="query != null">
+                `query` = #{query,jdbcType=VARCHAR},
+            </if>
+            <if test="isFrame != null">
+                is_frame = #{isFrame,jdbcType=TINYINT},
+            </if>
+            <if test="isCache != null">
+                is_cache = #{isCache,jdbcType=TINYINT},
+            </if>
+            <if test="type != null">
+                `type` = #{type,jdbcType=CHAR},
+            </if>
+            <if test="visible != null">
+                visible = #{visible,jdbcType=CHAR},
+            </if>
+            <if test="status != null">
+                `status` = #{status,jdbcType=CHAR},
+            </if>
+            <if test="perms != null">
+                perms = #{perms,jdbcType=VARCHAR},
+            </if>
+            <if test="icon != null">
+                icon = #{icon,jdbcType=VARCHAR},
+            </if>
+            <if test="updateBy != null">
+                update_by = #{updateBy,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="remark != null">
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where   id = #{id,jdbcType=INTEGER}
+    </update>
+
+</mapper>

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.icezhg.sunflower.dao.TaskLogDao">
+
+    <resultMap id="BaseResultMap" type="com.icezhg.sunflower.pojo.TaskLogInfo">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="taskId" column="task_id" jdbcType="BIGINT"/>
+        <result property="invokeTarget" column="invoke_target" jdbcType="VARCHAR"/>
+        <result property="message" column="message" jdbcType="VARCHAR"/>
+        <result property="status" column="status" jdbcType="CHAR"/>
+        <result property="exceptionInfo" column="exception_info" jdbcType="VARCHAR"/>
+        <result property="startTime" column="start_time" jdbcType="TIMESTAMP"/>
+        <result property="stopTime" column="stop_time" jdbcType="TIMESTAMP"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="taskName" column="task_name" jdbcType="VARCHAR"/>
+        <result property="taskGroup" column="task_group" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <insert id="insert" keyProperty="id" parameterType="com.icezhg.sunflower.domain.TaskLog" useGeneratedKeys="true">
+        insert into t_task_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="taskId != null">task_id,</if>
+            <if test="invokeTarget != null">invoke_target,</if>
+            <if test="message != null">message,</if>
+            <if test="status != null">status,</if>
+            <if test="exceptionInfo != null">exception_info,</if>
+            <if test="startTime != null">start_time,</if>
+            <if test="stopTime != null">stop_time,</if>
+            <if test="createTime != null">create_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id,jdbcType=BIGINT},</if>
+            <if test="taskId != null">#{taskId,jdbcType=BIGINT},</if>
+            <if test="invokeTarget != null">#{invokeTarget,jdbcType=VARCHAR},</if>
+            <if test="message != null">#{message,jdbcType=VARCHAR},</if>
+            <if test="status != null">#{status,jdbcType=CHAR},</if>
+            <if test="exceptionInfo != null">#{exceptionInfo,jdbcType=VARCHAR},</if>
+            <if test="startTime != null">#{startTime,jdbcType=TIMESTAMP},</if>
+            <if test="stopTime != null">#{stopTime,jdbcType=TIMESTAMP},</if>
+            <if test="createTime != null">#{createTime,jdbcType=TIMESTAMP},</if>
+        </trim>
+    </insert>
+
+    <sql id="findCondition">
+        <where>
+            <if test="taskId != null">
+                and l.task_id = #{taskId}
+            </if>
+            <if test="taskName != null">
+                and LOCATE(#{taskName,jdbcType=VARCHAR}, t.task_name) > 0
+            </if>
+            <if test="taskGroup != null">
+                and t.task_group = #{taskGroup}
+            </if>
+            <if test="status != null">
+                and l.status = #{status}
+            </if>
+            <if test="beginTime != null and endTime != null">
+                and l.create_time between #{beginTime,jdbcType=TIMESTAMP} and #{endTime,jdbcType=TIMESTAMP}
+            </if>
+        </where>
+    </sql>
+
+    <select id="count" parameterType="map" resultType="_int">
+        select count(*)
+        from t_task_log l left join t_task t on l.task_id = t.id
+        <include refid="findCondition" />
+    </select>
+
+    <select id="find" parameterType="map" resultMap="BaseResultMap">
+        select
+            l.id,
+            l.task_id,
+            l.invoke_target,
+            l.message,
+            l.status,
+            l.exception_info,
+            l.start_time,
+            l.stop_time,
+            l.create_time,
+            t.task_name,
+            t.task_group
+        from t_task_log l left join t_task t on l.task_id = t.id
+        <include refid="findCondition" />
+        ORDER BY l.create_time DESC
+        LIMIT #{offset,jdbcType=INTEGER}, #{pageSize,jdbcType=INTEGER}
+    </select>
+
+</mapper>

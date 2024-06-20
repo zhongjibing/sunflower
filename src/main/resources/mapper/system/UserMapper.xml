@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.icezhg.sunflower.dao.UserDao">
+    <resultMap id="BaseResultMap" type="com.icezhg.sunflower.domain.User">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="username" column="username" jdbcType="VARCHAR"/>
+        <result property="password" column="password" jdbcType="VARCHAR"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="nickname" column="nickname" jdbcType="VARCHAR"/>
+        <result property="gender" column="gender" jdbcType="CHAR"/>
+        <result property="birthdate" column="birthdate" jdbcType="VARCHAR"/>
+        <result property="email" column="email" jdbcType="VARCHAR"/>
+        <result property="mobile" column="mobile" jdbcType="VARCHAR"/>
+        <result property="avatar" column="avatar" jdbcType="VARCHAR"/>
+        <result property="deadline" column="deadline" jdbcType="TIMESTAMP"/>
+        <result property="createBy" column="create_by" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateBy" column="update_by" jdbcType="VARCHAR"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="lastLoginTime" column="last_login_time" jdbcType="TIMESTAMP"/>
+        <result property="credentialsUpdateTime" column="credentials_update_time" jdbcType="TIMESTAMP"/>
+        <result property="defaultUser" column="default_user" jdbcType="TINYINT"/>
+        <result property="archived" column="archived" jdbcType="TINYINT"/>
+        <result property="accountLocked" column="account_locked" jdbcType="TINYINT"/>
+        <result property="remark" column="remark" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="BaseColumns">
+        id, username, password,
+        name, nickname, gender,
+        birthdate, email, mobile,
+        avatar, deadline, create_by,
+        create_time, update_by, update_time,
+        last_login_time, credentials_update_time, default_user,
+        archived, account_locked, remark
+    </sql>
+
+    <insert id="insert" parameterType="com.icezhg.sunflower.domain.User" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="username != null">username,</if>
+            <if test="password != null">password,</if>
+            <if test="name != null">name,</if>
+            <if test="nickname != null">nickname,</if>
+            <if test="gender != null">gender,</if>
+            <if test="birthdate != null">birthdate,</if>
+            <if test="email != null">email,</if>
+            <if test="mobile != null">mobile,</if>
+            <if test="avatar != null">avatar,</if>
+            <if test="deadline != null">deadline,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="lastLoginTime != null">last_login_time,</if>
+            <if test="credentialsUpdateTime != null">credentials_update_time,</if>
+            <if test="defaultUser != null">default_user,</if>
+            <if test="archived != null">archived,</if>
+            <if test="accountLocked != null">account_locked,</if>
+            <if test="remark != null">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id,jdbcType=BIGINT},</if>
+            <if test="username != null">#{username,jdbcType=VARCHAR},</if>
+            <if test="password != null">#{password,jdbcType=VARCHAR},</if>
+            <if test="name != null">#{name,jdbcType=VARCHAR},</if>
+            <if test="nickname != null">#{nickname,jdbcType=VARCHAR},</if>
+            <if test="gender != null">#{gender,jdbcType=CHAR},</if>
+            <if test="birthdate != null">#{birthdate,jdbcType=VARCHAR},</if>
+            <if test="email != null">#{email,jdbcType=VARCHAR},</if>
+            <if test="mobile != null">#{mobile,jdbcType=VARCHAR},</if>
+            <if test="avatar != null">#{avatar,jdbcType=VARCHAR},</if>
+            <if test="deadline != null">#{deadline,jdbcType=DATE},</if>
+            <if test="createBy != null">#{createBy,jdbcType=VARCHAR},</if>
+            <if test="createTime != null">#{createTime,jdbcType=TIMESTAMP},</if>
+            <if test="updateBy != null">#{updateBy,jdbcType=VARCHAR},</if>
+            <if test="updateTime != null">#{updateTime,jdbcType=TIMESTAMP},</if>
+            <if test="lastLoginTime != null">#{lastLoginTime,jdbcType=TIMESTAMP},</if>
+            <if test="credentialsUpdateTime != null">#{credentialsUpdateTime,jdbcType=TIMESTAMP},</if>
+            <if test="defaultUser != null">#{defaultUser,jdbcType=TINYINT},</if>
+            <if test="archived != null">#{archived,jdbcType=TINYINT},</if>
+            <if test="accountLocked != null">#{accountLocked,jdbcType=TINYINT},</if>
+            <if test="remark != null">#{remark,jdbcType=VARCHAR},</if>
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="com.icezhg.sunflower.domain.User">
+        update sys_user
+        <set>
+            <if test="username != null">
+                username = #{username,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                password = #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="nickname != null">
+                nickname = #{nickname,jdbcType=VARCHAR},
+            </if>
+            <if test="gender != null">
+                gender = #{gender,jdbcType=CHAR},
+            </if>
+            <if test="birthdate != null">
+                birthdate = #{birthdate,jdbcType=VARCHAR},
+            </if>
+            <if test="email != null">
+                email = #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="mobile != null">
+                mobile = #{mobile,jdbcType=VARCHAR},
+            </if>
+            <if test="avatar != null">
+                avatar = #{avatar,jdbcType=VARCHAR},
+            </if>
+            <if test="deadline != null">
+                deadline = #{deadline,jdbcType=DATE},
+            </if>
+            <if test="createBy != null">
+                create_by = #{createBy,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateBy != null">
+                update_by = #{updateBy,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="lastLoginTime != null">
+                last_login_time = #{lastLoginTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="credentialsUpdateTime != null">
+                credentials_update_time = #{credentialsUpdateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="defaultUser != null">
+                default_user = #{defaultUser,jdbcType=TINYINT},
+            </if>
+            <if test="archived != null">
+                archived = #{archived,jdbcType=TINYINT},
+            </if>
+            <if test="accountLocked != null">
+                account_locked = #{accountLocked,jdbcType=TINYINT},
+            </if>
+            <if test="remark != null">
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <select id="findUserById" parameterType="long" resultMap="BaseResultMap">
+        select
+            <include refid="BaseColumns"/>
+        from sys_user
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="findUserByUsername" parameterType="string" resultMap="BaseResultMap">
+        select
+            <include refid="BaseColumns"/>
+        from sys_user
+        where username = #{username,jdbcType=VARCHAR}
+    </select>
+
+    <sql id="findCondition">
+        <where>
+            id > 0 and default_user = 0
+            <if test="name != null">
+                and (
+                    LOCATE(#{name,jdbcType=VARCHAR}, username) > 0
+                    or LOCATE(#{name,jdbcType=VARCHAR}, name) > 0
+                    or LOCATE(#{name,jdbcType=VARCHAR}, nickname) > 0
+                )
+            </if>
+            <if test="username != null">
+                and username = #{username,jdbcType=VARCHAR}
+            </if>
+            <if test="mobile != null">
+                and mobile = #{mobile,jdbcType=VARCHAR}
+            </if>
+            <if test="beginTime != null and endTime != null">
+                and create_time between #{beginTime,jdbcType=TIMESTAMP} and #{endTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="roleId != null">
+                and id in (
+                    select ur.user_id
+                      from sys_user_role ur, sys_role  r
+                     where ur.role_id = r.id and r.id = #{roleId,jdbcType=INTEGER}
+                )
+            </if>
+            <if test="nonRoleId != null">
+                and id not in (
+                    select ur.user_id
+                      from sys_user_role ur, sys_role  r
+                     where ur.role_id = r.id and r.id = #{nonRoleId,jdbcType=INTEGER}
+                )
+            </if>
+        </where>
+    </sql>
+
+    <select id="count" parameterType="map" resultType="int">
+        select
+          count(*)
+        from sys_user
+        <include refid="findCondition" />
+    </select>
+
+    <select id="find" parameterType="map" resultMap="BaseResultMap">
+        select
+          <include refid="BaseColumns"/>
+        from sys_user
+        <include refid="findCondition" />
+        ORDER BY id ASC
+        LIMIT #{offset,jdbcType=INTEGER}, #{pageSize,jdbcType=INTEGER}
+    </select>
+
+    <update id="updateLastLoginTime">
+        update sys_user
+        set last_login_time = #{lastLoginTime,jdbcType=TIMESTAMP}
+        where username = #{username,jdbcType=VARCHAR} and archived = 0
+    </update>
+
+    <select id="findUserPasswd" parameterType="long" resultType="string">
+        select password from sys_user where id = #{userId,jdbcType=BIGINT}
+    </select>
+
+</mapper>

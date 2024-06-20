@@ -2,9 +2,9 @@ package com.icezhg.sunflower.listener;
 
 
 import com.icezhg.sunflower.common.Constant;
-import com.icezhg.sunflower.entity.IpLocation;
-import com.icezhg.sunflower.entity.User;
-import com.icezhg.sunflower.repository.IpLocationRepository;
+import com.icezhg.sunflower.domain.IpLocation;
+import com.icezhg.sunflower.domain.User;
+import com.icezhg.sunflower.service.IpLocationService;
 import com.icezhg.sunflower.service.LoginRecordService;
 import com.icezhg.sunflower.service.UserService;
 import com.icezhg.sunflower.util.IPAddressUtil;
@@ -29,7 +29,7 @@ public class AuthenticationFailureEventListener implements ApplicationListener<A
 
     private LoginRecordService loginRecordService;
 
-    private IpLocationRepository ipLocationRepository;
+    private IpLocationService ipLocationService;
 
     @Autowired
     public void setUserService(UserService userService) {
@@ -42,8 +42,8 @@ public class AuthenticationFailureEventListener implements ApplicationListener<A
     }
 
     @Autowired
-    public void setIpLocationRepository(IpLocationRepository ipLocationRepository) {
-        this.ipLocationRepository = ipLocationRepository;
+    public void setIpLocationService(IpLocationService ipLocationService) {
+        this.ipLocationService = ipLocationService;
     }
 
     @Override
@@ -65,13 +65,13 @@ public class AuthenticationFailureEventListener implements ApplicationListener<A
     }
 
     private String findAndSaveIpLocation(String ip) {
-        IpLocation ipLocation = ipLocationRepository.findByIp(ip);
+        IpLocation ipLocation = ipLocationService.findByIp(ip);
         if (ipLocation != null) {
             return ipLocation.getLocation();
         }
 
         String location = IPAddressUtil.getLocation(ip);
-        ipLocationRepository.createOrUpdate(new IpLocation(ip, location));
+        ipLocationService.save(new IpLocation(ip, location));
         return location;
     }
 }

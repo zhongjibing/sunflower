@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.icezhg.sunflower.dao.RoleMenuDao">
+
+    <delete id="deleteByRoleIds" parameterType="list">
+        delete from sys_role_menu
+        where role_id in
+        <foreach collection="list" item="item" open="(" separator=", " close=")">
+            #{item,jdbcType=INTEGER}
+        </foreach>
+    </delete>
+
+    <insert id="batchInsert" parameterType="list">
+        insert into sys_role_menu
+        ( role_id,menu_id)
+        values
+        <foreach collection="records" item="item" open="(" separator="), (" close=")">
+            #{item.roleId,jdbcType=INTEGER},#{item.menuId,jdbcType=INTEGER}
+        </foreach>
+    </insert>
+
+    <select id="findMenuIdsByRoleId" parameterType="int" resultType="int">
+        select menu_id from sys_role_menu where role_id = #{roleId,jdbcType=INTEGER}
+    </select>
+
+    <select id="checkMenuExistRole" parameterType="int" resultType="_boolean">
+        select count(*) from (select role_id from sys_role_menu where menu_id = #{menuId,jdbcType=INTEGER}) t
+    </select>
+</mapper>

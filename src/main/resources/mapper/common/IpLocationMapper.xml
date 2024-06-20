@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.icezhg.sunflower.dao.IpLocationDao">
+
+    <resultMap id="BaseResultMap" type="com.icezhg.sunflower.domain.IpLocation">
+        <id property="ip" column="ip" jdbcType="VARCHAR"/>
+        <result property="location" column="location" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        ip, location, create_time, update_time
+    </sql>
+
+    <select id="findByIp" parameterType="string" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from t_ip_location
+        where ip = #{ip,jdbcType=VARCHAR}
+    </select>
+
+    <insert id="save" parameterType="com.icezhg.sunflower.domain.IpLocation">
+        insert into t_ip_location
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="ip != null">ip,</if>
+            <if test="location != null">location,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="ip != null">#{ip,jdbcType=VARCHAR},</if>
+            <if test="location != null">#{location,jdbcType=VARCHAR},</if>
+            <if test="createTime != null">#{createTime,jdbcType=TIMESTAMP},</if>
+            <if test="updateTime != null">#{updateTime,jdbcType=TIMESTAMP},</if>
+        </trim>
+        on duplicate key update
+            <if test="location != null">
+                location = #{location,jdbcType=VARCHAR},
+            </if>
+            <choose>
+                <when test="updateTime != null">
+                    update_time = #{updateTime,jdbcType=TIMESTAMP}
+                </when>
+                <otherwise>
+                    update_time = now()
+                </otherwise>
+            </choose>
+    </insert>
+
+</mapper>

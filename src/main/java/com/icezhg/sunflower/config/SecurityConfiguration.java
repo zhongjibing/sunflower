@@ -1,8 +1,9 @@
 package com.icezhg.sunflower.config;
 
-import com.icezhg.sunflower.security.UsernamePasswordLoginConfigurer;
+import com.icezhg.sunflower.security.configurer.UsernamePasswordLoginConfigurer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -31,6 +32,8 @@ public class SecurityConfiguration {
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/actuator/*").permitAll()
+                        .requestMatchers("/authenticated").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/picture/*").permitAll()
                         .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                         .anyRequest().authenticated())
                 .logout(logout -> logout

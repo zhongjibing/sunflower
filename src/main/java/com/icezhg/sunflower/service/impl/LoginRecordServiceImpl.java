@@ -1,8 +1,8 @@
 package com.icezhg.sunflower.service.impl;
 
 import com.icezhg.sunflower.common.Constant;
-import com.icezhg.sunflower.entity.LoginRecord;
-import com.icezhg.sunflower.repository.LoginRecordRepository;
+import com.icezhg.sunflower.dao.LoginRecordDao;
+import com.icezhg.sunflower.domain.LoginRecord;
 import com.icezhg.sunflower.service.LoginRecordService;
 import eu.bitwalker.useragentutils.UserAgent;
 import jakarta.transaction.Transactional;
@@ -23,11 +23,11 @@ public class LoginRecordServiceImpl implements LoginRecordService {
 
     private static final Logger log = LoggerFactory.getLogger(LoginRecordService.class);
 
-    private LoginRecordRepository loginRecordRepository;
+    private LoginRecordDao loginRecordDao;
 
     @Autowired
-    public void setLoginInfoRepository(LoginRecordRepository loginRecordRepository) {
-        this.loginRecordRepository = loginRecordRepository;
+    public void setLoginRecordDao(LoginRecordDao loginRecordDao) {
+        this.loginRecordDao = loginRecordDao;
     }
 
     @Override
@@ -76,6 +76,6 @@ public class LoginRecordServiceImpl implements LoginRecordService {
             loginRecord.setBrowser(userAgent.getBrowser().getName());
         }
 
-        loginRecordRepository.save(loginRecord);
+        loginRecordDao.save(loginRecord);
     }
 }

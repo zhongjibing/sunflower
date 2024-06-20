@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.MissingNode;
-import com.icezhg.sunflower.pojo.UserDetail;
+import com.icezhg.sunflower.security.UserDetail;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
@@ -28,14 +28,14 @@ public class UserDetailDeserializer extends JsonDeserializer<UserDetail> {
     public UserDetail deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException, JsonProcessingException {
         ObjectMapper mapper = (ObjectMapper) jp.getCodec();
         JsonNode jsonNode = mapper.readTree(jp);
-        JsonNode passwordNode = readJsonNode(jsonNode, "password");
-        UserDetail result = UserDetail.builder()
+        return UserDetail.builder()
                 .id(readJsonNode(jsonNode, "id").asText())
                 .username(readJsonNode(jsonNode, "username").asText())
+                .openid(readJsonNode(jsonNode, "openid").asText())
                 .nickname(readJsonNode(jsonNode, "nickname").asText())
+                .name(readJsonNode(jsonNode, "name").asText())
                 .gender(readJsonNode(jsonNode, "gender").asText())
                 .birthdate(readJsonNode(jsonNode, "birthdate").asText())
-                .password(passwordNode.asText(""))
                 .email(readJsonNode(jsonNode, "email").asText(""))
                 .mobile(readJsonNode(jsonNode, "mobile").asText(""))
                 .avatar(readJsonNode(jsonNode, "avatar").asText(""))
@@ -47,10 +47,6 @@ public class UserDetailDeserializer extends JsonDeserializer<UserDetail> {
                 .credentialsNonExpired(readJsonNode(jsonNode, "credentialsNonExpired").asBoolean())
                 .attributes(parseAttributes(readJsonNode(jsonNode, "attributes")))
                 .build();
-        if (passwordNode.asText(null) == null) {
-            result.eraseCredentials();
-        }
-        return result;
     }
 
     private JsonNode readJsonNode(JsonNode jsonNode, String field) {

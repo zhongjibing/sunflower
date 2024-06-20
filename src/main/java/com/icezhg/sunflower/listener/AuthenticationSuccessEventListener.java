@@ -1,7 +1,7 @@
 package com.icezhg.sunflower.listener;
 
 
-import com.icezhg.sunflower.pojo.UserDetail;
+import com.icezhg.sunflower.security.UserDetail;
 import com.icezhg.sunflower.service.LoginRecordService;
 import com.icezhg.sunflower.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;

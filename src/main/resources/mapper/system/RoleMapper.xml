@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.icezhg.sunflower.dao.RoleDao">
+    <sql id="BaseColumns">
+        id,name,role_key,
+        role_sort,data_scope,
+        status,create_by,
+        create_time,update_by,update_time,
+        remark
+    </sql>
+
+    <insert id="insert" parameterType="com.icezhg.sunflower.domain.Role" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_role
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="name != null">name,</if>
+            <if test="roleKey != null">role_key,</if>
+            <if test="roleSort != null">role_sort,</if>
+            <if test="dataScope != null">data_scope,</if>
+            <if test="status != null">status,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id,jdbcType=INTEGER},</if>
+            <if test="name != null">#{name,jdbcType=VARCHAR},</if>
+            <if test="roleKey != null">#{roleKey,jdbcType=VARCHAR},</if>
+            <if test="roleSort != null">#{roleSort,jdbcType=INTEGER},</if>
+            <if test="dataScope != null">#{dataScope,jdbcType=TINYINT},</if>
+            <if test="status != null">#{status,jdbcType=CHAR},</if>
+            <if test="createBy != null">#{createBy,jdbcType=VARCHAR},</if>
+            <if test="createTime != null">#{createTime,jdbcType=TIMESTAMP},</if>
+            <if test="updateBy != null">#{updateBy,jdbcType=VARCHAR},</if>
+            <if test="updateTime != null">#{updateTime,jdbcType=TIMESTAMP},</if>
+            <if test="remark != null">#{remark,jdbcType=VARCHAR},</if>
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="com.icezhg.sunflower.domain.Role">
+        update sys_role
+        <set>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="roleKey != null">
+                role_key = #{roleKey,jdbcType=VARCHAR},
+            </if>
+            <if test="roleSort != null">
+                role_sort = #{roleSort,jdbcType=INTEGER},
+            </if>
+            <if test="dataScope != null">
+                data_scope = #{dataScope,jdbcType=TINYINT},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=CHAR},
+            </if>
+            <if test="updateBy != null">
+                update_by = #{updateBy,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="remark != null">
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where   id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <delete id="deleteByIds" parameterType="list">
+        delete from sys_role where id > 0 and id in
+        <foreach collection="list" item="item" open=" (" separator=", " close=")">
+            #{item,jdbcType=INTEGER}
+        </foreach>
+    </delete>
+
+    <sql id="findCondition">
+        <where>
+            id > 0
+            <if test="id != null">
+                and id = #{id,jdbcType=INTEGER}
+            </if>
+            <if test="name != null">
+                and LOCATE(#{name,jdbcType=VARCHAR}, `name`) > 0
+            </if>
+            <if test="roleKey != null">
+                and role_key = #{roleKey,jdbcType=VARCHAR}
+            </if>
+            <if test="status != null">
+                and `status` = #{status,jdbcType=CHAR}
+            </if>
+        </where>
+    </sql>
+
+    <select id="count" parameterType="map" resultType="int">
+        select count(*)
+        from sys_role
+        <include refid="findCondition"/>
+    </select>
+
+    <select id="find" parameterType="map" resultType="com.icezhg.sunflower.domain.Role">
+        select <include refid="BaseColumns"/>
+        from sys_role
+        <include refid="findCondition"/>
+        order by role_sort asc
+        limit #{offset,jdbcType=INTEGER}, #{pageSize,jdbcType=INTEGER}
+    </select>
+
+    <select id="findAuthRoles" parameterType="long" resultType="com.icezhg.sunflower.domain.Role">
+        select <include refid="BaseColumns"/>
+        from sys_role
+        where status = '0'
+          and id in (select role_id from sys_user_role where user_id = #{userId,jdbcType=BIGINT})
+    </select>
+
+    <select id="listAll" resultType="com.icezhg.sunflower.domain.Role">
+        select <include refid="BaseColumns"/>
+        from sys_role
+        where id > 0 and status = '0'
+    </select>
+
+</mapper>

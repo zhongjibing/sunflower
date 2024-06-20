@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.icezhg.sunflower.dao.OperationLogDao">
+
+    <resultMap id="BaseResultMap" type="com.icezhg.sunflower.pojo.OperationInfo">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="title" column="title" jdbcType="VARCHAR"/>
+        <result property="operationType" column="operation_type" jdbcType="VARCHAR"/>
+        <result property="method" column="method" jdbcType="VARCHAR"/>
+        <result property="requestMethod" column="request_method" jdbcType="VARCHAR"/>
+        <result property="requestUrl" column="request_url" jdbcType="VARCHAR"/>
+        <result property="requestIp" column="request_ip" jdbcType="VARCHAR"/>
+        <result property="requestLocation" column="request_location" jdbcType="VARCHAR"/>
+        <result property="parameter" column="parameter" jdbcType="VARCHAR"/>
+        <result property="result" column="result" jdbcType="VARCHAR"/>
+        <result property="errorMsg" column="error_msg" jdbcType="VARCHAR"/>
+        <result property="status" column="status" jdbcType="CHAR"/>
+        <result property="cost" column="cost" jdbcType="BIGINT"/>
+        <result property="username" column="username" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.icezhg.sunflower.domain.OperationLog" keyProperty="id" useGeneratedKeys="true">
+        insert into t_operation_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="title != null">title,</if>
+            <if test="operationType != null">operation_type,</if>
+            <if test="method != null">method,</if>
+            <if test="requestMethod != null">request_method,</if>
+            <if test="requestUrl != null">request_url,</if>
+            <if test="requestIp != null">request_ip,</if>
+            <if test="requestLocation != null">request_location,</if>
+            <if test="parameter != null">parameter,</if>
+            <if test="result != null">result,</if>
+            <if test="errorMsg != null">error_msg,</if>
+            <if test="status != null">status,</if>
+            <if test="cost != null">cost,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="createTime != null">create_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id,jdbcType=BIGINT},</if>
+            <if test="title != null">#{title,jdbcType=VARCHAR},</if>
+            <if test="operationType != null">#{operationType,jdbcType=VARCHAR},</if>
+            <if test="method != null">#{method,jdbcType=VARCHAR},</if>
+            <if test="requestMethod != null">#{requestMethod,jdbcType=VARCHAR},</if>
+            <if test="requestUrl != null">#{requestUrl,jdbcType=VARCHAR},</if>
+            <if test="requestIp != null">#{requestIp,jdbcType=VARCHAR},</if>
+            <if test="requestLocation != null">#{requestLocation,jdbcType=VARCHAR},</if>
+            <if test="parameter != null">#{parameter,jdbcType=VARCHAR},</if>
+            <if test="result != null">#{result,jdbcType=VARCHAR},</if>
+            <if test="errorMsg != null">#{errorMsg,jdbcType=VARCHAR},</if>
+            <if test="status != null">#{status,jdbcType=CHAR},</if>
+            <if test="cost != null">#{cost,jdbcType=BIGINT},</if>
+            <if test="userId != null">#{userId,jdbcType=BIGINT},</if>
+            <if test="createTime != null">#{createTime,jdbcType=TIMESTAMP},</if>
+        </trim>
+    </insert>
+
+    <sql id="findCondition">
+        <where>
+            <if test="title != null and title != ''">
+                and LOCATE(#{title,jdbcType=VARCHAR}, l.title) > 0
+            </if>
+            <if test="username != null and username != ''">
+                and u.username = #{username,jdbcType=VARCHAR}
+            </if>
+            <if test="status != null and status != ''">
+                and l.status = #{status,jdbcType=CHAR}
+            </if>
+            <if test="beginTime != null and endTime != null">
+                and l.create_time between #{beginTime,jdbcType=TIMESTAMP} and #{endTime,jdbcType=TIMESTAMP}
+            </if>
+        </where>
+    </sql>
+
+    <select id="count" parameterType="map" resultType="_int">
+        select count(*)
+        from t_operation_log l left join sys_user u on l.user_id = u.id
+        <include refid="findCondition" />
+    </select>
+
+    <select id="find" parameterType="map" resultMap="BaseResultMap">
+        select
+            l.id, l.title, l.operation_type,
+            l.method, l.request_method, l.request_url,
+            l.request_ip, l.request_location, l.parameter,
+            l.result, l.error_msg, l.status,
+            l.cost, u.username, l.create_time
+        from t_operation_log l left join sys_user u on l.user_id = u.id
+        <include refid="findCondition"/>
+        ORDER BY l.id DESC
+        LIMIT #{offset,jdbcType=INTEGER}, #{pageSize,jdbcType=INTEGER}
+    </select>
+
+</mapper>

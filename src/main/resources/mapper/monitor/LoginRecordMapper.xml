@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.icezhg.sunflower.dao.LoginRecordDao">
+
+    <resultMap id="BaseResultMap" type="com.icezhg.sunflower.domain.LoginRecord">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="userId" column="user_id" jdbcType="BIGINT"/>
+        <result property="username" column="username" jdbcType="VARCHAR"/>
+        <result property="loginIp" column="login_ip" jdbcType="VARCHAR"/>
+        <result property="loginLocation" column="login_location" jdbcType="VARCHAR"/>
+        <result property="agent" column="agent" jdbcType="VARCHAR"/>
+        <result property="browser" column="browser" jdbcType="VARCHAR"/>
+        <result property="os" column="os" jdbcType="VARCHAR"/>
+        <result property="status" column="status" jdbcType="CHAR"/>
+        <result property="msg" column="msg" jdbcType="VARCHAR"/>
+        <result property="loginTime" column="login_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,user_id,username,
+        login_ip,login_location,agent,
+        browser,os,status,
+        msg,login_time
+    </sql>
+
+    <sql id="findCondition">
+        <where>
+            <if test="userId != null">
+                and user_id = #{userId}
+            </if>
+            <if test="username != null">
+                and LOCATE(#{username,jdbcType=VARCHAR}, username) > 0
+            </if>
+            <if test="loginIp != null">
+                and login_ip = #{loginIp}
+            </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+            <if test="beginTime != null and endTime != null">
+                and login_time between #{beginTime,jdbcType=TIMESTAMP} and #{endTime,jdbcType=TIMESTAMP}
+            </if>
+        </where>
+    </sql>
+
+    <select id="count" parameterType="map" resultType="_int">
+        select count(*)
+        from t_login_record
+        <include refid="findCondition" />
+    </select>
+
+    <select id="find" parameterType="map" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/>
+        from t_login_record
+        <include refid="findCondition" />
+        order by login_time desc
+        limit #{offset,jdbcType=INTEGER}, #{pageSize,jdbcType=INTEGER}
+    </select>
+
+    <insert id="save" parameterType="com.icezhg.sunflower.domain.LoginRecord" useGeneratedKeys="true" keyProperty="id">
+        insert into t_login_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="username != null">username,</if>
+            <if test="loginIp != null">login_ip,</if>
+            <if test="loginLocation != null">login_location,</if>
+            <if test="agent != null">agent,</if>
+            <if test="browser != null">browser,</if>
+            <if test="os != null">os,</if>
+            <if test="status != null">status,</if>
+            <if test="msg != null">msg,</if>
+            <if test="loginTime != null">login_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id,jdbcType=BIGINT},</if>
+            <if test="userId != null">#{userId,jdbcType=BIGINT},</if>
+            <if test="username != null">#{username,jdbcType=VARCHAR},</if>
+            <if test="loginIp != null">#{loginIp,jdbcType=VARCHAR},</if>
+            <if test="loginLocation != null">#{loginLocation,jdbcType=VARCHAR},</if>
+            <if test="agent != null">#{agent,jdbcType=VARCHAR},</if>
+            <if test="browser != null">#{browser,jdbcType=VARCHAR},</if>
+            <if test="os != null">#{os,jdbcType=VARCHAR},</if>
+            <if test="status != null">#{status,jdbcType=CHAR},</if>
+            <if test="msg != null">#{msg,jdbcType=VARCHAR},</if>
+            <if test="loginTime != null">#{loginTime,jdbcType=TIMESTAMP},</if>
+        </trim>
+    </insert>
+</mapper>

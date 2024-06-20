@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.icezhg.sunflower.dao.AvatarPictureDao">
+
+    <insert id="create" parameterType="com.icezhg.sunflower.domain.AvatarPicture">
+        insert into sys_avatar_picture
+        (avatar,picture_id)
+        values (#{avatar,jdbcType=VARCHAR}, #{pictureId,jdbcType=BIGINT})
+    </insert>
+
+    <update id="update" parameterType="com.icezhg.sunflower.domain.AvatarPicture">
+        update sys_avatar_picture
+        set picture_id = #{pictureId,jdbcType=BIGINT}
+        where avatar = #{avatar,jdbcType=VARCHAR}
+    </update>
+</mapper>

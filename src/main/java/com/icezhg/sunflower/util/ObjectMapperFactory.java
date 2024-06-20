@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.json.JsonMapper;
-import com.icezhg.sunflower.pojo.UserDetail;
+import com.icezhg.sunflower.security.UserDetail;
 import com.icezhg.sunflower.serial.AuthenticationExceptionMixIn;
 import com.icezhg.sunflower.serial.UserDetailMixIn;
 import org.springframework.security.core.AuthenticationException;

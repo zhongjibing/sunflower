@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.icezhg.sunflower.dao.DictDataDao">
+
+    <sql id="BaseColumns">
+        id,dict_sort,dict_label,
+        dict_value,dict_value_type,dict_type,css_class,
+        list_class,is_default,status,
+        create_by,create_time,update_by,
+        update_time,remark
+    </sql>
+
+    <delete id="deleteByTypeIds" parameterType="list">
+        delete from
+            sys_dict_data
+        where dict_type in (
+            select dict_type from sys_dict_type where id in
+            <foreach collection="list" item="item" open="(" separator=", " close=")">#{item,jdbcType=INTEGER}</foreach>
+        )
+    </delete>
+
+    <delete id="deleteByIds" parameterType="list">
+        delete from
+            sys_dict_data
+        where id in
+        <foreach collection="list" item="item" open="(" separator=", " close=")">
+              #{item,jdbcType=INTEGER}
+        </foreach>
+    </delete>
+
+    <insert id="insert" parameterType="com.icezhg.sunflower.domain.DictData" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_dict_data
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="dictSort != null">dict_sort,</if>
+            <if test="dictLabel != null">dict_label,</if>
+            <if test="dictValue != null">dict_value,</if>
+            <if test="dictValueType != null">dict_value_type,</if>
+            <if test="dictType != null">dict_type,</if>
+            <if test="cssClass != null">css_class,</if>
+            <if test="listClass != null">list_class,</if>
+            <if test="isDefault != null">is_default,</if>
+            <if test="status != null">status,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id,jdbcType=INTEGER},</if>
+            <if test="dictSort != null">#{dictSort,jdbcType=INTEGER},</if>
+            <if test="dictLabel != null">#{dictLabel,jdbcType=VARCHAR},</if>
+            <if test="dictValue != null">#{dictValue,jdbcType=VARCHAR},</if>
+            <if test="dictValueType != null">#{dictValueType,jdbcType=VARCHAR},</if>
+            <if test="dictType != null">#{dictType,jdbcType=VARCHAR},</if>
+            <if test="cssClass != null">#{cssClass,jdbcType=VARCHAR},</if>
+            <if test="listClass != null">#{listClass,jdbcType=VARCHAR},</if>
+            <if test="isDefault != null">#{isDefault,jdbcType=CHAR},</if>
+            <if test="status != null">#{status,jdbcType=CHAR},</if>
+            <if test="createBy != null">#{createBy,jdbcType=VARCHAR},</if>
+            <if test="createTime != null">#{createTime,jdbcType=TIMESTAMP},</if>
+            <if test="updateBy != null">#{updateBy,jdbcType=VARCHAR},</if>
+            <if test="updateTime != null">#{updateTime,jdbcType=TIMESTAMP},</if>
+            <if test="remark != null">#{remark,jdbcType=VARCHAR},</if>
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="com.icezhg.sunflower.domain.DictData">
+        update sys_dict_data
+        <set>
+            <if test="dictSort != null">
+                dict_sort = #{dictSort,jdbcType=INTEGER},
+            </if>
+            <if test="dictLabel != null">
+                dict_label = #{dictLabel,jdbcType=VARCHAR},
+            </if>
+            <if test="dictValue != null">
+                dict_value = #{dictValue,jdbcType=VARCHAR},
+            </if>
+            <if test="dictValueType != null">
+                dict_value_type = #{dictValueType,jdbcType=VARCHAR},
+            </if>
+            <if test="dictType != null">
+                dict_type = #{dictType,jdbcType=VARCHAR},
+            </if>
+            <if test="cssClass != null">
+                css_class = #{cssClass,jdbcType=VARCHAR},
+            </if>
+            <if test="listClass != null">
+                list_class = #{listClass,jdbcType=VARCHAR},
+            </if>
+            <if test="isDefault != null">
+                is_default = #{isDefault,jdbcType=CHAR},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=CHAR},
+            </if>
+            <if test="updateBy != null">
+                update_by = #{updateBy,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="remark != null">
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where   id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <select id="findByType" parameterType="string" resultType="com.icezhg.sunflower.domain.DictData">
+        select <include refid="BaseColumns"/>
+        from sys_dict_data
+        where status = '0' and dict_type = #{dictType}
+        order by dict_sort asc
+    </select>
+
+    <select id="findById" parameterType="int" resultType="com.icezhg.sunflower.domain.DictData">
+        select <include refid="BaseColumns"/>
+        from sys_dict_data
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <sql id="findCondition">
+        <where>
+            <if test="dictType != null">
+                and locate(#{dictType,jdbcType=VARCHAR}, dict_type) > 0
+            </if>
+            <if test="dictLabel != null">
+                and locate(#{dictLabel,jdbcType=VARCHAR}, dict_label) > 0
+            </if>
+            <if test="status != null">
+                and status = #{status,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </sql>
+
+    <select id="count" parameterType="map" resultType="int">
+        select count(*) from sys_dict_data
+        <include refid="findCondition"/>
+    </select>
+
+    <select id="find" parameterType="map" resultType="com.icezhg.sunflower.domain.DictData">
+        select
+        <include refid="BaseColumns"/>
+        from sys_dict_data
+        <include refid="findCondition" />
+        order by id asc
+        limit #{offset,jdbcType=INTEGER}, #{pageSize,jdbcType=INTEGER}
+    </select>
+</mapper>

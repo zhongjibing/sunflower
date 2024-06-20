@@ -1,11 +1,4 @@
-package com.icezhg.sunflower.entity;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+package com.icezhg.sunflower.domain;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -17,8 +10,6 @@ import java.util.Date;
  *
  * @TableName sys_user
  */
-@Entity
-@Table(name = "sys_user")
 public class User implements Serializable {
 
     @Serial
@@ -27,8 +18,6 @@ public class User implements Serializable {
     /**
      * 用户id
      */
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     /**
@@ -85,43 +74,36 @@ public class User implements Serializable {
     /**
      * 创建者
      */
-    @Column(name = "create_by")
     private String createBy;
 
     /**
      * 创建时间
      */
-    @Column(name = "create_time")
     private Date createTime;
 
     /**
      * 更新者
      */
-    @Column(name = "update_by")
     private String updateBy;
 
     /**
      * 更新时间
      */
-    @Column(name = "update_time")
     private Date updateTime;
 
     /**
      * 最后登录时间
      */
-    @Column(name = "last_login_time")
     private Date lastLoginTime;
 
     /**
      * 密码更新时间
      */
-    @Column(name = "credentials_update_time")
     private Date credentialsUpdateTime;
 
     /**
      * 是否默认用户: 0.否, 1.是
      */
-    @Column(name = "default_user")
     private Integer defaultUser;
 
     /**
@@ -132,7 +114,6 @@ public class User implements Serializable {
     /**
      * 是否锁定: 0.否, 1.是
      */
-    @Column(name = "account_locked")
     private Integer accountLocked;
 
     /**
@@ -321,5 +302,13 @@ public class User implements Serializable {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public boolean isRoot() {
+        return isRoot(this.id);
+    }
+
+    public static boolean isRoot(Long userId) {
+        return userId != null && userId == 0L;
     }
 }

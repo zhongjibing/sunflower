@@ -1,4 +1,4 @@
-package com.icezhg.sunflower.security;
+package com.icezhg.sunflower.security.configurer;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.authentication.AuthenticationManager;

@@ -6,7 +6,7 @@ import com.fasterxml.jackson.core.type.WritableTypeId;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.jsontype.TypeSerializer;
-import com.icezhg.sunflower.pojo.UserDetail;
+import com.icezhg.sunflower.security.UserDetail;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.io.IOException;
@@ -21,10 +21,11 @@ public class UserDetailSerializer extends JsonSerializer<UserDetail> {
     public void serialize(UserDetail value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
         gen.writeStringField("id", value.getId());
         gen.writeStringField("username", value.getUsername());
+        gen.writeStringField("openid", value.getOpenid());
         gen.writeStringField("nickname", value.getNickname());
+        gen.writeStringField("name", value.getName());
         gen.writeStringField("gender", value.getGender());
         gen.writeStringField("birthdate", value.getBirthdate());
-        gen.writeStringField("password", value.getPassword());
         gen.writeStringField("email", value.getEmail());
         gen.writeStringField("mobile", value.getMobile());
         gen.writeStringField("avatar", value.getAvatar());

@@ -1,4 +1,4 @@
-package com.icezhg.sunflower.pojo;
+package com.icezhg.sunflower.security;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;

@@ -4,7 +4,7 @@ package com.icezhg.sunflower.aspect;
 import com.icezhg.sunflower.annotation.Operation;
 import com.icezhg.sunflower.common.Constant;
 import com.icezhg.sunflower.common.SessionKey;
-import com.icezhg.sunflower.entity.OperationLog;
+import com.icezhg.sunflower.domain.OperationLog;
 import com.icezhg.sunflower.service.OperationLogService;
 import com.icezhg.sunflower.util.JsonUtil;
 import com.icezhg.sunflower.util.Requests;

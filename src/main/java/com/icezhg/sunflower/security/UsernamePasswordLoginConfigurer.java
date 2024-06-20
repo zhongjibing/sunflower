@@ -1,17 +1,10 @@
 package com.icezhg.sunflower.security;
 
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.HttpSecurityBuilder;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.AuthorizeHttpRequestsConfigurer;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.RememberMeServices;
@@ -20,31 +13,23 @@ import org.springframework.security.web.authentication.session.SessionAuthentica
 import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
-import org.springframework.util.Assert;
-
-import java.io.IOException;
 
 /**
  * Created by zhongjibing on 2023/06/20.
  */
-public class UsernamePasswordLoginConfigurer<B extends HttpSecurityBuilder<B>,
-        T extends UsernamePasswordLoginConfigurer<B, T>>
+public class UsernamePasswordLoginConfigurer<B extends HttpSecurityBuilder<B>, T extends UsernamePasswordLoginConfigurer<B, T>>
         extends AbstractHttpConfigurer<T, B> {
 
-    private UsernamePasswordAuthenticationFilter authFilter = new UsernamePasswordAuthenticationFilter();
+    private final UsernamePasswordAuthenticationFilter authFilter = new UsernamePasswordAuthenticationFilter();
     private String loginProcessingUrl = "/login";
 
-    private AuthenticationSuccessHandler successHandler;
+    private final AuthenticationSuccessHandler defaultHandler = (request, response, authentication) -> {
+    };
+
+    private AuthenticationSuccessHandler successHandler = this.defaultHandler;
     private AuthenticationFailureHandler failureHandler;
 
     public UsernamePasswordLoginConfigurer() {
-        this.successHandler = new AuthenticationSuccessHandler() {
-            @Override
-            public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-                Class<? extends Authentication> aClass = authentication.getClass();
-                System.out.println(response.getStatus());
-            }
-        };
     }
 
     @Override

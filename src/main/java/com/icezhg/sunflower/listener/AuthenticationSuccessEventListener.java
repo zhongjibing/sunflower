@@ -2,7 +2,6 @@ package com.icezhg.sunflower.listener;
 
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 /**
@@ -14,7 +13,5 @@ public class AuthenticationSuccessEventListener implements ApplicationListener<A
 
     @Override
     public void onApplicationEvent(AuthenticationSuccessEvent event) {
-        Authentication authentication = event.getAuthentication();
-        System.out.println(authentication);
     }
 }

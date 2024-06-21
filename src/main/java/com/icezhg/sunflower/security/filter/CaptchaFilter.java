@@ -1,5 +1,6 @@
 package com.icezhg.sunflower.security.filter;
 
+import com.alibaba.fastjson2.JSONObject;
 import com.icezhg.captcha.Captcha;
 import com.icezhg.captcha.CaptchaProducer;
 import jakarta.servlet.FilterChain;
@@ -19,8 +20,11 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.imageio.ImageIO;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
 import java.util.Calendar;
+import java.util.Map;
 
 /**
  * Created by zhongjibing on 2022/09/02.
@@ -61,7 +65,7 @@ public class CaptchaFilter extends OncePerRequestFilter {
 
     private void handleInvalidCaptchaCode(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType(MediaType.TEXT_PLAIN_VALUE);
-        response.setStatus(HttpStatus.UNAUTHORIZED.value());
+        response.setStatus(HttpStatus.FORBIDDEN.value());
         try (ServletOutputStream out = response.getOutputStream()) {
             out.print("bad captcha code");
             out.flush();
@@ -70,12 +74,14 @@ public class CaptchaFilter extends OncePerRequestFilter {
 
     private boolean validateCaptcha(HttpServletRequest request) {
         String validateCode = request.getParameter(REQUEST_PARAM_VALIDATE_CODE);
+        log.info("captcha code: {}", validateCode);
         if (!StringUtils.hasText(validateCode)) {
             return false;
         }
 
         Object obj = request.getSession().getAttribute(SESSION_KEY_CAPTCHA_CODE);
         String code = obj != null ? String.valueOf(obj) : null;
+        log.info("captcha session code: {}", code);
         // 验证码清除，防止多次使用。
         request.getSession().removeAttribute(SESSION_KEY_CAPTCHA_CODE);
         if (code != null) {
@@ -83,20 +89,24 @@ public class CaptchaFilter extends OncePerRequestFilter {
                 return false;
             }
             code = code.substring(0, code.indexOf("@"));
+            log.info("captcha compare code: {}", code);
         }
         return validateCode.equalsIgnoreCase(code);
     }
 
     private void sendCaptchaImage(HttpServletRequest request, HttpServletResponse response) throws IOException {
         HttpSession session = request.getSession();
-        response.setContentType("image/jpeg");
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
         try (ServletOutputStream out = response.getOutputStream()) {
             Captcha captcha = captchaProducer.create();
             Calendar calendar = Calendar.getInstance();
             calendar.add(Calendar.SECOND, 60);
             session.setAttribute(SESSION_KEY_CAPTCHA_CODE, captcha.getCode() + '@' + calendar.getTimeInMillis());
-            ImageIO.write(captcha.getImage(), "jpg", out);
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            ImageIO.write(captcha.getImage(), "png", bos);
+            String imgBase64 = Base64.getEncoder().encodeToString(bos.toByteArray());
+            out.print(JSONObject.toJSONString(Map.of("img", imgBase64)));
             out.flush();
         }
     }

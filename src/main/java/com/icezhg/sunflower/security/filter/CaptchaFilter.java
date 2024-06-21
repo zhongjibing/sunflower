@@ -10,8 +10,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.web.DefaultRedirectStrategy;
-import org.springframework.security.web.RedirectStrategy;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.util.Assert;
@@ -36,9 +36,6 @@ public class CaptchaFilter extends OncePerRequestFilter {
 
     private static final String REQUEST_PARAM_VALIDATE_CODE = "validateCode";
 
-    private static final String FAIL_URL = "/login?captcha";
-
-    private final RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
     private final CaptchaProducer captchaProducer;
 
     public CaptchaFilter(CaptchaProducer captchaProducer) {
@@ -48,17 +45,26 @@ public class CaptchaFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
-            FilterChain filterChain) throws ServletException, IOException {
+                                    FilterChain filterChain) throws ServletException, IOException {
         if (LOGIN_REQUEST_MATCHER.matches(request)) {
             if (validateCaptcha(request)) {
                 filterChain.doFilter(request, response);
             } else {
-                redirectStrategy.sendRedirect(request, response, FAIL_URL);
+                handleInvalidCaptchaCode(request, response);
             }
         } else if (CAPTCHA_REQUEST_MATCHER.matches(request)) {
             sendCaptchaImage(request, response);
         } else {
             filterChain.doFilter(request, response);
+        }
+    }
+
+    private void handleInvalidCaptchaCode(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.setContentType(MediaType.TEXT_PLAIN_VALUE);
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
+        try (ServletOutputStream out = response.getOutputStream()) {
+            out.print("bad captcha code");
+            out.flush();
         }
     }
 

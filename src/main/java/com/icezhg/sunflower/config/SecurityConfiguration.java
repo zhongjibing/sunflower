@@ -1,5 +1,6 @@
 package com.icezhg.sunflower.config;
 
+import com.icezhg.sunflower.security.configurer.CaptchaConfigurer;
 import com.icezhg.sunflower.security.configurer.UsernamePasswordLoginConfigurer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -45,6 +46,7 @@ public class SecurityConfiguration {
                 .headers(headers -> headers.cacheControl(HeadersConfigurer.CacheControlConfig::disable))
                 .sessionManagement(session -> session.maximumSessions(1));
 
+        http.apply(new CaptchaConfigurer<>());
         http.apply(new UsernamePasswordLoginConfigurer<>());
 
         return http.build();

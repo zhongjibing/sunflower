@@ -7,7 +7,7 @@ import com.icezhg.captcha.impl.ShadowGimpy;
 import com.icezhg.captcha.noise.DefaultNoise;
 import com.icezhg.captcha.text.DelegateTextProducer;
 import com.icezhg.captcha.text.TextProducer;
-import com.icezhg.sunflower.security.filter.CaptchaFilter;
+import com.icezhg.sunflower.security.captcha.CaptchaFilter;
 import org.springframework.security.config.annotation.web.HttpSecurityBuilder;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;

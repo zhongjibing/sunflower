@@ -1,8 +1,9 @@
-package com.icezhg.sunflower.security.filter;
+package com.icezhg.sunflower.security.captcha;
 
 import com.alibaba.fastjson2.JSONObject;
 import com.icezhg.captcha.Captcha;
 import com.icezhg.captcha.CaptchaProducer;
+import com.icezhg.sunflower.util.ApplicationContextUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletOutputStream;
@@ -11,8 +12,12 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEvent;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.util.Assert;
@@ -49,12 +54,12 @@ public class CaptchaFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
-                                    FilterChain filterChain) throws ServletException, IOException {
+            FilterChain filterChain) throws ServletException, IOException {
         if (LOGIN_REQUEST_MATCHER.matches(request)) {
             if (validateCaptcha(request)) {
                 filterChain.doFilter(request, response);
             } else {
-                handleInvalidCaptchaCode(request, response);
+                handleBadCaptcha(request, response);
             }
         } else if (CAPTCHA_REQUEST_MATCHER.matches(request)) {
             sendCaptchaImage(request, response);
@@ -63,25 +68,24 @@ public class CaptchaFilter extends OncePerRequestFilter {
         }
     }
 
-    private void handleInvalidCaptchaCode(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        response.setContentType(MediaType.TEXT_PLAIN_VALUE);
-        response.setStatus(HttpStatus.FORBIDDEN.value());
-        try (ServletOutputStream out = response.getOutputStream()) {
-            out.print("bad captcha code");
-            out.flush();
-        }
+    private void handleBadCaptcha(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.addHeader("X-Captcha-Matched", "false");
+        response.sendError(HttpStatus.FORBIDDEN.value(), "Bad captcha");
+
+        String username = request.getParameter(UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_USERNAME_KEY);
+        Authentication authentication = UsernamePasswordAuthenticationToken.unauthenticated(username, "");
+        ApplicationEvent badCaptchaEvent = new AuthenticationFailureBadCaptchaEvent(authentication);
+        ApplicationContextUtil.publishEvent(badCaptchaEvent);
     }
 
     private boolean validateCaptcha(HttpServletRequest request) {
         String validateCode = request.getParameter(REQUEST_PARAM_VALIDATE_CODE);
-        log.info("captcha code: {}", validateCode);
         if (!StringUtils.hasText(validateCode)) {
             return false;
         }
 
         Object obj = request.getSession().getAttribute(SESSION_KEY_CAPTCHA_CODE);
         String code = obj != null ? String.valueOf(obj) : null;
-        log.info("captcha session code: {}", code);
         // 验证码清除，防止多次使用。
         request.getSession().removeAttribute(SESSION_KEY_CAPTCHA_CODE);
         if (code != null) {
@@ -89,7 +93,6 @@ public class CaptchaFilter extends OncePerRequestFilter {
                 return false;
             }
             code = code.substring(0, code.indexOf("@"));
-            log.info("captcha compare code: {}", code);
         }
         return validateCode.equalsIgnoreCase(code);
     }

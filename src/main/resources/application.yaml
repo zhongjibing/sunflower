@@ -2,6 +2,10 @@ server:
   port: 13520
   servlet:
     context-path: /sunflower
+    session:
+      cookie:
+        same-site: none
+        secure: true
 spring:
   application:
     name: sunflower

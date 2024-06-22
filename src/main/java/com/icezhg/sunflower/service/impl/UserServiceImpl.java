@@ -8,6 +8,7 @@ import com.icezhg.sunflower.domain.AvatarPicture;
 import com.icezhg.sunflower.domain.IpLocation;
 import com.icezhg.sunflower.domain.Role;
 import com.icezhg.sunflower.domain.User;
+import com.icezhg.sunflower.pojo.MenuInfo;
 import com.icezhg.sunflower.pojo.UserInfo;
 import com.icezhg.sunflower.pojo.UserPasswd;
 import com.icezhg.sunflower.pojo.UserStatus;
@@ -17,6 +18,7 @@ import com.icezhg.sunflower.security.UserDetail;
 import com.icezhg.sunflower.service.AvatarPictureService;
 import com.icezhg.sunflower.service.ConfigService;
 import com.icezhg.sunflower.service.IpLocationService;
+import com.icezhg.sunflower.service.MenuService;
 import com.icezhg.sunflower.service.RoleService;
 import com.icezhg.sunflower.service.UserService;
 import com.icezhg.sunflower.util.IPAddressUtil;
@@ -36,12 +38,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * Created by zhongjibing on 2023/06/20.
@@ -52,6 +54,8 @@ public class UserServiceImpl implements UserService {
     private UserDao userDao;
 
     private RoleService roleService;
+
+    private MenuService menuService;
 
     private IpLocationService ipLocationService;
 
@@ -70,6 +74,11 @@ public class UserServiceImpl implements UserService {
     @Autowired
     public void setRoleService(RoleService roleService) {
         this.roleService = roleService;
+    }
+
+    @Autowired
+    public void setMenuService(MenuService menuService) {
+        this.menuService = menuService;
     }
 
     @Autowired
@@ -99,9 +108,6 @@ public class UserServiceImpl implements UserService {
             throw new UsernameNotFoundException("'" + username + "' is not exist!");
         }
 
-        List<Role> roles = roleService.findUserRoles(user.getId());
-        Set<GrantedAuthority> authorities = roles.stream().map(this::buildAuthority).collect(Collectors.toSet());
-
         return UserDetail.builder()
                 .id(String.valueOf(user.getId()))
                 .username(user.getUsername())
@@ -115,12 +121,35 @@ public class UserServiceImpl implements UserService {
                 .avatar(user.getAvatar())
                 .createTime(String.valueOf(user.getCreateTime().getTime()))
                 .updateTime(String.valueOf(user.getUpdateTime().getTime()))
-                .authorities(authorities)
+                .authorities(buildAuthority(user.getId()))
                 .accountNonExpired(user.accountNonExpired())
                 .accountNonLocked(user.accountNonLocked())
                 .credentialsNonExpired(user.credentialsNonExpired())
                 .attributes(attributeMap())
                 .build();
+    }
+
+    private Set<GrantedAuthority> buildAuthority(Long userId) {
+        Set<GrantedAuthority> authorities = new HashSet<>();
+        List<Role> roles = roleService.findUserRoles(userId);
+        roles.forEach(role -> authorities.add(buildAuthority(role)));
+
+        if (User.isRoot(userId)) {
+            authorities.add(new SimpleGrantedAuthority(Constant.ALL_PRIVILEGES));
+        } else {
+            List<MenuInfo> userMenus = menuService.listUserRoleMenus(userId);
+            for (MenuInfo menu : userMenus) {
+                if (StringUtils.isNotBlank(menu.getPerms())) {
+                    authorities.add(new SimpleGrantedAuthority(menu.getPerms()));
+                }
+            }
+        }
+
+        if (authorities.isEmpty()) {
+            authorities.add(buildAuthority(Constant.DEFAULT_ROLE));
+        }
+
+        return authorities;
     }
 
     private GrantedAuthority buildAuthority(Role role) {
@@ -170,7 +199,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @org.springframework.transaction.annotation.Transactional
+    @Transactional
     public UserInfo save(UserInfo userInfo) {
         AvatarPicture avatarPicture = defaultAvatarPicture();
         avatarPictureService.create(avatarPicture);
@@ -188,6 +217,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserInfo update(UserInfo userInfo) {
+        SecurityUtil.checkExceedAuthority(userInfo.getId());
+
         User existing = buildUser(userInfo, false);
         existing.setUpdateTime(new Date());
         existing.setUpdateBy(SecurityUtil.currentUserName());
@@ -211,6 +242,7 @@ public class UserServiceImpl implements UserService {
         user.setMobile(userInfo.getMobile());
         user.setRemark(userInfo.getRemark());
         if (newUser) {
+            user.setId(null);
             user.setPassword(passwordEncoder.encode(defaultPasswd()));
             Calendar calendar = Calendar.getInstance();
             calendar.add(Calendar.YEAR, 1);
@@ -258,6 +290,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public int changeStatus(UserStatus userStatus) {
+        SecurityUtil.checkExceedAuthority(userStatus.userId());
+
         User user = new User();
         user.setId(userStatus.userId());
         user.setAccountLocked(userStatus.status());
@@ -268,6 +302,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserInfo findById(Long userId) {
+        SecurityUtil.checkExceedAuthority(userId);
+
         User user = userDao.findUserById(userId);
         if (user == null) {
             return null;
@@ -278,6 +314,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public int resetPasswd(UserPasswd userPasswd) {
+        SecurityUtil.checkExceedAuthority(userPasswd.userId());
+
         User user = new User();
         user.setId(userPasswd.userId());
         user.setPassword(passwordEncoder.encode(userPasswd.passwd()));

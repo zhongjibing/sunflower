@@ -36,7 +36,7 @@ public class RequestRateLimitFilter extends OncePerRequestFilter {
         Set<RequestLimitRule> loginRateRules = Collections.singleton(RequestLimitRule.of(Duration.ofSeconds(5), 1));
         loginRateLimiter = new InMemorySlidingWindowRequestRateLimiter(loginRateRules);
 
-        Set<RequestLimitRule> commonRateRules = Collections.singleton(RequestLimitRule.of(Duration.ofSeconds(5), 10));
+        Set<RequestLimitRule> commonRateRules = Collections.singleton(RequestLimitRule.of(Duration.ofSeconds(5), 20));
         commonRateLimiter = new InMemorySlidingWindowRequestRateLimiter(commonRateRules);
     }
 

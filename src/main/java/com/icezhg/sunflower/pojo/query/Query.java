@@ -1,6 +1,7 @@
 package com.icezhg.sunflower.pojo.query;
 
 
+import com.icezhg.sunflower.util.SecurityUtil;
 import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Field;
@@ -13,6 +14,7 @@ import java.util.Map;
 public interface Query {
     default Map<String, Object> toMap() {
         Map<String, Object> map = new HashMap<>();
+        map.put("isRoot", SecurityUtil.isRootUser());
         map.put("isFuzzyQuery", isFuzzyQuery());
         addFieldValues(this.getClass(), map);
 

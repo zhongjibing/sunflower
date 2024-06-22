@@ -51,7 +51,7 @@ public class AuthenticationFailureEventListener implements ApplicationListener<A
         if (event.getAuthentication() instanceof UsernamePasswordAuthenticationToken authenticationToken) {
             if (authenticationToken.getPrincipal() instanceof String username) {
                 Map<String, String> attribute = attributeMap();
-                Long userId = Optional.ofNullable(userService.findUserByUsername(username)).map(User::getId).orElse(-1L);
+                Long userId = Optional.ofNullable(userService.findUserByUsername(username)).map(User::getId).orElse(Constant.UNKNOWN_USER_ID);
                 loginRecordService.saveLoginInfo(userId, username, Constant.LOGIN_FAILURE, event.getException().getMessage(), attribute);
             }
         }

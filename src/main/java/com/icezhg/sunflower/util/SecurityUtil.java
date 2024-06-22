@@ -1,12 +1,16 @@
 package com.icezhg.sunflower.util;
 
+import com.icezhg.sunflower.common.Constant;
+import com.icezhg.sunflower.domain.User;
 import com.icezhg.sunflower.security.UserDetail;
 import com.icezhg.sunflower.security.UserInfo;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.csrf.CsrfToken;
@@ -16,7 +20,7 @@ import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import java.util.List;
+import java.util.Set;
 
 public class SecurityUtil {
 
@@ -32,13 +36,27 @@ public class SecurityUtil {
         return true;
     }
 
+    public static void checkExceedAuthority(Long userId) {
+        if (isRootUser(userId) && !isRootUser()) {
+            throw new AccessDeniedException("Access denied");
+        }
+    }
+
+    public static boolean isRootUser() {
+        return isRootUser(currentUserId());
+    }
+
+    public static boolean isRootUser(Long userId) {
+        return User.isRoot(userId);
+    }
+
     public static Long currentUserId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.getPrincipal() instanceof UserDetail detail) {
             String userId = detail.getId();
-            return StringUtils.hasText(userId) ? NumberUtils.parseNumber(userId, Long.class) : null;
+            return StringUtils.hasText(userId) ? NumberUtils.parseNumber(userId, Long.class) : Constant.UNKNOWN_USER_ID;
         }
-        return null;
+        return Constant.UNKNOWN_USER_ID;
     }
 
     public static String currentUserName() {
@@ -50,30 +68,36 @@ public class SecurityUtil {
         return "anonymousUser";
     }
 
-    public static UserInfo currentUserInfo() {
+    public static UserDetail currentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.getPrincipal() instanceof UserDetail detail) {
-            return UserInfo.builder()
-                    .id(detail.getId())
-                    .username(detail.getUsername())
-                    .name(detail.getName())
-                    .nickname(detail.getNickname())
-                    .gender(detail.getGender())
-                    .birthdate(detail.getBirthdate())
-                    .picture(detail.getAvatar())
-                    .email(detail.getEmail())
-                    .mobile(detail.getMobile())
-                    .createTime(detail.getCreateTime())
-                    .updateTime(detail.getUpdateTime())
-                    .authorities(detail.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList())
-                    .build();
+            return detail;
         }
 
-        return UserInfo.builder()
-                .id("")
+        return UserDetail.builder()
+                .id(String.valueOf(Constant.UNKNOWN_USER_ID))
                 .name("anonymousUser")
-                .authorities(List.of("ROLE_ANONYMOUS"))
+                .authorities(Set.of(new SimpleGrantedAuthority("ROLE_ANONYMOUS")))
                 .build();
+    }
+
+    public static UserInfo currentUserInfo() {
+        UserDetail detail = currentUser();
+        return UserInfo.builder()
+                .id(detail.getId())
+                .username(detail.getUsername())
+                .name(detail.getName())
+                .nickname(detail.getNickname())
+                .gender(detail.getGender())
+                .birthdate(detail.getBirthdate())
+                .picture(detail.getAvatar())
+                .email(detail.getEmail())
+                .mobile(detail.getMobile())
+                .createTime(detail.getCreateTime())
+                .updateTime(detail.getUpdateTime())
+                .authorities(detail.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList())
+                .build();
+
     }
 
 

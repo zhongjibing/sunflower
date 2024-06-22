@@ -9,6 +9,12 @@ public interface Constant {
 
     String ROLE_PREFIX = "ROLE_";
 
+    String ALL_PRIVILEGES = "*:*:*";
+
+    String DEFAULT_ROLE = "default";
+
+    long UNKNOWN_USER_ID = -1L;
+
     int TOKEN_EXPIRE_SECONDS = 30 * 60;
 
     long TOKEN_EXPIRE_MILLIS = TOKEN_EXPIRE_SECONDS * 1000L;

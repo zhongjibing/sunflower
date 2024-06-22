@@ -4,10 +4,8 @@ package com.icezhg.sunflower.service.impl;
 import com.icezhg.commons.exception.InvalidDataStateException;
 import com.icezhg.sunflower.common.Constant;
 import com.icezhg.sunflower.dao.MenuDao;
-import com.icezhg.sunflower.dao.RoleDao;
 import com.icezhg.sunflower.dao.RoleMenuDao;
 import com.icezhg.sunflower.domain.Menu;
-import com.icezhg.sunflower.domain.Role;
 import com.icezhg.sunflower.domain.User;
 import com.icezhg.sunflower.pojo.MenuInfo;
 import com.icezhg.sunflower.pojo.MenuTree;
@@ -33,13 +31,10 @@ public class MenuServiceImpl implements MenuService {
 
     private final MenuDao menuDao;
 
-    private final RoleDao roleDao;
-
     private final RoleMenuDao roleMenuDao;
 
-    public MenuServiceImpl(MenuDao menuDao, RoleDao roleDao, RoleMenuDao roleMenuDao) {
+    public MenuServiceImpl(MenuDao menuDao, RoleMenuDao roleMenuDao) {
         this.menuDao = menuDao;
-        this.roleDao = roleDao;
         this.roleMenuDao = roleMenuDao;
     }
 
@@ -66,10 +61,15 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     public List<MenuInfo> listRoleMenus() {
+        return listUserRoleMenus(SecurityUtil.currentUserId());
+    }
+
+    @Override
+    public List<MenuInfo> listUserRoleMenus(Long userId) {
         MenuQuery query = new MenuQuery();
         query.setStatus(Constant.NORMAL);
 
-        Long userId = SecurityUtil.currentUserId();
+        userId = userId != null ? userId : Constant.UNKNOWN_USER_ID;
         if (!isAdminRole(userId)) {
             query.setUserId(userId);
         }
@@ -80,12 +80,6 @@ public class MenuServiceImpl implements MenuService {
     private boolean isAdminRole(Long userId) {
         if (User.isRoot(userId)) {
             return true;
-        }
-        List<Role> roles = roleDao.findAuthRoles(userId);
-        for (Role role : roles) {
-            if (role.isAdmin()) {
-                return true;
-            }
         }
         return false;
     }

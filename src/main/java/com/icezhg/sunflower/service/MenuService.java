@@ -19,6 +19,8 @@ public interface MenuService {
 
     List<MenuInfo> listRoleMenus();
 
+    List<MenuInfo> listUserRoleMenus(Long userId);
+
     List<MenuTree> buildMenuTreeSelect();
 
     List<MenuTree> buildMenuTree(List<MenuInfo> menus);

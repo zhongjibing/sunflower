@@ -168,7 +168,9 @@
 
     <sql id="findCondition">
         <where>
-            id > 0 and default_user = 0
+            <if test="!isRoot">
+                and (id > 0 and default_user = 0)
+            </if>
             <if test="name != null">
                 and (
                     LOCATE(#{name,jdbcType=VARCHAR}, username) > 0

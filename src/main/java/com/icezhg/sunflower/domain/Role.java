@@ -39,11 +39,18 @@ public class Role extends BaseEntity {
     private Integer dataScope;
 
     /**
+     * 菜单树选择项是否关联显示
+     */
+    private Integer menuCheckStrictly;
+
+    /**
+     * 部门树选择项是否关联显示
+     */
+    private Integer deptCheckStrictly;
+
+    /**
      * 角色状态（0正常 1停用）
      */
     private String status;
 
-    public boolean isAdmin() {
-        return id != null && id == 1;
-    }
 }

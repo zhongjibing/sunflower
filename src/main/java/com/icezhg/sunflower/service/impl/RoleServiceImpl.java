@@ -1,5 +1,6 @@
 package com.icezhg.sunflower.service.impl;
 
+import com.icezhg.sunflower.common.Constant;
 import com.icezhg.sunflower.dao.RoleDao;
 import com.icezhg.sunflower.dao.RoleMenuDao;
 import com.icezhg.sunflower.domain.Role;
@@ -125,6 +126,8 @@ public class RoleServiceImpl implements RoleService {
         newRole.setRoleKey(role.getRoleKey());
         newRole.setRoleSort(role.getRoleSort());
         newRole.setDataScope(role.getDataScope());
+        newRole.setMenuCheckStrictly(role.isMenuCheckStrictly() ? Constant.YES : Constant.NO);
+        newRole.setDeptCheckStrictly(role.isDeptCheckStrictly() ? Constant.YES : Constant.NO);
         newRole.setStatus(role.getStatus());
         newRole.setRemark(role.getRemark());
         return newRole;
@@ -138,6 +141,8 @@ public class RoleServiceImpl implements RoleService {
             roleInfo.setRoleKey(role.getRoleKey());
             roleInfo.setRoleSort(role.getRoleSort());
             roleInfo.setDataScope(role.getDataScope());
+            roleInfo.setMenuCheckStrictly(role.getMenuCheckStrictly() == Constant.YES);
+            roleInfo.setDeptCheckStrictly(role.getDeptCheckStrictly() == Constant.YES);
             roleInfo.setStatus(role.getStatus());
             roleInfo.setRemark(role.getRemark());
         }

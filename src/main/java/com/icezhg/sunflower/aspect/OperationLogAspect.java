@@ -3,7 +3,6 @@ package com.icezhg.sunflower.aspect;
 
 import com.icezhg.sunflower.annotation.Operation;
 import com.icezhg.sunflower.common.Constant;
-import com.icezhg.sunflower.common.SessionKey;
 import com.icezhg.sunflower.domain.OperationLog;
 import com.icezhg.sunflower.service.OperationLogService;
 import com.icezhg.sunflower.util.JsonUtil;
@@ -12,7 +11,6 @@ import com.icezhg.sunflower.util.SecurityUtil;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -27,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by zhongjibing on 2022/12/23.
@@ -84,12 +83,11 @@ public class OperationLogAspect {
         if (request != null) {
             operationLog.setRequestMethod(request.getMethod());
             operationLog.setRequestUrl(request.getRequestURI());
-            HttpSession session = request.getSession(false);
-            if (session != null && session.getAttribute(SessionKey.REQUEST_IP) != null) {
-                operationLog.setRequestIp((String) session.getAttribute(SessionKey.REQUEST_IP));
-                operationLog.setRequestLocation((String) session.getAttribute(SessionKey.REQUEST_LOCATION));
-            }
         }
+
+        Map<String, String> attributes = SecurityUtil.currentUser().getAttributes();
+        operationLog.setRequestIp(attributes.get(Constant.ATTRIBUTE_IP));
+        operationLog.setRequestLocation(attributes.get(Constant.ATTRIBUTE_IP_LOCATION));
 
         operationLogService.addLog(operationLog);
     }

@@ -42,6 +42,16 @@ public class RoleInfo {
     private Integer dataScope;
 
     /**
+     * 菜单树选择项是否关联显示
+     */
+    private boolean menuCheckStrictly;
+
+    /**
+     * 部门树选择项是否关联显示
+     */
+    private boolean deptCheckStrictly;
+
+    /**
      * 角色状态（0正常 1停用）
      */
     private String status;

@@ -45,7 +45,7 @@ public class LoginRecordServiceImpl implements LoginRecordService {
                 status, msg, attributes);
 
         LoginRecord loginRecord = new LoginRecord();
-        loginRecord.setUserId(userId != null ? userId : -1L);
+        loginRecord.setUserId(userId != null ? userId : Constant.UNKNOWN_USER_ID);
         loginRecord.setUsername(username);
         loginRecord.setLoginTime(new Date());
         loginRecord.setStatus(status);

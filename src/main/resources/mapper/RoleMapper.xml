@@ -3,8 +3,8 @@
 <mapper namespace="com.icezhg.sunflower.dao.RoleDao">
     <sql id="BaseColumns">
         id,name,role_key,
-        role_sort,data_scope,
-        status,create_by,
+        role_sort,data_scope,menu_check_strictly,
+        dept_check_strictly,status,create_by,
         create_time,update_by,update_time,
         remark
     </sql>
@@ -17,6 +17,8 @@
             <if test="roleKey != null">role_key,</if>
             <if test="roleSort != null">role_sort,</if>
             <if test="dataScope != null">data_scope,</if>
+            <if test="menuCheckStrictly != null">menu_check_strictly,</if>
+            <if test="deptCheckStrictly != null">dept_check_strictly,</if>
             <if test="status != null">status,</if>
             <if test="createBy != null">create_by,</if>
             <if test="createTime != null">create_time,</if>
@@ -30,6 +32,8 @@
             <if test="roleKey != null">#{roleKey,jdbcType=VARCHAR},</if>
             <if test="roleSort != null">#{roleSort,jdbcType=INTEGER},</if>
             <if test="dataScope != null">#{dataScope,jdbcType=TINYINT},</if>
+            <if test="menuCheckStrictly != null">#{menuCheckStrictly,jdbcType=TINYINT},</if>
+            <if test="deptCheckStrictly != null">#{deptCheckStrictly,jdbcType=TINYINT},</if>
             <if test="status != null">#{status,jdbcType=CHAR},</if>
             <if test="createBy != null">#{createBy,jdbcType=VARCHAR},</if>
             <if test="createTime != null">#{createTime,jdbcType=TIMESTAMP},</if>
@@ -53,6 +57,12 @@
             </if>
             <if test="dataScope != null">
                 data_scope = #{dataScope,jdbcType=TINYINT},
+            </if>
+            <if test="menuCheckStrictly != null">
+                menu_check_strictly = #{menuCheckStrictly,jdbcType=TINYINT},
+            </if>
+            <if test="deptCheckStrictly != null">
+                dept_check_strictly = #{deptCheckStrictly,jdbcType=TINYINT},
             </if>
             <if test="status != null">
                 status = #{status,jdbcType=CHAR},

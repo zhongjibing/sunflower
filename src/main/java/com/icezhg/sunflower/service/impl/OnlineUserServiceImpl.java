@@ -4,12 +4,16 @@ package com.icezhg.sunflower.service.impl;
 import com.icezhg.commons.util.OptRef;
 import com.icezhg.sunflower.common.CacheKey;
 import com.icezhg.sunflower.common.Constant;
+import com.icezhg.sunflower.domain.Session;
 import com.icezhg.sunflower.pojo.OnlineUser;
 import com.icezhg.sunflower.pojo.PageResult;
 import com.icezhg.sunflower.pojo.query.OnlineUserQuery;
 import com.icezhg.sunflower.security.UserDetail;
 import com.icezhg.sunflower.service.OnlineUserService;
+import com.icezhg.sunflower.service.SessionService;
+import com.icezhg.sunflower.util.SecurityUtil;
 import eu.bitwalker.useragentutils.UserAgent;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
@@ -46,6 +50,8 @@ public class OnlineUserServiceImpl implements OnlineUserService {
 
     private RedissonClient redissonClient;
 
+    private SessionService sessionService;
+
     public OnlineUserServiceImpl(RedisTemplate<Object, Object> redisTemplate) {
         this.redisTemplate = redisTemplate;
     }
@@ -55,8 +61,15 @@ public class OnlineUserServiceImpl implements OnlineUserService {
         this.redissonClient = redissonClient;
     }
 
+    @Autowired
+    public void setSessionService(SessionService sessionService) {
+        this.sessionService = sessionService;
+    }
+
     @Override
     public PageResult listOnlineUsers(OnlineUserQuery query) {
+        int total = this.sessionService.count(query);
+        List<Session> sessions = this.sessionService.find(query);
         Object cache = redisTemplate.opsForValue().get(CacheKey.ONLINE_USERS);
         if (cache != null) {
             @SuppressWarnings("unchecked")
@@ -66,6 +79,29 @@ public class OnlineUserServiceImpl implements OnlineUserService {
         }
 
         return buildPageResult(buildOnlineUsers(), query);
+    }
+
+    private List<OnlineUser> buildOnlineUser(List<Session> sessions) {
+        if (CollectionUtils.isEmpty(sessions)) {
+            return Collections.emptyList();
+        }
+
+        List<Object> accessedTimes = redisTemplate.executePipelined((RedisCallback<Object>) connection -> {
+            RedisSerializer<String> serializer = RedisSerializer.string();
+            byte[] field = serializer.serialize(CacheKey.SESSION_FIELD_LAST_ACCESSED_TIME);
+            sessions.forEach(session-> {
+                byte[] key = serializer.serialize(CacheKey.SESSION_KEY_PREFIX + session.getSessionId());
+                assert key != null && field != null;
+                connection.hashCommands().hGet(key, field);
+                connection.hashCommands().hGet(serializer.serialize("test"), field);
+            });
+            return null;
+        });
+
+        for (int i = 0; i < sessions.size(); i++) {
+            System.out.println(accessedTimes.get(i));
+        }
+        return new ArrayList<>();
     }
 
     @SuppressWarnings("unchecked")
@@ -115,6 +151,10 @@ public class OnlineUserServiceImpl implements OnlineUserService {
                 OnlineUser onlineUser = buildOnlineUser(detail);
                 String sessionId = StringUtils.substringAfterLast(keyList.get(i), ":");
                 onlineUser.setSessionId(sessionId);
+
+                if (SecurityUtil.isRootUser(onlineUser.getId()) && !SecurityUtil.isRootUser()) {
+                    continue;
+                }
 
                 if (StringUtils.isNotEmpty(onlineUser.getId())) {
                     onlineUsers.add(onlineUser);

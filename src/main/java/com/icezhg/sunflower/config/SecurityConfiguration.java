@@ -1,5 +1,6 @@
 package com.icezhg.sunflower.config;
 
+import com.icezhg.sunflower.security.configurer.AuthenticatedRequestConfigurer;
 import com.icezhg.sunflower.security.configurer.CaptchaConfigurer;
 import com.icezhg.sunflower.security.configurer.UsernamePasswordLoginConfigurer;
 import org.springframework.context.annotation.Bean;
@@ -48,6 +49,7 @@ public class SecurityConfiguration {
 
         http.apply(new CaptchaConfigurer<>());
         http.apply(new UsernamePasswordLoginConfigurer<>());
+        http.apply(new AuthenticatedRequestConfigurer<>());
 
         return http.build();
     }

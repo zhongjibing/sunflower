@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.icezhg.sunflower.dao.SessionDao">
+
+    <resultMap id="BaseResultMap" type="com.icezhg.sunflower.domain.Session">
+            <id property="id" column="id" jdbcType="VARCHAR"/>
+            <result property="sessionId" column="session_id" jdbcType="VARCHAR"/>
+            <result property="userId" column="user_id" jdbcType="VARCHAR"/>
+            <result property="username" column="username" jdbcType="VARCHAR"/>
+            <result property="name" column="name" jdbcType="VARCHAR"/>
+            <result property="nickname" column="nickname" jdbcType="VARCHAR"/>
+            <result property="avatar" column="avatar" jdbcType="VARCHAR"/>
+            <result property="loginIp" column="login_ip" jdbcType="VARCHAR"/>
+            <result property="loginLocation" column="login_location" jdbcType="VARCHAR"/>
+            <result property="loginTime" column="login_time" jdbcType="TIMESTAMP"/>
+            <result property="lastAccessedTime" column="last_accessed_time" jdbcType="TIMESTAMP"/>
+            <result property="agent" column="agent" jdbcType="VARCHAR"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="BaseColumns">
+        id, session_id, user_id,
+        username, name, nickname,
+        avatar, login_ip, login_location,
+        login_time, last_accessed_time, agent,
+        create_time, update_time
+    </sql>
+
+    <select id="findById" parameterType="string" resultMap="BaseResultMap">
+        select
+        <include refid="BaseColumns" />
+        from sys_session
+        where  id = #{id,jdbcType=VARCHAR} 
+    </select>
+
+    <delete id="deleteById" parameterType="string">
+        delete from sys_session
+        where  id = #{id,jdbcType=VARCHAR} 
+    </delete>
+
+    <delete id="deleteBySessionId" parameterType="string">
+        delete from sys_session
+        where  session_id = #{sessionId,jdbcType=VARCHAR}
+    </delete>
+
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.icezhg.sunflower.domain.Session">
+        insert into sys_session
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="sessionId != null">session_id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="username != null">username,</if>
+            <if test="name != null">name,</if>
+            <if test="nickname != null">nickname,</if>
+            <if test="avatar != null">avatar,</if>
+            <if test="loginIp != null">login_ip,</if>
+            <if test="loginLocation != null">login_location,</if>
+            <if test="loginTime != null">login_time,</if>
+            <if test="lastAccessedTime != null">last_accessed_time,</if>
+            <if test="agent != null">agent,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id,jdbcType=VARCHAR},</if>
+            <if test="sessionId != null">#{sessionId,jdbcType=VARCHAR},</if>
+            <if test="userId != null">#{userId,jdbcType=VARCHAR},</if>
+            <if test="username != null">#{username,jdbcType=VARCHAR},</if>
+            <if test="name != null">#{name,jdbcType=VARCHAR},</if>
+            <if test="nickname != null">#{nickname,jdbcType=VARCHAR},</if>
+            <if test="avatar != null">#{avatar,jdbcType=VARCHAR},</if>
+            <if test="loginIp != null">#{loginIp,jdbcType=VARCHAR},</if>
+            <if test="loginLocation != null">#{loginLocation,jdbcType=VARCHAR},</if>
+            <if test="loginTime != null">#{loginTime,jdbcType=TIMESTAMP},</if>
+            <if test="lastAccessedTime != null">#{lastAccessedTime,jdbcType=TIMESTAMP},</if>
+            <if test="agent != null">#{agent,jdbcType=VARCHAR},</if>
+            <if test="createTime != null">#{createTime,jdbcType=TIMESTAMP},</if>
+            <if test="updateTime != null">#{updateTime,jdbcType=TIMESTAMP},</if>
+        </trim>
+    </insert>
+
+    <update id="updateLastAccessedTime">
+        update sys_session
+        set last_accessed_time = #{lastAccessedTime,jdbcType=TIMESTAMP}
+        where session_id = #{sessionId,jdbcType=VARCHAR}
+    </update>
+
+    <sql id="findCondition">
+        <where>
+            <if test="!isRoot">
+                and user_id > 0
+            </if>
+            <choose>
+                <when test="isFuzzyQuery">
+                    <if test="username != null">
+                        and (
+                            LOCATE(#{username,jdbcType=VARCHAR}, username) > 0
+                            or LOCATE(#{username,jdbcType=VARCHAR}, name) > 0
+                            or LOCATE(#{username,jdbcType=VARCHAR}, nickname) > 0
+                        )
+                    </if>
+                    <if test="loginIp != null">
+                        and (
+                            LOCATE(#{loginIp,jdbcType=VARCHAR}, login_ip) > 0
+                            or LOCATE(#{loginIp,jdbcType=VARCHAR}, login_location) > 0
+                        )
+                    </if>
+                </when>
+                <otherwise>
+                    <if test="username != null">
+                        and username = #{username,jdbcType=VARCHAR}
+                    </if>
+                    <if test="loginIp != null">
+                        and login_ip = #{loginIp,jdbcType=VARCHAR}
+                    </if>
+                </otherwise>
+            </choose>
+        </where>
+    </sql>
+
+    <select id="count" parameterType="map" resultType="int">
+        select
+            count(*)
+        from sys_session
+        <include refid="findCondition" />
+    </select>
+
+    <select id="find" parameterType="map" resultMap="BaseResultMap">
+        select
+            <include refid="BaseColumns"/>
+        from sys_session
+        <include refid="findCondition" />
+        order by create_time desc
+        limit #{offset,jdbcType=INTEGER}, #{pageSize,jdbcType=INTEGER}
+    </select>
+
+</mapper>

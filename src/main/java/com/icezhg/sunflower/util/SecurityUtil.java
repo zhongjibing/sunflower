@@ -6,6 +6,7 @@ import com.icezhg.sunflower.security.UserDetail;
 import com.icezhg.sunflower.security.UserInfo;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -14,8 +15,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.csrf.CsrfToken;
-import org.springframework.util.NumberUtils;
-import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -50,11 +49,15 @@ public class SecurityUtil {
         return User.isRoot(userId);
     }
 
+    public static boolean isRootUser(String userId) {
+        return NumberUtils.isCreatable(userId) && isRootUser(NumberUtils.createLong(userId));
+    }
+
     public static Long currentUserId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.getPrincipal() instanceof UserDetail detail) {
             String userId = detail.getId();
-            return StringUtils.hasText(userId) ? NumberUtils.parseNumber(userId, Long.class) : Constant.UNKNOWN_USER_ID;
+            return NumberUtils.isCreatable(userId) ? NumberUtils.createLong(userId): Constant.UNKNOWN_USER_ID;
         }
         return Constant.UNKNOWN_USER_ID;
     }

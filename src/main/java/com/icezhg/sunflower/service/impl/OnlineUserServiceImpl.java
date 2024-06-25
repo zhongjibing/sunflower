@@ -9,9 +9,15 @@ import com.icezhg.sunflower.pojo.PageResult;
 import com.icezhg.sunflower.pojo.query.OnlineUserQuery;
 import com.icezhg.sunflower.security.UserDetail;
 import com.icezhg.sunflower.service.OnlineUserService;
+import eu.bitwalker.useragentutils.UserAgent;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.RedisSerializer;
@@ -28,15 +34,25 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
 public class OnlineUserServiceImpl implements OnlineUserService {
+    private static final Logger log = LoggerFactory.getLogger(OnlineUserServiceImpl.class);
 
     private final RedisTemplate<Object, Object> redisTemplate;
 
+    private RedissonClient redissonClient;
+
     public OnlineUserServiceImpl(RedisTemplate<Object, Object> redisTemplate) {
         this.redisTemplate = redisTemplate;
+    }
+
+    @Autowired
+    public void setRedissonClient(RedissonClient redissonClient) {
+        this.redissonClient = redissonClient;
     }
 
     @Override
@@ -46,11 +62,37 @@ public class OnlineUserServiceImpl implements OnlineUserService {
             @SuppressWarnings("unchecked")
             List<OnlineUser> onlineUsers = (List<OnlineUser>) cache;
             return buildPageResult(onlineUsers, query);
+
         }
 
-        List<OnlineUser> onlineUsers = listOnlineUsers();
-        redisTemplate.opsForValue().set(CacheKey.ONLINE_USERS, onlineUsers, Duration.ofMinutes(1L));
-        return buildPageResult(onlineUsers, query);
+        return buildPageResult(buildOnlineUsers(), query);
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<OnlineUser> buildOnlineUsers() {
+        RLock lock = redissonClient.getLock(CacheKey.ONLINE_LOCK);
+        try {
+            if (lock.tryLock(1L, TimeUnit.SECONDS)) {
+                try {
+                    Object cache = redisTemplate.opsForValue().get(CacheKey.ONLINE_USERS);
+                    if (cache != null) {
+                        return (List<OnlineUser>) cache;
+                    }
+
+                    List<OnlineUser> onlineUsers = listOnlineUsers();
+                    redisTemplate.opsForValue().set(CacheKey.ONLINE_USERS, onlineUsers, Duration.ofSeconds(20));
+                    return onlineUsers;
+                } finally {
+                    if (lock.isHeldByCurrentThread()) {
+                        lock.unlock();
+                    }
+                }
+            }
+        } catch (InterruptedException e) {
+            log.warn("get lock interrupted: {}", CacheKey.ONLINE_LOCK);
+        }
+
+        return Collections.emptyList();
     }
 
     private List<OnlineUser> listOnlineUsers() {
@@ -104,17 +146,27 @@ public class OnlineUserServiceImpl implements OnlineUserService {
     private void buildBuilder(OnlineUser.OnlineUserBuilder builder, UserDetail userDetail) {
         builder
                 .username(userDetail.getUsername())
+                .name(userDetail.getName())
                 .birthdate(userDetail.getBirthdate())
                 .gender(userDetail.getGender())
                 .loginIp(userDetail.getAttributes().get(Constant.ATTRIBUTE_IP))
+                .loginLocation(userDetail.getAttributes().get(Constant.ATTRIBUTE_IP_LOCATION))
                 .mobile(userDetail.getMobile())
                 .picture(userDetail.getAvatar())
                 .nickname(userDetail.getNickname())
                 .id(userDetail.getId())
                 .email(userDetail.getEmail())
                 .createTime(formatDateTime(userDetail.getCreateTime()))
-                .userAgent(userDetail.getAttributes().get(Constant.ATTRIBUTE_AGENT))
-                .aud(userDetail.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList());
+                .aud(userDetail.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()));
+
+        String agent = userDetail.getAttributes().get(Constant.ATTRIBUTE_AGENT);
+        if (agent != null) {
+            builder.userAgent(agent);
+            UserAgent userAgent = UserAgent.parseUserAgentString(agent);
+            builder.os(userAgent.getOperatingSystem().getName());
+            builder.browser(userAgent.getBrowser().getName());
+        }
+
     }
 
     private PageResult buildPageResult(List<OnlineUser> onlineUsers, OnlineUserQuery query) {

@@ -9,6 +9,7 @@ import io.micrometer.observation.ObservationRegistry;
 import org.aopalliance.intercept.MethodInvocation;
 import org.springframework.aop.Advisor;
 import org.springframework.aop.Pointcut;
+import org.springframework.aop.support.Pointcuts;
 import org.springframework.aop.support.annotation.AnnotationMatchingPointcut;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.ApplicationContext;
@@ -69,10 +70,9 @@ public class SecurityConfiguration {
         return http.build();
     }
 
-//    @Bean
+    //    @Bean
     static Advisor preAuthorizeAuthorizationMethodInterceptor(ObjectProvider<ObservationRegistry> registryProvider,
             ApplicationContext context) {
-
 
         CustomMethodSecurityExpressionHandler handler = new CustomMethodSecurityExpressionHandler();
         handler.setApplicationContext(context);
@@ -80,8 +80,11 @@ public class SecurityConfiguration {
         manager1.setExpressionHandler(handler);
 
         ObservationRegistry registry = registryProvider.getIfAvailable(() -> ObservationRegistry.NOOP);
-        AuthorizationManager<MethodInvocation> manager = registry.isNoop()? manager1 : new ObservationAuthorizationManager<>(registry, manager1);
-        Pointcut pointcut = new AnnotationMatchingPointcut(PreAuthorize.class, true);
+        AuthorizationManager<MethodInvocation> manager = registry.isNoop() ? manager1 :
+                new ObservationAuthorizationManager<>(registry, manager1);
+        Pointcut classPointcut = new AnnotationMatchingPointcut(PreAuthorize.class, true);
+        Pointcut methodPointcut = new AnnotationMatchingPointcut(null, PreAuthorize.class, true);
+        Pointcut pointcut = Pointcuts.union(methodPointcut, classPointcut);
         return new AuthorizationManagerBeforeMethodInterceptor(pointcut, manager);
     }
 

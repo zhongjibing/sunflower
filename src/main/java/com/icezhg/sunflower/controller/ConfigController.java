@@ -2,11 +2,13 @@ package com.icezhg.sunflower.controller;
 
 import com.icezhg.commons.exception.ErrorCodeException;
 import com.icezhg.sunflower.annotation.Operation;
+import com.icezhg.sunflower.common.Authority;
 import com.icezhg.sunflower.enums.OperationType;
 import com.icezhg.sunflower.pojo.ConfigInfo;
 import com.icezhg.sunflower.pojo.PageResult;
 import com.icezhg.sunflower.pojo.query.ConfigQuery;
 import com.icezhg.sunflower.service.ConfigService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,11 +35,13 @@ public class ConfigController {
     }
 
     @GetMapping
+    @PreAuthorize("isAuthenticated()")
     public ConfigInfo query(@RequestParam String key) {
         return configService.findByKey(key);
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('" + Authority.System.Config.ADD + "')")
     @Operation(title = "system config properties addition", type = OperationType.INSERT)
     public ConfigInfo add(@Validated @RequestBody ConfigInfo configInfo) {
         if (!configService.checkUnique(configInfo)) {
@@ -47,6 +51,7 @@ public class ConfigController {
     }
 
     @PutMapping
+    @PreAuthorize("hasAuthority('" + Authority.System.Config.EDIT + "')")
     @Operation(title = "system config properties modification", type = OperationType.UPDATE)
     public ConfigInfo edit(@Validated @RequestBody ConfigInfo configInfo) {
         if (!configService.checkUnique(configInfo)) {
@@ -56,17 +61,20 @@ public class ConfigController {
     }
 
     @DeleteMapping
+    @PreAuthorize("hasAuthority('" + Authority.System.Config.DELETE + "')")
     @Operation(title = "system config properties deletion", type = OperationType.DELETE)
     public int delete(@RequestBody List<Integer> dictTypeIds) {
         return configService.deleteByIds(dictTypeIds);
     }
 
     @GetMapping("/list")
+    @PreAuthorize("hasAuthority('" + Authority.System.Config.QUERY + "')")
     public PageResult list(ConfigQuery query) {
         return new PageResult(configService.count(query), configService.find(query));
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('" + Authority.System.Config.QUERY + "')")
     public ConfigInfo get(@PathVariable Integer id) {
         return configService.findById(id);
     }

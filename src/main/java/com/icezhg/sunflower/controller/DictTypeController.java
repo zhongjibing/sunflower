@@ -7,6 +7,7 @@ import com.icezhg.sunflower.pojo.DictTypeInfo;
 import com.icezhg.sunflower.pojo.PageResult;
 import com.icezhg.sunflower.pojo.query.DictQuery;
 import com.icezhg.sunflower.service.DictTypeService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,6 +33,7 @@ public class DictTypeController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('system:dict:add')")
     @Operation(title = "dict types addition", type = OperationType.INSERT)
     public DictTypeInfo add(@Validated @RequestBody DictTypeInfo typeInfo) {
         if (!dictTypeService.checkUnique(typeInfo)) {
@@ -41,6 +43,7 @@ public class DictTypeController {
     }
 
     @PutMapping
+    @PreAuthorize("hasAuthority('system:dict:edit')")
     @Operation(title = "dict types modification", type = OperationType.UPDATE)
     public DictTypeInfo edit(@Validated @RequestBody DictTypeInfo typeInfo) {
         if (!dictTypeService.checkUnique(typeInfo)) {
@@ -50,22 +53,26 @@ public class DictTypeController {
     }
 
     @DeleteMapping
+    @PreAuthorize("hasAuthority('system:dict:delete')")
     @Operation(title = "dict types deletion", type = OperationType.DELETE)
     public int delete(@RequestBody List<Integer> dictTypeIds) {
         return dictTypeService.deleteByIds(dictTypeIds);
     }
 
     @GetMapping("/list")
+    @PreAuthorize("hasAuthority('system:dict:list')")
     public PageResult list(DictQuery query) {
         return new PageResult(dictTypeService.count(query), dictTypeService.find(query));
     }
 
     @GetMapping("/options")
+    @PreAuthorize("hasAuthority('system:dict:list')")
     public List<DictTypeInfo> listOptions() {
         return dictTypeService.listOptions();
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('system:dict:query')")
     public DictTypeInfo get(@PathVariable Integer id) {
         return dictTypeService.findById(id);
     }

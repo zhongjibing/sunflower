@@ -7,6 +7,7 @@ import com.icezhg.sunflower.pojo.MenuTree;
 import com.icezhg.sunflower.pojo.RoleMenuTree;
 import com.icezhg.sunflower.pojo.query.MenuQuery;
 import com.icezhg.sunflower.service.MenuService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,23 +33,27 @@ public class MenuController {
     }
 
     @GetMapping("/{menuId}")
+    @PreAuthorize("hasAuthority('system:menu:query')")
     public MenuInfo get(@PathVariable Integer menuId) {
         return menuService.findMenu(menuId);
     }
 
     @DeleteMapping("/{menuId}")
+    @PreAuthorize("hasAuthority('system:menu:delete')")
     @Operation(title = "system menus deletion", type = OperationType.DELETE)
     public int delete(@PathVariable Integer menuId) {
         return menuService.delete(menuId);
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('system:menu:add')")
     @Operation(title = "system menus addition", type = OperationType.INSERT)
     public MenuInfo add(@RequestBody MenuInfo menuInfo) {
         return menuService.save(menuInfo);
     }
 
     @PutMapping
+    @PreAuthorize("hasAuthority('system:menu:edit')")
     @Operation(title = "system menus modification", type = OperationType.UPDATE)
     public MenuInfo edit(@RequestBody MenuInfo menuInfo) {
         return menuService.update(menuInfo);
@@ -56,16 +61,19 @@ public class MenuController {
 
 
     @GetMapping("/tree")
+    @PreAuthorize("hasAnyAuthority('system:role:add', 'system:role:edit')")
     public List<MenuTree> roleFilteredMenuTree() {
         return menuService.buildMenuTreeSelect();
     }
 
     @GetMapping("/roleMenuTree/{roleId}")
+    @PreAuthorize("hasAnyAuthority('system:role:add', 'system:role:edit')")
     public RoleMenuTree roleMenuTree(@PathVariable Integer roleId) {
         return menuService.buildRoleMenuTreeSelect(roleId);
     }
 
     @GetMapping("/list")
+    @PreAuthorize("hasAuthority('system:menu:list')")
     public Object list(MenuQuery query) {
         return menuService.list(query);
     }

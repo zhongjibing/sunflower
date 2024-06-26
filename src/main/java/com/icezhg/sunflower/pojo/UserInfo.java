@@ -107,7 +107,7 @@ public class UserInfo {
         Date credentialsCreateTime = credentialsUpdateTime != null ? credentialsUpdateTime : createTime;
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.MONTH, -6);
-        return credentialsCreateTime.getTime() < calendar.getTimeInMillis();
+        return credentialsCreateTime != null && credentialsCreateTime.getTime() < calendar.getTimeInMillis();
     }
 
     public String getAccountLocked() {

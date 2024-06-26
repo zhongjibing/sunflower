@@ -25,7 +25,7 @@ public class LogoutSuccessEventListener implements ApplicationListener<LogoutSuc
     @Override
     public void onApplicationEvent(LogoutSuccessEvent event) {
         if (event.getAuthentication().getDetails() instanceof WebAuthenticationDetails details) {
-            sessionService.deleteBySessionId(details.getSessionId());
+            sessionService.deleteByOldSessionId(details.getSessionId());
         }
     }
 }

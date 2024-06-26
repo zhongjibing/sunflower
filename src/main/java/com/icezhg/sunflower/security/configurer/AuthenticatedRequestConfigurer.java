@@ -26,13 +26,10 @@ public class AuthenticatedRequestConfigurer<B extends HttpSecurityBuilder<B>> ex
         this.requestFilter = new AuthenticatedRequestFilter() {
             @Override
             protected Consumer<HttpServletRequest> requestConsumer() {
-                return new Consumer<HttpServletRequest>() {
-                    @Override
-                    public void accept(HttpServletRequest request) {
-                        HttpSession session = request.getSession(false);
-                        if (session != null) {
-                            service.updateLastAccessedTime(session.getId(), new Date());
-                        }
+                return request -> {
+                    HttpSession session = request.getSession(false);
+                    if (session != null) {
+                        service.updateLastAccessedTime(session.getId(), new Date());
                     }
                 };
             }
@@ -42,6 +39,6 @@ public class AuthenticatedRequestConfigurer<B extends HttpSecurityBuilder<B>> ex
     @Override
     public void configure(B http) throws Exception {
         AuthenticatedRequestFilter filter = postProcess(requestFilter);
-        http.addFilterAfter(requestFilter, SecurityContextHolderFilter.class);
+        http.addFilterAfter(filter, SecurityContextHolderFilter.class);
     }
 }

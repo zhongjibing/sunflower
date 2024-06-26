@@ -90,7 +90,7 @@ public class OnlineUserServiceImpl implements OnlineUserService {
             RedisSerializer<String> serializer = RedisSerializer.string();
             byte[] field = serializer.serialize(CacheKey.SESSION_FIELD_LAST_ACCESSED_TIME);
             sessions.forEach(session-> {
-                byte[] key = serializer.serialize(CacheKey.SESSION_KEY_PREFIX + session.getSessionId());
+                byte[] key = serializer.serialize(CacheKey.SESSION_KEY_PREFIX + session.getNewSessionId());
                 assert key != null && field != null;
                 connection.hashCommands().hGet(key, field);
                 connection.hashCommands().hGet(serializer.serialize("test"), field);

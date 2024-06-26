@@ -13,7 +13,7 @@ import java.util.function.Consumer;
 /**
  * Created by zhongjibing on 2023/06/25.
  */
-public abstract class AuthenticatedRequestFilter extends OncePerRequestFilter {
+public class AuthenticatedRequestFilter extends OncePerRequestFilter {
 
 
     @Override
@@ -29,5 +29,8 @@ public abstract class AuthenticatedRequestFilter extends OncePerRequestFilter {
         chain.doFilter(request, response);
     }
 
-    protected abstract Consumer<HttpServletRequest> requestConsumer();
+    protected Consumer<HttpServletRequest> requestConsumer() {
+        return request -> {
+        };
+    }
 }

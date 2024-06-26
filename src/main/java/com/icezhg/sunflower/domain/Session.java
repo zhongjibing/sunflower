@@ -17,7 +17,12 @@ public class Session {
     /**
      * 会话id
      */
-    private String sessionId;
+    private String oldSessionId;
+
+    /**
+     * 会话id
+     */
+    private String newSessionId;
 
     /**
      * 用户id

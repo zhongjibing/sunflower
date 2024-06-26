@@ -1,17 +1,16 @@
 package com.icezhg.sunflower.service.impl;
 
 import com.icezhg.commons.util.IdGenerator;
-import com.icezhg.sunflower.common.Constant;
 import com.icezhg.sunflower.dao.SessionDao;
 import com.icezhg.sunflower.domain.Session;
 import com.icezhg.sunflower.pojo.query.Query;
-import com.icezhg.sunflower.security.UserDetail;
 import com.icezhg.sunflower.service.SessionService;
-import com.icezhg.sunflower.util.SecurityUtil;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by zhongjibing on 2023/06/25.
@@ -40,27 +39,13 @@ public class SessionServiceImpl implements SessionService {
     }
 
     @Override
-    public void save(UserDetail userDetail) {
-        Session session = new Session();
-        session.setSessionId(SecurityUtil.getSessionId());
-        session.setUserId(userDetail.getId());
-        session.setUsername(userDetail.getUsername());
-        session.setName(userDetail.getName());
-        session.setNickname(userDetail.getNickname());
-        session.setAvatar(userDetail.getAvatar());
-        session.setLoginIp(userDetail.getAttributes().get(Constant.ATTRIBUTE_IP));
-        session.setLoginLocation(userDetail.getAttributes().get(Constant.ATTRIBUTE_IP_LOCATION));
-        session.setAgent(userDetail.getAttributes().get(Constant.ATTRIBUTE_AGENT));
-        session.setLoginTime(new Date());
-        session.setLastAccessedTime(new Date());
-        this.save(session);
-    }
-
-    @Override
-    public void updateLastAccessedTime(String sessionId, Date lastAccessedTime) {
-        if (sessionId != null) {
-            Date time = lastAccessedTime != null ? lastAccessedTime : new Date();
-            this.sessionDao.updateLastAccessedTime(sessionId, time);
+    public void updateLastAccessedTime(String newSessionId, Date lastAccessedTime) {
+        if (newSessionId != null) {
+            Map<String, Object> params = new HashMap<>();
+            params.put("newSessionId", newSessionId);
+            params.put("lastAccessedTime", lastAccessedTime != null ? lastAccessedTime : new Date());
+            params.put("updateTime", new Date());
+            this.sessionDao.updateLastAccessedTime(params);
         }
     }
 
@@ -70,8 +55,8 @@ public class SessionServiceImpl implements SessionService {
     }
 
     @Override
-    public void deleteBySessionId(String sessionId) {
-        this.sessionDao.deleteBySessionId(sessionId);
+    public void deleteByOldSessionId(String oldSessionId) {
+        this.sessionDao.deleteByOldSessionId(oldSessionId);
     }
 
     @Override

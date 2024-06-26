@@ -2,7 +2,6 @@ package com.icezhg.sunflower.service;
 
 import com.icezhg.sunflower.domain.Session;
 import com.icezhg.sunflower.pojo.query.Query;
-import com.icezhg.sunflower.security.UserDetail;
 
 import java.util.Date;
 import java.util.List;
@@ -14,13 +13,11 @@ public interface SessionService {
 
     void save(Session session);
 
-    void save(UserDetail userDetail);
-
-    void updateLastAccessedTime(String sessionId, Date lastAccessedTime);
+    void updateLastAccessedTime(String newSessionId, Date lastAccessedTime);
 
     void delete(String id);
 
-    void deleteBySessionId(String sessionId);
+    void deleteByOldSessionId(String sessionId);
 
     int count(Query query);
 

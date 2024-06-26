@@ -3,7 +3,6 @@ package com.icezhg.sunflower.listener;
 
 import com.icezhg.sunflower.security.UserDetail;
 import com.icezhg.sunflower.service.LoginRecordService;
-import com.icezhg.sunflower.service.SessionService;
 import com.icezhg.sunflower.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
@@ -20,9 +19,6 @@ public class AuthenticationSuccessEventListener implements ApplicationListener<A
 
     private LoginRecordService loginRecordService;
 
-    private SessionService sessionService;
-
-
     @Autowired
     public void setUserService(UserService userService) {
         this.userService = userService;
@@ -33,17 +29,11 @@ public class AuthenticationSuccessEventListener implements ApplicationListener<A
         this.loginRecordService = loginRecordService;
     }
 
-    @Autowired
-    public void setSessionService(SessionService sessionService) {
-        this.sessionService = sessionService;
-    }
-
     @Override
     public void onApplicationEvent(AuthenticationSuccessEvent event) {
         if (event.getAuthentication().getPrincipal() instanceof UserDetail userDetail) {
             userService.updateLastLoginTime(userDetail.getUsername());
             loginRecordService.saveLoginInfo(userDetail.getId(), userDetail.getUsername(), userDetail.getAttributes());
-            sessionService.save(userDetail);
         }
     }
 }

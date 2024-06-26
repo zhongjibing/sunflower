@@ -14,6 +14,8 @@ public interface SessionDao {
 
     int insert(Session session);
 
+    Session findById(String id);
+
     int updateLastAccessedTime(Map<String, Object> params);
 
     int deleteById(String id);

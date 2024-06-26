@@ -8,8 +8,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @Builder
 @NoArgsConstructor
@@ -19,23 +17,19 @@ import java.util.List;
         isGetterVisibility = JsonAutoDetect.Visibility.NONE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class OnlineUser {
-    private String sessionId;
     private String id;
+    private String sessionId;
+    private String userId;
     private String username;
     private String name;
-    private String gender;
-    private String birthdate;
     private String loginIp;
     private String loginLocation;
-    private String mobile;
     private String picture;
     private String nickname;
-    private String email;
-    private String createTime;
     private String lastAccessedTime;
     private String loginTime;
     private String userAgent;
     private String browser;
     private String os;
-    private List<String> aud;
+    private boolean currentSession;
 }

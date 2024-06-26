@@ -22,4 +22,6 @@ public interface SessionService {
     int count(Query query);
 
     List<Session> find(Query query);
+
+    void forceLogout(String id);
 }

@@ -1,4 +1,4 @@
-package com.icezhg.sunflower.controller;
+package com.icezhg.sunflower.controller.system;
 
 import com.icezhg.commons.exception.ErrorCodeException;
 import com.icezhg.sunflower.annotation.Operation;

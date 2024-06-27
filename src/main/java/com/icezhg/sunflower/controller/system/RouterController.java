@@ -1,4 +1,4 @@
-package com.icezhg.sunflower.controller;
+package com.icezhg.sunflower.controller.system;
 
 import com.icezhg.sunflower.pojo.Router;
 import com.icezhg.sunflower.service.RouterService;

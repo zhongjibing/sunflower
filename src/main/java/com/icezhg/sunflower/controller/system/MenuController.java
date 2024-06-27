@@ -1,4 +1,4 @@
-package com.icezhg.sunflower.controller;
+package com.icezhg.sunflower.controller.system;
 
 import com.icezhg.sunflower.annotation.Operation;
 import com.icezhg.sunflower.common.Authority;

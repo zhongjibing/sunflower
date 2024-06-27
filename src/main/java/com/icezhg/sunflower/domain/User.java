@@ -122,14 +122,18 @@ public class User implements Serializable {
     private String remark;
 
     public boolean accountNonExpired() {
-        return deadline == null || deadline.getTime() > Calendar.getInstance().getTimeInMillis();
+        return isRoot() || deadline == null || deadline.getTime() > Calendar.getInstance().getTimeInMillis();
     }
 
     public boolean accountNonLocked() {
-        return accountLocked != null && accountLocked == 0;
+        return isRoot() || accountLocked != null && accountLocked == 0;
     }
 
     public boolean credentialsNonExpired() {
+        if (isRoot()) {
+            return true;
+        }
+
         Date credentialsCreateTime = credentialsUpdateTime != null ? credentialsUpdateTime : createTime;
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.MONTH, -6);

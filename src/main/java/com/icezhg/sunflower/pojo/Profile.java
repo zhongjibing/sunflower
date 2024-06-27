@@ -12,10 +12,6 @@ import java.util.Date;
 @Data
 public class Profile {
 
-    /**
-     * 用户id
-     */
-    private Long id;
 
     /**
      * 用户名

@@ -1,7 +1,9 @@
 package com.icezhg.sunflower.controller;
 
 
+import com.icezhg.sunflower.common.Authority;
 import com.icezhg.sunflower.server.Server;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ServerController {
 
     @GetMapping
+    @Secured(Authority.Monitor.Server.QUERY)
     public Object serverInfo(String name) {
         return StringUtils.hasText(name) ? Server.getInfo(name) : Server.getInfo(Server.ALL);
     }

@@ -5,6 +5,8 @@ package com.icezhg.sunflower.common;
  */
 public interface Authority {
 
+    String AUTHENTICATED = "AUTHENTICATED";
+
     interface System {
 
         interface User {
@@ -45,6 +47,12 @@ public interface Authority {
             String ADD = "system:dict:add";
             String EDIT = "system:dict:edit";
             String DELETE = "system:dict:delete";
+        }
+
+        interface Picture {
+            String QUERY = "system:dict:query";
+            String UPLOAD = "system:dict:query";
+            String DELETE = "system:dict:query";
         }
 
     }

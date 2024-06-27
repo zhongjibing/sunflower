@@ -48,7 +48,6 @@ public class ProfileServiceImpl implements ProfileService {
     public Profile buildProfile() {
         Profile profile = new Profile();
         User user = userDao.findUserById(SecurityUtil.currentUserId());
-        profile.setId(user.getId());
         profile.setUsername(user.getUsername());
         profile.setNickname(user.getNickname());
         profile.setGender(user.getGender());
@@ -58,7 +57,7 @@ public class ProfileServiceImpl implements ProfileService {
         profile.setAvatar(user.getAvatar());
         profile.setCreateTime(user.getCreateTime());
 
-        String roles = roleDao.findAuthRoles(profile.getId()).stream()
+        String roles = roleDao.findAuthRoles(user.getId()).stream()
                 .map(Role::getName)
                 .collect(Collectors.joining(", "));
         profile.setRoles(roles);

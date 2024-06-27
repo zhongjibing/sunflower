@@ -2,6 +2,7 @@ package com.icezhg.sunflower.controller;
 
 import com.icezhg.commons.exception.ErrorCodeException;
 import com.icezhg.sunflower.annotation.Operation;
+import com.icezhg.sunflower.common.Authority;
 import com.icezhg.sunflower.enums.OperationType;
 import com.icezhg.sunflower.pojo.PageResult;
 import com.icezhg.sunflower.pojo.UserAuth;
@@ -11,6 +12,7 @@ import com.icezhg.sunflower.pojo.UserStatus;
 import com.icezhg.sunflower.pojo.query.UserQuery;
 import com.icezhg.sunflower.service.UserRoleService;
 import com.icezhg.sunflower.service.UserService;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,6 +41,7 @@ public class UserController {
     }
 
     @PostMapping
+    @Secured(Authority.System.User.ADD)
     @Operation(title = "users addition", type = OperationType.INSERT, saveResult = false)
     public UserInfo add(@Validated @RequestBody UserInfo user) {
         if (!userService.checkUnique(user)) {
@@ -48,6 +51,7 @@ public class UserController {
     }
 
     @PutMapping
+    @Secured(Authority.System.User.EDIT)
     @Operation(title = "users modification", type = OperationType.UPDATE, saveResult = false)
     public UserInfo edit(@Validated @RequestBody UserInfo user) {
         if (!userService.checkUnique(user)) {
@@ -57,6 +61,7 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
+    @Secured(Authority.System.User.QUERY)
     @Operation(title = "users detail", type = OperationType.QUERY, saveResult = false)
     public UserInfo get(@PathVariable Long userId) {
         return userService.findById(userId);
@@ -64,30 +69,35 @@ public class UserController {
 
 
     @GetMapping("/list")
+    @Secured(Authority.System.User.QUERY)
     @Operation(title = "users list", type = OperationType.LIST, saveResult = false)
     public PageResult list(UserQuery query) {
         return new PageResult(userService.count(query), userService.find(query));
     }
 
     @PutMapping("/changeStatus")
+    @Secured(Authority.System.User.STATUS)
     @Operation(title = "user status change", type = OperationType.UPDATE)
     public int changeStatus(@Validated @RequestBody UserStatus userStatus) {
         return userService.changeStatus(userStatus);
     }
 
     @PutMapping("/resetPasswd")
+    @Secured(Authority.System.User.PWD)
     @Operation(title = "user password reset", type = OperationType.UPDATE, saveParameter = false)
     public int resetPasswd(@Validated @RequestBody UserPasswd userPasswd) {
         return userService.resetPasswd(userPasswd);
     }
 
     @GetMapping("/{userId}/auth")
+    @Secured(Authority.System.User.ASSIGN)
     @Operation(title = "roles for the specified user", type = OperationType.QUERY)
     public UserAuth findUserAuth(@PathVariable Long userId) {
         return userRoleService.findAuth(userId);
     }
 
     @PutMapping("/{userId}/auth")
+    @Secured(Authority.System.User.ASSIGN)
     @Operation(title = "change roles of the specified user", type = OperationType.GRANT)
     public UserAuth updateUserAuth(@PathVariable Long userId, @RequestBody List<Integer> roleIds) {
         return userRoleService.updateUserAuth(userId, roleIds);

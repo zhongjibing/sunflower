@@ -2,12 +2,13 @@ package com.icezhg.sunflower.controller;
 
 import com.icezhg.commons.exception.ErrorCodeException;
 import com.icezhg.sunflower.annotation.Operation;
+import com.icezhg.sunflower.common.Authority;
 import com.icezhg.sunflower.enums.OperationType;
 import com.icezhg.sunflower.pojo.DictTypeInfo;
 import com.icezhg.sunflower.pojo.PageResult;
 import com.icezhg.sunflower.pojo.query.DictQuery;
 import com.icezhg.sunflower.service.DictTypeService;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,7 +34,7 @@ public class DictTypeController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAuthority('system:dict:add')")
+    @Secured(Authority.System.Dict.ADD)
     @Operation(title = "dict types addition", type = OperationType.INSERT)
     public DictTypeInfo add(@Validated @RequestBody DictTypeInfo typeInfo) {
         if (!dictTypeService.checkUnique(typeInfo)) {
@@ -43,7 +44,7 @@ public class DictTypeController {
     }
 
     @PutMapping
-    @PreAuthorize("hasAuthority('system:dict:edit')")
+    @Secured(Authority.System.Dict.EDIT)
     @Operation(title = "dict types modification", type = OperationType.UPDATE)
     public DictTypeInfo edit(@Validated @RequestBody DictTypeInfo typeInfo) {
         if (!dictTypeService.checkUnique(typeInfo)) {
@@ -53,26 +54,26 @@ public class DictTypeController {
     }
 
     @DeleteMapping
-    @PreAuthorize("hasAuthority('system:dict:delete')")
+    @Secured(Authority.System.Dict.DELETE)
     @Operation(title = "dict types deletion", type = OperationType.DELETE)
     public int delete(@RequestBody List<Integer> dictTypeIds) {
         return dictTypeService.deleteByIds(dictTypeIds);
     }
 
     @GetMapping("/list")
-    @PreAuthorize("hasAuthority('system:dict:list')")
+    @Secured(Authority.System.Dict.ADD)
     public PageResult list(DictQuery query) {
         return new PageResult(dictTypeService.count(query), dictTypeService.find(query));
     }
 
     @GetMapping("/options")
-    @PreAuthorize("hasAuthority('system:dict:list')")
+    @Secured(Authority.System.Dict.QUERY)
     public List<DictTypeInfo> listOptions() {
         return dictTypeService.listOptions();
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('system:dict:query')")
+    @Secured(Authority.System.Dict.QUERY)
     public DictTypeInfo get(@PathVariable Integer id) {
         return dictTypeService.findById(id);
     }

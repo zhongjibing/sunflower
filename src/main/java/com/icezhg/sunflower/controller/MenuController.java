@@ -1,13 +1,14 @@
 package com.icezhg.sunflower.controller;
 
 import com.icezhg.sunflower.annotation.Operation;
+import com.icezhg.sunflower.common.Authority;
 import com.icezhg.sunflower.enums.OperationType;
 import com.icezhg.sunflower.pojo.MenuInfo;
 import com.icezhg.sunflower.pojo.MenuTree;
 import com.icezhg.sunflower.pojo.RoleMenuTree;
 import com.icezhg.sunflower.pojo.query.MenuQuery;
 import com.icezhg.sunflower.service.MenuService;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,27 +34,27 @@ public class MenuController {
     }
 
     @GetMapping("/{menuId}")
-    @PreAuthorize("hasAuthority('system:menu:query')")
+    @Secured(Authority.System.Menu.QUERY)
     public MenuInfo get(@PathVariable Integer menuId) {
         return menuService.findMenu(menuId);
     }
 
     @DeleteMapping("/{menuId}")
-    @PreAuthorize("hasAuthority('system:menu:delete')")
+    @Secured(Authority.System.Menu.DELETE)
     @Operation(title = "system menus deletion", type = OperationType.DELETE)
     public int delete(@PathVariable Integer menuId) {
         return menuService.delete(menuId);
     }
 
     @PostMapping
-    @PreAuthorize("hasAuthority('system:menu:add')")
+    @Secured(Authority.System.Menu.ADD)
     @Operation(title = "system menus addition", type = OperationType.INSERT)
     public MenuInfo add(@RequestBody MenuInfo menuInfo) {
         return menuService.save(menuInfo);
     }
 
     @PutMapping
-    @PreAuthorize("hasAuthority('system:menu:edit')")
+    @Secured(Authority.System.Menu.EDIT)
     @Operation(title = "system menus modification", type = OperationType.UPDATE)
     public MenuInfo edit(@RequestBody MenuInfo menuInfo) {
         return menuService.update(menuInfo);
@@ -61,19 +62,19 @@ public class MenuController {
 
 
     @GetMapping("/tree")
-    @PreAuthorize("hasAnyAuthority('system:role:add', 'system:role:edit')")
+    @Secured({Authority.System.Role.ADD, Authority.System.Role.EDIT})
     public List<MenuTree> roleFilteredMenuTree() {
         return menuService.buildMenuTreeSelect();
     }
 
     @GetMapping("/roleMenuTree/{roleId}")
-    @PreAuthorize("hasAnyAuthority('system:role:add', 'system:role:edit')")
+    @Secured({Authority.System.Role.ADD, Authority.System.Role.EDIT})
     public RoleMenuTree roleMenuTree(@PathVariable Integer roleId) {
         return menuService.buildRoleMenuTreeSelect(roleId);
     }
 
     @GetMapping("/list")
-    @PreAuthorize("hasAuthority('system:menu:list')")
+    @Secured(Authority.System.Menu.QUERY)
     public Object list(MenuQuery query) {
         return menuService.list(query);
     }

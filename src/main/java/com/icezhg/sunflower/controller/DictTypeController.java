@@ -61,7 +61,7 @@ public class DictTypeController {
     }
 
     @GetMapping("/list")
-    @Secured(Authority.System.Dict.ADD)
+    @Secured(Authority.System.Dict.QUERY)
     public PageResult list(DictQuery query) {
         return new PageResult(dictTypeService.count(query), dictTypeService.find(query));
     }

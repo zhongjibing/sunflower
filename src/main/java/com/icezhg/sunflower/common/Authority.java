@@ -122,4 +122,27 @@ public interface Authority {
             String DELETE = "resource:room:delete";
         }
     }
+
+    interface Price {
+        interface BanquetHall {
+            String QUERY = "price:banquet:query";
+            String ADD = "price:banquet:add";
+            String EDIT = "price:banquet:edit";
+            String DELETE = "price:banquet:delete";
+        }
+
+        interface ConferenceRoom {
+            String QUERY = "price:conference:query";
+            String ADD = "price:conference:add";
+            String EDIT = "price:conference:edit";
+            String DELETE = "price:conference:delete";
+        }
+
+        interface GuestRoom {
+            String QUERY = "price:room:query";
+            String ADD = "price:room:add";
+            String EDIT = "price:room:edit";
+            String DELETE = "price:room:delete";
+        }
+    }
 }

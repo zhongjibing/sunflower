@@ -25,4 +25,6 @@ public interface SessionDao {
     int count(Map<String, Object> query);
 
     List<Session> find(Map<String, Object> query);
+
+    List<Session> findAllExpired();
 }

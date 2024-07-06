@@ -24,4 +24,6 @@ public interface SessionService {
     List<Session> find(Query query);
 
     void forceLogout(String id);
+
+    void cleanExpired();
 }

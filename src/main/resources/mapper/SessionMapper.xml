@@ -140,4 +140,12 @@
         limit #{offset,jdbcType=INTEGER}, #{pageSize,jdbcType=INTEGER}
     </select>
 
+    <select id="findAllExpired" resultMap="BaseResultMap">
+        select
+            <include refid="BaseColumns"/>
+        from sys_session
+        where last_accessed_time &lt; date_add(now(), interval -30 minute)
+        order by create_time asc
+    </select>
+
 </mapper>

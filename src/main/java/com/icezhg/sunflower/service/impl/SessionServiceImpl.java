@@ -9,7 +9,9 @@ import com.icezhg.sunflower.service.SessionService;
 import com.icezhg.sunflower.util.SecurityUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -93,5 +95,29 @@ public class SessionServiceImpl implements SessionService {
 
         this.redisTemplate.delete(CacheKey.SESSION_KEY_PREFIX + session.getNewSessionId());
         this.sessionDao.deleteById(id);
+    }
+
+    @Override
+    public void cleanExpired() {
+        List<Session> sessions = this.sessionDao.findAllExpired();
+        if (sessions.isEmpty()) {
+            return;
+        }
+
+        List<Object> result = redisTemplate.executePipelined((RedisCallback<Object>) connection -> {
+            RedisSerializer<String> serializer = RedisSerializer.string();
+            sessions.forEach(session -> {
+                byte[] key = serializer.serialize(CacheKey.SESSION_KEY_PREFIX + session.getNewSessionId());
+                assert key != null;
+                connection.keyCommands().exists(key);
+            });
+            return null;
+        });
+
+        for (int i = 0; i < result.size(); i++) {
+            if (result.get(i) instanceof Boolean exist && !exist) {
+                this.sessionDao.deleteById(sessions.get(i).getId());
+            }
+        }
     }
 }

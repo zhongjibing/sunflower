@@ -104,6 +104,7 @@ public class MenuServiceImpl implements MenuService {
                 returnList.add(treeNode);
             }
         }
+        returnList.sort(Comparator.comparingInt(menuTree -> menuTree.getMenu().getOrderNum()));
         return returnList;
     }
 

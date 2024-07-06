@@ -6,13 +6,17 @@ import com.icezhg.sunflower.pojo.MenuTree;
 import com.icezhg.sunflower.pojo.Router;
 import com.icezhg.sunflower.service.MenuService;
 import com.icezhg.sunflower.service.RouterService;
+import com.icezhg.sunflower.util.SecurityUtil;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -30,22 +34,25 @@ public class RouterServiceImpl implements RouterService {
 
     @Override
     public List<Router> listRouters() {
-        List<MenuTree> menuTrees = menuService.buildMenuTreeSelect();
-        return buildRouters(menuTrees);
+        boolean isRootUser = SecurityUtil.isRootUser();
+        List<MenuTree> menuTrees = menuService.buildMenuTreeSelect().stream()
+                .filter(tree -> isRootUser || Constant.NORMAL.equals(tree.getMenu().getStatus()))
+                .toList();
+
+        Map<Integer, MenuTree> menuTreeMap = new HashMap<>();
+        menuTrees.stream().map(this::getMenuTreeMap).forEach(menuTreeMap::putAll);
+        return buildRouters(menuTrees, menuTreeMap);
     }
 
-    private List<Router> buildRouters(List<MenuTree> menuTrees) {
-        return menuTrees.stream()
-                .filter(tree -> Constant.NORMAL.equals(tree.getMenu().getStatus()))
-                .map(this::buildRouters)
-                .collect(Collectors.toList());
+    private List<Router> buildRouters(List<MenuTree> menuTrees, Map<Integer, MenuTree> treeMap) {
+        return menuTrees.stream().map(tree -> buildRouters(tree, treeMap)).collect(Collectors.toList());
     }
 
-    private Router buildRouters(MenuTree tree) {
+    private Router buildRouters(MenuTree tree, Map<Integer, MenuTree> treeMap) {
         MenuInfo menu = tree.getMenu();
         Router router = new Router();
         router.setHidden(isHidden(menu));
-        router.setName(getRouteName(menu));
+        router.setName(getRouteName(menu, treeMap));
         router.setPath(getRouterPath(menu));
         router.setComponent(getComponent(menu));
         router.setQuery(menu.getQuery());
@@ -54,7 +61,7 @@ public class RouterServiceImpl implements RouterService {
         if (!CollectionUtils.isEmpty(cMenus) && Constant.TYPE_DIR.equals(menu.getType())) {
             router.setAlwaysShow(true);
             router.setRedirect("noRedirect");
-            router.setChildren(buildRouters(cMenus));
+            router.setChildren(buildRouters(cMenus, treeMap));
         } else if (isMenuNonFrame(menu)) {
             router.setMeta(null);
             List<Router> childrenList = new ArrayList<>();
@@ -83,16 +90,34 @@ public class RouterServiceImpl implements RouterService {
         return router;
     }
 
+    private Map<Integer, MenuTree> getMenuTreeMap(MenuTree tree) {
+        Map<Integer, MenuTree> menuTreeMap = new HashMap<>();
+        menuTreeMap.put(tree.getId(), tree);
+        if (CollectionUtils.isNotEmpty(tree.getChildren())) {
+            tree.getChildren().forEach(child -> menuTreeMap.putAll(getMenuTreeMap(child)));
+        }
+        return menuTreeMap;
+    }
+
     /**
      * 获取路由名称
      */
-    private String getRouteName(MenuInfo menu) {
-        String routerName = StringUtils.capitalize(menu.getPath());
-        // 非外链并且是一级目录（类型为目录）
-        if (isMenuNonFrame(menu)) {
-            routerName = StringUtils.EMPTY;
+    private String getRouteName(MenuInfo menu, Map<Integer, MenuTree> treeMap) {
+        if (isMenuNonFrame(menu)) { // 非外链并且是一级目录（类型为目录）
+            return StringUtils.EMPTY;
         }
-        return routerName;
+
+        List<String> pathList = new LinkedList<>();
+        pathList.add(StringUtils.capitalize(menu.getPath()));
+
+        MenuTree parent;
+        Integer parentId = menu.getParentId();
+        while ((parent = treeMap.get(parentId)) != null) {
+            pathList.add(0, StringUtils.capitalize(parent.getMenu().getPath()));
+            parentId = parent.getMenu().getParentId();
+        }
+
+        return StringUtils.join(pathList, '-');
     }
 
     /**

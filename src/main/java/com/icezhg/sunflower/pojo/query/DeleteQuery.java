@@ -11,14 +11,14 @@ import java.util.Date;
 @Getter
 public class DeleteQuery implements Query {
 
-    private final Object key;
+    private final Object data;
 
     private final Object user;
 
     private final Date date;
 
-    private DeleteQuery(Object key, Object user, Date date) {
-        this.key = key;
+    private DeleteQuery(Object data, Object user, Date date) {
+        this.data = data;
         this.user = user;
         this.date = date;
     }

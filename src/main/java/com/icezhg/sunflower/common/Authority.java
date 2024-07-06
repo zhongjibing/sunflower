@@ -99,4 +99,27 @@ public interface Authority {
             String QUERY = "log:login:query";
         }
     }
+
+    interface Resource {
+        interface BanquetHall {
+            String QUERY = "resource:banquet:query";
+            String ADD = "resource:banquet:add";
+            String EDIT = "resource:banquet:edit";
+            String DELETE = "resource:banquet:delete";
+        }
+
+        interface ConferenceRoom {
+            String QUERY = "resource:conference:query";
+            String ADD = "resource:conference:add";
+            String EDIT = "resource:conference:edit";
+            String DELETE = "resource:conference:delete";
+        }
+
+        interface GuestRoom {
+            String QUERY = "resource:room:query";
+            String ADD = "resource:room:add";
+            String EDIT = "resource:room:edit";
+            String DELETE = "resource:room:delete";
+        }
+    }
 }

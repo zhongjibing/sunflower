@@ -10,9 +10,9 @@ import java.util.List;
  */
 public interface ResourceService {
 
-    void insert(Resource resource);
+    Object insert(Resource resource);
 
-    void update(Resource resource);
+    Object update(Resource resource);
 
     Resource findById(String id);
 
@@ -21,4 +21,6 @@ public interface ResourceService {
     int count(Query query);
 
     List<Resource> find(Query query);
+
+    void deleteByIds(List<String> ids);
 }

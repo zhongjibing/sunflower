@@ -14,6 +14,8 @@ public interface ResourceDao {
 
     int delete(Map<String, Object> params);
 
+    int deleteByIds(Map<String, Object> params);
+
     int insert(Resource record);
 
     Resource findById(String id);

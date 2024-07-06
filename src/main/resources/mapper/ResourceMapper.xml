@@ -58,7 +58,43 @@
                     id = #{id,jdbcType=VARCHAR}
                 </when>
                 <otherwise>
-                    id = #{key,jdbcType=VARCHAR}
+                    id = #{data,jdbcType=VARCHAR}
+                </otherwise>
+            </choose>
+        </where>
+    </update>
+
+    <update id="deleteByIds" parameterType="map">
+        update t_resource
+        <set>
+            deleted = 1,
+            <choose>
+                <when test="updateTime != null">
+                    update_time = #{updateTime,jdbcType=TIMESTAMP},
+                </when>
+                <otherwise>
+                    update_time = #{date,jdbcType=TIMESTAMP},
+                </otherwise>
+            </choose>
+            <choose>
+                <when test="updateBy != null">
+                    update_by = #{updateBy,jdbcType=VARCHAR},
+                </when>
+                <otherwise>
+                    update_by = #{user,jdbcType=VARCHAR},
+                </otherwise>
+            </choose>
+        </set>
+        <where>
+            <choose>
+                <when test="id != null">
+                    id = #{id,jdbcType=VARCHAR}
+                </when>
+                <otherwise>
+                    id in
+                    <foreach collection="data" item="item" open="(" separator=", " close=")">
+                        #{item,jdbcType=INTEGER}
+                    </foreach>
                 </otherwise>
             </choose>
         </where>
@@ -68,10 +104,10 @@
         insert into t_resource
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
-            <if test="name != null">name,</if>
-            <if test="description != null">description,</if>
-            <if test="type != null">type,</if>
-            <if test="number != null">number,</if>
+            <if test="name != null">`name`,</if>
+            <if test="description != null">`description`,</if>
+            <if test="type != null">`type`,</if>
+            <if test="number != null">`number`,</if>
             <if test="deleted != null">deleted,</if>
             <if test="createTime != null">create_time,</if>
             <if test="createBy != null">create_by,</if>
@@ -97,16 +133,16 @@
         update t_resource
         <set>
             <if test="name != null">
-                name = #{name,jdbcType=VARCHAR},
+                `name` = #{name,jdbcType=VARCHAR},
             </if>
             <if test="description != null">
-                description = #{description,jdbcType=VARCHAR},
+                `description` = #{description,jdbcType=VARCHAR},
             </if>
             <if test="type != null">
-                type = #{type,jdbcType=TINYINT},
+                `type` = #{type,jdbcType=TINYINT},
             </if>
             <if test="number != null">
-                number = #{number,jdbcType=OTHER},
+                `number` = #{number,jdbcType=OTHER},
             </if>
             <if test="deleted != null">
                 deleted = #{deleted,jdbcType=TINYINT},

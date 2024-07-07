@@ -37,7 +37,7 @@ public class Resource extends BaseEntity {
     /**
      * 状态
      */
-    private Integer status;
+    private String status;
 
     /**
      * 是否删除

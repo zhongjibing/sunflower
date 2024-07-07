@@ -10,7 +10,7 @@
         <result property="description" column="description" jdbcType="VARCHAR"/>
         <result property="type" column="type" jdbcType="TINYINT"/>
         <result property="number" column="number" jdbcType="INTEGER"/>
-        <result property="status" column="status" jdbcType="TINYINT"/>
+        <result property="status" column="status" jdbcType="CHAR"/>
         <result property="deleted" column="deleted" jdbcType="TINYINT"/>
         <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
         <result property="createBy" column="create_by" jdbcType="VARCHAR"/>
@@ -20,8 +20,8 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        id, `name`, description,
-        `type`, `number`, status, deleted,
+        id, `name`, `description`,
+        `type`, `number`, `status`, deleted,
         create_time, create_by, update_time,
         update_by, remark
     </sql>
@@ -100,7 +100,7 @@
             <if test="description != null">`description`,</if>
             <if test="type != null">`type`,</if>
             <if test="number != null">`number`,</if>
-            <if test="status != null">status,</if>
+            <if test="status != null">`status`,</if>
             <if test="deleted != null">deleted,</if>
             <if test="createTime != null">create_time,</if>
             <if test="createBy != null">create_by,</if>
@@ -114,7 +114,7 @@
             <if test="description != null">#{description,jdbcType=VARCHAR},</if>
             <if test="type != null">#{type,jdbcType=TINYINT},</if>
             <if test="number != null">#{number,jdbcType=OTHER},</if>
-            <if test="status != null">#{status,jdbcType=TINYINT},</if>
+            <if test="status != null">#{status,jdbcType=CHAR},</if>
             <if test="deleted != null">#{deleted,jdbcType=TINYINT},</if>
             <if test="createTime != null">#{createTime,jdbcType=TIMESTAMP},</if>
             <if test="createBy != null">#{createBy,jdbcType=VARCHAR},</if>
@@ -140,7 +140,7 @@
                 `number` = #{number,jdbcType=OTHER},
             </if>
             <if test="status != null">
-                status = #{status,jdbcType=TINYINT},
+                `status` = #{status,jdbcType=CHAR},
             </if>
             <if test="deleted != null">
                 deleted = #{deleted,jdbcType=TINYINT},
@@ -170,7 +170,7 @@
                 and `type` = #{type,jdbcType=TINYINT}
             </if>
             <if test="status != null">
-                and `status` = #{status,jdbcType=TINYINT},
+                and `status` = #{status,jdbcType=CHAR},
             </if>
         </where>
     </sql>

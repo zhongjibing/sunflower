@@ -1,5 +1,6 @@
 package com.icezhg.sunflower.controller.resource;
 
+import com.icezhg.sunflower.common.Constant;
 import com.icezhg.sunflower.domain.Resource;
 import com.icezhg.sunflower.enums.ResourceType;
 import com.icezhg.sunflower.pojo.ResourceInfo;
@@ -18,6 +19,7 @@ public abstract class AbstractResourceController {
         resource.setDescription(info.getDescription());
         resource.setType(resourceType().getType());
         resource.setNumber(info.getNumber());
+        resource.setStatus(Constant.NORMAL);
         resource.setRemark(info.getRemark());
         return resource;
     }

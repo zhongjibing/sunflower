@@ -37,9 +37,14 @@
         where  id = #{id,jdbcType=VARCHAR} 
     </select>
 
-    <delete id="deleteById" parameterType="string">
+    <delete id="deleteByIds" parameterType="list">
         delete from sys_session
-        where  id = #{id,jdbcType=VARCHAR} 
+        <where>
+            id in
+            <foreach collection="list" item="item" open="(" separator="," close=")">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </where>
     </delete>
 
     <delete id="deleteByOldSessionId" parameterType="string">

@@ -15,8 +15,6 @@ public interface SessionService {
 
     void updateLastAccessedTime(String newSessionId, Date lastAccessedTime);
 
-    void delete(String id);
-
     void deleteByOldSessionId(String sessionId);
 
     int count(Query query);

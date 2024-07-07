@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -64,11 +65,6 @@ public class SessionServiceImpl implements SessionService {
     }
 
     @Override
-    public void delete(String id) {
-        this.sessionDao.deleteById(id);
-    }
-
-    @Override
     public void deleteByOldSessionId(String oldSessionId) {
         this.sessionDao.deleteByOldSessionId(oldSessionId);
     }
@@ -94,7 +90,7 @@ public class SessionServiceImpl implements SessionService {
         }
 
         this.redisTemplate.delete(CacheKey.SESSION_KEY_PREFIX + session.getNewSessionId());
-        this.sessionDao.deleteById(id);
+        this.sessionDao.deleteByIds(List.of(id));
     }
 
     @Override
@@ -114,10 +110,14 @@ public class SessionServiceImpl implements SessionService {
             return null;
         });
 
+        List<String> deleteIds = new LinkedList<>();
         for (int i = 0; i < result.size(); i++) {
             if (result.get(i) instanceof Boolean exist && !exist) {
-                this.sessionDao.deleteById(sessions.get(i).getId());
+                deleteIds.add(sessions.get(i).getId());
             }
+        }
+        if (!deleteIds.isEmpty()) {
+            this.sessionDao.deleteByIds(deleteIds);
         }
     }
 }

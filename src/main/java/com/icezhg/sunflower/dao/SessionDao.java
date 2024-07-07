@@ -18,7 +18,7 @@ public interface SessionDao {
 
     int updateLastAccessedTime(Map<String, Object> params);
 
-    int deleteById(String id);
+    int deleteByIds(List<String> ids);
 
     int deleteByOldSessionId(String oldSessionId);
 

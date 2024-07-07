@@ -67,8 +67,6 @@ public class MenuServiceImpl implements MenuService {
     @Override
     public List<MenuInfo> listUserRoleMenus(Long userId) {
         MenuQuery query = new MenuQuery();
-        query.setStatus(Constant.NORMAL);
-
         userId = userId != null ? userId : Constant.UNKNOWN_USER_ID;
         if (!isAdminRole(userId)) {
             query.setUserId(userId);

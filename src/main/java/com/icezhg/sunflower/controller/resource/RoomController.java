@@ -5,6 +5,7 @@ import com.icezhg.sunflower.common.Authority;
 import com.icezhg.sunflower.domain.Resource;
 import com.icezhg.sunflower.enums.OperationType;
 import com.icezhg.sunflower.enums.ResourceType;
+import com.icezhg.sunflower.pojo.ChangeStatus;
 import com.icezhg.sunflower.pojo.PageResult;
 import com.icezhg.sunflower.pojo.ResourceInfo;
 import com.icezhg.sunflower.pojo.query.ResourceQuery;
@@ -51,8 +52,15 @@ public class RoomController extends AbstractResourceController {
     @DeleteMapping
     @Secured(Authority.Resource.GuestRoom.DELETE)
     @Operation(title = "guest rooms deletion", type = OperationType.DELETE)
-    public void delete(@RequestBody List<String> resourceIds) {
+    public void delete(@RequestBody List<Long> resourceIds) {
         this.resourceService.deleteByIds(resourceIds);
+    }
+
+    @PostMapping("/restore")
+    @Secured(Authority.Resource.GuestRoom.RESTORE)
+    @Operation(title = "guest rooms restore", type = OperationType.RESTORE)
+    public void restore(@RequestBody List<Long> resourceIds) {
+        this.resourceService.restoreByIds(resourceIds);
     }
 
     @GetMapping("/list")
@@ -64,8 +72,15 @@ public class RoomController extends AbstractResourceController {
 
     @GetMapping("/{id}")
     @Secured(Authority.Resource.GuestRoom.QUERY)
-    public Resource get(@PathVariable String id) {
+    public Resource get(@PathVariable Long id) {
         return this.resourceService.findById(id);
+    }
+
+    @PutMapping("/changeStatus")
+    @Secured(Authority.Resource.GuestRoom.STATUS)
+    @Operation(title = "guest rooms status change", type = OperationType.UPDATE)
+    public int changeStatus(@RequestBody ChangeStatus change) {
+        return this.resourceService.changeStatus(change);
     }
 
     @Override

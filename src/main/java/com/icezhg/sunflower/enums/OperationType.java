@@ -8,6 +8,7 @@ public enum OperationType {
     UPDATE("Modify"),
     DELETE("Delete"),
     QUERY("Query"),
+    RESTORE("Restore"),
     LIST("List"),
     GRANT("Grant"),
     REVOKE("Revoke"),

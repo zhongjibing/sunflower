@@ -1,6 +1,7 @@
 package com.icezhg.sunflower.service;
 
 import com.icezhg.sunflower.domain.Resource;
+import com.icezhg.sunflower.pojo.ChangeStatus;
 import com.icezhg.sunflower.pojo.query.Query;
 
 import java.util.List;
@@ -14,13 +15,15 @@ public interface ResourceService {
 
     Object update(Resource resource);
 
-    Resource findById(String id);
-
-    void delete(String id);
+    Resource findById(Long id);
 
     int count(Query query);
 
     List<Resource> find(Query query);
 
-    void deleteByIds(List<String> ids);
+    void deleteByIds(List<Long> ids);
+
+    void restoreByIds(List<Long> ids);
+
+    int changeStatus(ChangeStatus change);
 }

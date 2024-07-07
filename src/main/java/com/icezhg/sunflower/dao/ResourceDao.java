@@ -18,7 +18,7 @@ public interface ResourceDao {
 
     int insert(Resource record);
 
-    Resource findById(String id);
+    Resource findById(Long id);
 
     int update(Resource record);
 
@@ -26,4 +26,5 @@ public interface ResourceDao {
 
     List<Resource> find(Map<String, Object> params);
 
+    int restoreByIds(Map<String, Object> params);
 }

@@ -12,7 +12,7 @@ public class Resource extends BaseEntity {
     /**
      * 主键
      */
-    private String id;
+    private Long id;
 
     /**
      * 名称

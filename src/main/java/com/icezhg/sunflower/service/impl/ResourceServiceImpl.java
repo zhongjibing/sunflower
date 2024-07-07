@@ -1,16 +1,18 @@
 package com.icezhg.sunflower.service.impl;
 
-import com.icezhg.commons.util.IdGenerator;
 import com.icezhg.sunflower.dao.ResourceDao;
 import com.icezhg.sunflower.domain.Resource;
+import com.icezhg.sunflower.pojo.ChangeStatus;
 import com.icezhg.sunflower.pojo.ResourceInfo;
 import com.icezhg.sunflower.pojo.query.DeleteQuery;
 import com.icezhg.sunflower.pojo.query.Query;
 import com.icezhg.sunflower.service.ResourceService;
 import com.icezhg.sunflower.util.CommonUtils;
+import com.icezhg.sunflower.util.SecurityUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -27,7 +29,7 @@ public class ResourceServiceImpl implements ResourceService {
 
     @Override
     public ResourceInfo insert(Resource resource) {
-        resource.setId(IdGenerator.nextId());
+        resource.setId(null);
         CommonUtils.completeBaseInfo(resource);
         this.resourceDao.insert(resource);
         return buildResourceInfo(findById(resource.getId()));
@@ -41,13 +43,8 @@ public class ResourceServiceImpl implements ResourceService {
     }
 
     @Override
-    public Resource findById(String id) {
+    public Resource findById(Long id) {
         return this.resourceDao.findById(id);
-    }
-
-    @Override
-    public void delete(String id) {
-        this.resourceDao.delete(DeleteQuery.of(id).toMap());
     }
 
     @Override
@@ -61,10 +58,27 @@ public class ResourceServiceImpl implements ResourceService {
     }
 
     @Override
-    public void deleteByIds(List<String> ids) {
+    public void deleteByIds(List<Long> ids) {
         if (CollectionUtils.isNotEmpty(ids)) {
             this.resourceDao.deleteByIds(DeleteQuery.of(ids).toMap());
         }
+    }
+
+    @Override
+    public void restoreByIds(List<Long> ids) {
+        if (CollectionUtils.isNotEmpty(ids)) {
+            this.resourceDao.restoreByIds(DeleteQuery.of(ids).toMap());
+        }
+    }
+
+    @Override
+    public int changeStatus(ChangeStatus change) {
+        Resource resource = new Resource();
+        resource.setId(change.getId());
+        resource.setStatus(change.getStatus());
+        resource.setUpdateBy(SecurityUtil.currentUserName());
+        resource.setUpdateTime(new Date());
+        return this.resourceDao.update(resource);
     }
 
     private ResourceInfo buildResourceInfo(Resource resource) {

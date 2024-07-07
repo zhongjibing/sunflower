@@ -14,6 +14,7 @@ import java.util.Date;
 public class ResourceQuery extends PageQuery {
     private String name;
     private Integer type;
+    private String status;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date beginTime;
     @DateTimeFormat(pattern = "yyyy-MM-dd")

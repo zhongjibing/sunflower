@@ -107,6 +107,7 @@ public interface Authority {
             String EDIT = "resource:banquet:edit";
             String DELETE = "resource:banquet:delete";
             String STATUS = "resource:banquet:status";
+            String RESTORE = "resource:banquet:restore";
         }
 
         interface ConferenceRoom {
@@ -115,6 +116,7 @@ public interface Authority {
             String EDIT = "resource:conference:edit";
             String DELETE = "resource:conference:delete";
             String STATUS = "resource:conference:status";
+            String RESTORE = "resource:conference:restore";
         }
 
         interface GuestRoom {
@@ -123,6 +125,7 @@ public interface Authority {
             String EDIT = "resource:room:edit";
             String DELETE = "resource:room:delete";
             String STATUS = "resource:room:status";
+            String RESTORE = "resource:room:restore";
         }
     }
 

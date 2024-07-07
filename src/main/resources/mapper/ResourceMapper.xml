@@ -10,6 +10,7 @@
         <result property="description" column="description" jdbcType="VARCHAR"/>
         <result property="type" column="type" jdbcType="TINYINT"/>
         <result property="number" column="number" jdbcType="INTEGER"/>
+        <result property="status" column="status" jdbcType="TINYINT"/>
         <result property="deleted" column="deleted" jdbcType="TINYINT"/>
         <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
         <result property="createBy" column="create_by" jdbcType="VARCHAR"/>
@@ -19,8 +20,8 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        id, name, description,
-        type, number, deleted,
+        id, `name`, description,
+        `type`, `number`, status, deleted,
         create_time, create_by, update_time,
         update_by, remark
     </sql>
@@ -31,7 +32,7 @@
         where id = #{id,jdbcType=VARCHAR}
     </select>
 
-    <update id="delete" parameterType="map">
+    <sql id="Delete_Statement">
         update t_resource
         <set>
             deleted = 1,
@@ -39,62 +40,53 @@
                 <when test="updateTime != null">
                     update_time = #{updateTime,jdbcType=TIMESTAMP},
                 </when>
-                <otherwise>
+                <when test="date != null">
                     update_time = #{date,jdbcType=TIMESTAMP},
-                </otherwise>
+                </when>
             </choose>
             <choose>
                 <when test="updateBy != null">
                     update_by = #{updateBy,jdbcType=VARCHAR},
                 </when>
-                <otherwise>
+                <when test="user != null">
                     update_by = #{user,jdbcType=VARCHAR},
-                </otherwise>
+                </when>
             </choose>
         </set>
+    </sql>
+
+    <update id="delete" parameterType="map">
+        <include refid="Delete_Statement"/>
         <where>
             <choose>
                 <when test="id != null">
                     id = #{id,jdbcType=VARCHAR}
                 </when>
-                <otherwise>
+                <when test="data != null">
                     id = #{data,jdbcType=VARCHAR}
+                </when>
+                <otherwise>
+                    false
                 </otherwise>
             </choose>
         </where>
     </update>
 
     <update id="deleteByIds" parameterType="map">
-        update t_resource
-        <set>
-            deleted = 1,
-            <choose>
-                <when test="updateTime != null">
-                    update_time = #{updateTime,jdbcType=TIMESTAMP},
-                </when>
-                <otherwise>
-                    update_time = #{date,jdbcType=TIMESTAMP},
-                </otherwise>
-            </choose>
-            <choose>
-                <when test="updateBy != null">
-                    update_by = #{updateBy,jdbcType=VARCHAR},
-                </when>
-                <otherwise>
-                    update_by = #{user,jdbcType=VARCHAR},
-                </otherwise>
-            </choose>
-        </set>
+        <include refid="Delete_Statement"/>
         <where>
             <choose>
                 <when test="id != null">
                     id = #{id,jdbcType=VARCHAR}
                 </when>
-                <otherwise>
+                <when test="data != null and data.size() > 0">
                     id in
                     <foreach collection="data" item="item" open="(" separator=", " close=")">
                         #{item,jdbcType=INTEGER}
                     </foreach>
+                </when>
+                <otherwise>
+                    false
                 </otherwise>
             </choose>
         </where>
@@ -108,6 +100,7 @@
             <if test="description != null">`description`,</if>
             <if test="type != null">`type`,</if>
             <if test="number != null">`number`,</if>
+            <if test="status != null">status,</if>
             <if test="deleted != null">deleted,</if>
             <if test="createTime != null">create_time,</if>
             <if test="createBy != null">create_by,</if>
@@ -121,6 +114,7 @@
             <if test="description != null">#{description,jdbcType=VARCHAR},</if>
             <if test="type != null">#{type,jdbcType=TINYINT},</if>
             <if test="number != null">#{number,jdbcType=OTHER},</if>
+            <if test="status != null">#{status,jdbcType=TINYINT},</if>
             <if test="deleted != null">#{deleted,jdbcType=TINYINT},</if>
             <if test="createTime != null">#{createTime,jdbcType=TIMESTAMP},</if>
             <if test="createBy != null">#{createBy,jdbcType=VARCHAR},</if>
@@ -129,6 +123,7 @@
             <if test="remark != null">#{remark,jdbcType=VARCHAR},</if>
         </trim>
     </insert>
+
     <update id="update" parameterType="com.icezhg.sunflower.domain.Resource">
         update t_resource
         <set>
@@ -144,11 +139,14 @@
             <if test="number != null">
                 `number` = #{number,jdbcType=OTHER},
             </if>
+            <if test="status != null">
+                status = #{status,jdbcType=TINYINT},
+            </if>
             <if test="deleted != null">
                 deleted = #{deleted,jdbcType=TINYINT},
             </if>
-            <if test="createTime != null">
-                create_time = #{createTime,jdbcType=TIMESTAMP},
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
             </if>
             <if test="updateBy != null">
                 update_by = #{updateBy,jdbcType=VARCHAR},
@@ -169,7 +167,10 @@
                 and LOCATE(#{name,jdbcType=VARCHAR}, `name`) > 0
             </if>
             <if test="type != null">
-                and type = #{type,jdbcType=TINYINT}
+                and `type` = #{type,jdbcType=TINYINT}
+            </if>
+            <if test="status != null">
+                and `status` = #{status,jdbcType=TINYINT},
             </if>
         </where>
     </sql>

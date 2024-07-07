@@ -34,14 +34,27 @@ public class RouterServiceImpl implements RouterService {
 
     @Override
     public List<Router> listRouters() {
-        boolean isRootUser = SecurityUtil.isRootUser();
-        List<MenuTree> menuTrees = menuService.buildMenuTreeSelect().stream()
-                .filter(tree -> isRootUser || Constant.NORMAL.equals(tree.getMenu().getStatus()))
-                .toList();
+        List<MenuTree> menuTrees = menuService.buildMenuTreeSelect();
+        if (!SecurityUtil.isRootUser()) {
+            menuTrees = filterNormalMenuTrees(menuTrees);
+        }
 
         Map<Integer, MenuTree> menuTreeMap = new HashMap<>();
         menuTrees.stream().map(this::getMenuTreeMap).forEach(menuTreeMap::putAll);
         return buildRouters(menuTrees, menuTreeMap);
+    }
+
+    private List<MenuTree> filterNormalMenuTrees(List<MenuTree> menuTrees) {
+        List<MenuTree> result = new ArrayList<>(menuTrees.size());
+        menuTrees.forEach(tree-> {
+            if (Constant.NORMAL.equals(tree.getMenu().getStatus())) {
+                tree.setChildren(filterNormalMenuTrees(tree.getChildren()));
+                if (!Constant.TYPE_DIR.equals(tree.getMenu().getType()) || !tree.getChildren().isEmpty()) {
+                    result.add(tree);
+                }
+            }
+        });
+        return result;
     }
 
     private List<Router> buildRouters(List<MenuTree> menuTrees, Map<Integer, MenuTree> treeMap) {

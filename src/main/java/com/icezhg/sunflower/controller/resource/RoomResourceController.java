@@ -27,64 +27,64 @@ import java.util.List;
  * Created by zhongjibing on 2023/07/06.
  */
 @RestController
-@RequestMapping("/conference")
-public class ConferenceController extends AbstractResourceController {
+@RequestMapping("/resource/room")
+public class RoomResourceController extends AbstractResourceController {
     private final ResourceService resourceService;
 
-    public ConferenceController(ResourceService resourceService) {
+    public RoomResourceController(ResourceService resourceService) {
         this.resourceService = resourceService;
     }
 
     @PostMapping
-    @Secured(Authority.Resource.ConferenceRoom.ADD)
-    @Operation(title = "conference rooms addition", type = OperationType.INSERT)
+    @Secured(Authority.Resource.GuestRoom.ADD)
+    @Operation(title = "guest rooms addition", type = OperationType.INSERT)
     public Object add(@Validated @RequestBody ResourceInfo info) {
         return this.resourceService.insert(buildResource(info));
     }
 
     @PutMapping
-    @Secured(Authority.Resource.ConferenceRoom.EDIT)
-    @Operation(title = "conference rooms modification", type = OperationType.UPDATE)
+    @Secured(Authority.Resource.GuestRoom.EDIT)
+    @Operation(title = "guest rooms modification", type = OperationType.UPDATE)
     public Object edit(@Validated @RequestBody ResourceInfo info) {
         return this.resourceService.update(buildResource(info));
     }
 
     @DeleteMapping
-    @Secured(Authority.Resource.ConferenceRoom.DELETE)
-    @Operation(title = "conference rooms deletion", type = OperationType.DELETE)
+    @Secured(Authority.Resource.GuestRoom.DELETE)
+    @Operation(title = "guest rooms deletion", type = OperationType.DELETE)
     public void delete(@RequestBody List<Long> resourceIds) {
         this.resourceService.deleteByIds(resourceIds);
     }
 
     @PostMapping("/restore")
-    @Secured(Authority.Resource.ConferenceRoom.RESTORE)
-    @Operation(title = "conference rooms restore", type = OperationType.RESTORE)
+    @Secured(Authority.Resource.GuestRoom.RESTORE)
+    @Operation(title = "guest rooms restore", type = OperationType.RESTORE)
     public void restore(@RequestBody List<Long> resourceIds) {
         this.resourceService.restoreByIds(resourceIds);
     }
 
     @GetMapping("/list")
-    @Secured(Authority.Resource.ConferenceRoom.QUERY)
+    @Secured(Authority.Resource.GuestRoom.QUERY)
     public PageResult list(ResourceQuery query) {
         query.setType(resourceType().getType());
         return new PageResult(resourceService.count(query), resourceService.find(query));
     }
 
     @GetMapping("/{id}")
-    @Secured(Authority.Resource.ConferenceRoom.QUERY)
+    @Secured(Authority.Resource.GuestRoom.QUERY)
     public Resource get(@PathVariable Long id) {
         return this.resourceService.findById(id);
     }
 
     @PutMapping("/changeStatus")
-    @Secured(Authority.Resource.ConferenceRoom.STATUS)
-    @Operation(title = "conference rooms status change", type = OperationType.UPDATE)
+    @Secured(Authority.Resource.GuestRoom.STATUS)
+    @Operation(title = "guest rooms status change", type = OperationType.UPDATE)
     public int changeStatus(@RequestBody ChangeStatus change) {
         return this.resourceService.changeStatus(change);
     }
 
     @Override
     ResourceType resourceType() {
-        return ResourceType.CONFERENCE_ROOM;
+        return ResourceType.GUEST_ROOM;
     }
 }

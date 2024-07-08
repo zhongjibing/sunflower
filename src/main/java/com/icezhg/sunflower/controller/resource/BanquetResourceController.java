@@ -9,7 +9,6 @@ import com.icezhg.sunflower.pojo.ChangeStatus;
 import com.icezhg.sunflower.pojo.PageResult;
 import com.icezhg.sunflower.pojo.ResourceInfo;
 import com.icezhg.sunflower.pojo.query.ResourceQuery;
-import com.icezhg.sunflower.service.ResourceService;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -29,38 +28,41 @@ import java.util.List;
 @RestController
 @RequestMapping("/resource/banquet")
 public class BanquetResourceController extends AbstractResourceController {
-    private final ResourceService resourceService;
 
-    public BanquetResourceController(ResourceService resourceService) {
-        this.resourceService = resourceService;
+    @Override
+    ResourceType resourceType() {
+        return ResourceType.BANQUET_HALL;
     }
 
     @PostMapping
     @Secured(Authority.Resource.BanquetHall.ADD)
     @Operation(title = "banquet halls addition", type = OperationType.INSERT)
     public Object add(@Validated @RequestBody ResourceInfo info) {
-        return this.resourceService.insert(buildResource(info));
+        return resourceService.insert(buildResource(info));
     }
 
     @PutMapping
     @Secured(Authority.Resource.BanquetHall.EDIT)
     @Operation(title = "banquet halls modification", type = OperationType.UPDATE)
     public Object edit(@Validated @RequestBody ResourceInfo info) {
-        return this.resourceService.update(buildResource(info));
+        checkDataPermission(List.of(info.getId()));
+        return resourceService.update(buildResource(info));
     }
 
     @DeleteMapping
     @Secured(Authority.Resource.BanquetHall.DELETE)
     @Operation(title = "banquet halls deletion", type = OperationType.DELETE)
     public void delete(@RequestBody List<Long> resourceIds) {
-        this.resourceService.deleteByIds(resourceIds);
+        checkDataPermission(resourceIds);
+        resourceService.deleteByIds(resourceIds);
     }
 
     @PostMapping("/restore")
     @Secured(Authority.Resource.BanquetHall.RESTORE)
     @Operation(title = "banquet halls restore", type = OperationType.RESTORE)
     public void restore(@RequestBody List<Long> resourceIds) {
-        this.resourceService.restoreByIds(resourceIds);
+        checkDataPermission(resourceIds);
+        resourceService.restoreByIds(resourceIds);
     }
 
     @GetMapping("/list")
@@ -73,18 +75,16 @@ public class BanquetResourceController extends AbstractResourceController {
     @GetMapping("/{id}")
     @Secured(Authority.Resource.BanquetHall.QUERY)
     public Resource get(@PathVariable Long id) {
-        return this.resourceService.findById(id);
+        checkDataPermission(List.of(id));
+        return resourceService.findById(id);
     }
 
     @PutMapping("/changeStatus")
     @Secured(Authority.Resource.BanquetHall.STATUS)
     @Operation(title = "banquet halls status change", type = OperationType.UPDATE)
     public int changeStatus(@RequestBody ChangeStatus change) {
-        return this.resourceService.changeStatus(change);
+        checkDataPermission(List.of(change.getId()));
+        return resourceService.changeStatus(change);
     }
 
-    @Override
-    ResourceType resourceType() {
-        return ResourceType.BANQUET_HALL;
-    }
 }

@@ -20,6 +20,8 @@ public interface ResourceDao {
 
     Resource findById(Long id);
 
+    List<Resource> findByIds(List<Long> ids);
+
     int update(Resource record);
 
     int count(Map<String, Object> params);

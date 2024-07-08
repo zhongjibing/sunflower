@@ -9,7 +9,6 @@ import com.icezhg.sunflower.pojo.ChangeStatus;
 import com.icezhg.sunflower.pojo.PageResult;
 import com.icezhg.sunflower.pojo.ResourceInfo;
 import com.icezhg.sunflower.pojo.query.ResourceQuery;
-import com.icezhg.sunflower.service.ResourceService;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -29,10 +28,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/resource/conference")
 public class ConferenceResourceController extends AbstractResourceController {
-    private final ResourceService resourceService;
 
-    public ConferenceResourceController(ResourceService resourceService) {
-        this.resourceService = resourceService;
+    @Override
+    ResourceType resourceType() {
+        return ResourceType.CONFERENCE_ROOM;
     }
 
     @PostMapping
@@ -46,6 +45,7 @@ public class ConferenceResourceController extends AbstractResourceController {
     @Secured(Authority.Resource.ConferenceRoom.EDIT)
     @Operation(title = "conference rooms modification", type = OperationType.UPDATE)
     public Object edit(@Validated @RequestBody ResourceInfo info) {
+        checkDataPermission(List.of(info.getId()));
         return this.resourceService.update(buildResource(info));
     }
 
@@ -53,6 +53,7 @@ public class ConferenceResourceController extends AbstractResourceController {
     @Secured(Authority.Resource.ConferenceRoom.DELETE)
     @Operation(title = "conference rooms deletion", type = OperationType.DELETE)
     public void delete(@RequestBody List<Long> resourceIds) {
+        checkDataPermission(resourceIds);
         this.resourceService.deleteByIds(resourceIds);
     }
 
@@ -60,6 +61,7 @@ public class ConferenceResourceController extends AbstractResourceController {
     @Secured(Authority.Resource.ConferenceRoom.RESTORE)
     @Operation(title = "conference rooms restore", type = OperationType.RESTORE)
     public void restore(@RequestBody List<Long> resourceIds) {
+        checkDataPermission(resourceIds);
         this.resourceService.restoreByIds(resourceIds);
     }
 
@@ -73,6 +75,7 @@ public class ConferenceResourceController extends AbstractResourceController {
     @GetMapping("/{id}")
     @Secured(Authority.Resource.ConferenceRoom.QUERY)
     public Resource get(@PathVariable Long id) {
+        checkDataPermission(List.of(id));
         return this.resourceService.findById(id);
     }
 
@@ -80,11 +83,8 @@ public class ConferenceResourceController extends AbstractResourceController {
     @Secured(Authority.Resource.ConferenceRoom.STATUS)
     @Operation(title = "conference rooms status change", type = OperationType.UPDATE)
     public int changeStatus(@RequestBody ChangeStatus change) {
+        checkDataPermission(List.of(change.getId()));
         return this.resourceService.changeStatus(change);
     }
 
-    @Override
-    ResourceType resourceType() {
-        return ResourceType.CONFERENCE_ROOM;
-    }
 }

@@ -12,6 +12,7 @@ import com.icezhg.sunflower.util.SecurityUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -55,6 +56,15 @@ public class ResourceServiceImpl implements ResourceService {
     @Override
     public List<Resource> find(Query query) {
         return this.resourceDao.find(query.toMap());
+    }
+
+    @Override
+    public List<Resource> findByIds(List<Long> ids) {
+        if (CollectionUtils.isEmpty(ids)) {
+            return Collections.emptyList();
+        }
+
+        return this.resourceDao.findByIds(ids);
     }
 
     @Override

@@ -32,6 +32,15 @@
         where id = #{id,jdbcType=BIGINT}
     </select>
 
+    <select id="findByIds" parameterType="list" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/>
+        from t_resource
+        where id in
+        <foreach collection="list" item="item" open=" (" separator="," close=")">
+            #{item,jdbcType=BIGINT}
+        </foreach>
+    </select>
+
     <sql id="Delete_Statement">
         update t_resource
         <set>

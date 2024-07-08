@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.icezhg.sunflower.dao.PricePlanDao">
+
+    <resultMap id="BaseResultMap" type="com.icezhg.sunflower.domain.PricePlan">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="ruleId" column="rule_id" jdbcType="BIGINT"/>
+        <result property="date" column="date" jdbcType="DATE"/>
+        <result property="resourceId" column="resource_id" jdbcType="BIGINT"/>
+        <result property="type" column="type" jdbcType="TINYINT"/>
+        <result property="price" column="price" jdbcType="BIGINT"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, rule_id, date,
+        resource_id, type, price,
+        create_time, update_time
+    </sql>
+
+    <select id="findById" parameterType="long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_price_plan
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.icezhg.sunflower.domain.PricePlan"
+            useGeneratedKeys="true">
+        insert into t_price_plan
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="ruleId != null">rule_id,</if>
+            <if test="date != null">date,</if>
+            <if test="resourceId != null">resource_id,</if>
+            <if test="type != null">type,</if>
+            <if test="price != null">price,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id,jdbcType=BIGINT},</if>
+            <if test="ruleId != null">#{ruleId,jdbcType=BIGINT},</if>
+            <if test="date != null">#{date,jdbcType=DATE},</if>
+            <if test="resourceId != null">#{resourceId,jdbcType=BIGINT},</if>
+            <if test="type != null">#{type,jdbcType=TINYINT},</if>
+            <if test="price != null">#{price,jdbcType=BIGINT},</if>
+            <if test="createTime != null">#{createTime,jdbcType=TIMESTAMP},</if>
+            <if test="updateTime != null">#{updateTime,jdbcType=TIMESTAMP},</if>
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="com.icezhg.sunflower.domain.PricePlan">
+        update t_price_plan
+        <set>
+            <if test="ruleId != null">
+                rule_id = #{ruleId,jdbcType=BIGINT},
+            </if>
+            <if test="date != null">
+                date = #{date,jdbcType=DATE},
+            </if>
+            <if test="resourceId != null">
+                resource_id = #{resourceId,jdbcType=BIGINT},
+            </if>
+            <if test="type != null">
+                type = #{type,jdbcType=TINYINT},
+            </if>
+            <if test="price != null">
+                price = #{price,jdbcType=BIGINT},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+</mapper>

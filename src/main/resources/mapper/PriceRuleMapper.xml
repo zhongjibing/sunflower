@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.icezhg.sunflower.dao.PriceRuleDao">
+
+    <resultMap id="BaseResultMap" type="com.icezhg.sunflower.domain.PriceRule">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="tagId" column="tag_id" jdbcType="INTEGER"/>
+        <result property="resourceId" column="resource_id" jdbcType="BIGINT"/>
+        <result property="type" column="type" jdbcType="TINYINT"/>
+        <result property="detail" column="detail" jdbcType="VARCHAR"/>
+        <result property="deleted" column="deleted" jdbcType="TINYINT"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="createBy" column="create_by" jdbcType="VARCHAR"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="updateBy" column="update_by" jdbcType="VARCHAR"/>
+        <result property="remark" column="remark" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, `name`, tag_id,
+        resource_id, `type`, detail,
+        deleted, create_time, create_by,
+        update_time, update_by, remark
+    </sql>
+
+    <select id="findById" parameterType="long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_price_rule
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="findByIds" parameterType="list" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_price_rule
+        where id in
+        <foreach collection="list" item="item" open=" (" separator="," close=")">
+            #{item,jdbcType=BIGINT}
+        </foreach>
+    </select>
+
+    <update id="delete" parameterType="map">
+        update t_price_rule
+        <set>
+            deleted = 1,
+            <choose>
+                <when test="updateTime != null">
+                    update_time = #{updateTime,jdbcType=TIMESTAMP},
+                </when>
+                <when test="date != null">
+                    update_time = #{date,jdbcType=TIMESTAMP},
+                </when>
+            </choose>
+            <choose>
+                <when test="updateBy != null">
+                    update_by = #{updateBy,jdbcType=VARCHAR},
+                </when>
+                <when test="user != null">
+                    update_by = #{user,jdbcType=VARCHAR},
+                </when>
+            </choose>
+        </set>
+        <where>
+            <choose>
+                <when test="id != null">
+                    id = #{id,jdbcType=BIGINT}
+                </when>
+                <when test="data != null">
+                    id = #{data,jdbcType=BIGINT}
+                </when>
+                <otherwise>
+                    false
+                </otherwise>
+            </choose>
+        </where>
+    </update>
+
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.icezhg.sunflower.domain.PriceRule"
+            useGeneratedKeys="true">
+        insert into t_price_rule
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="name != null">name,</if>
+            <if test="tagId != null">tag_id,</if>
+            <if test="resourceId != null">resource_id,</if>
+            <if test="type != null">type,</if>
+            <if test="detail != null">detail,</if>
+            <if test="deleted != null">deleted,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="remark != null">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id,jdbcType=BIGINT},</if>
+            <if test="name != null">#{name,jdbcType=VARCHAR},</if>
+            <if test="tagId != null">#{tagId,jdbcType=INTEGER},</if>
+            <if test="resourceId != null">#{resourceId,jdbcType=BIGINT},</if>
+            <if test="type != null">#{type,jdbcType=TINYINT},</if>
+            <if test="detail != null">#{detail,jdbcType=VARCHAR},</if>
+            <if test="deleted != null">#{deleted,jdbcType=TINYINT},</if>
+            <if test="createTime != null">#{createTime,jdbcType=TIMESTAMP},</if>
+            <if test="createBy != null">#{createBy,jdbcType=VARCHAR},</if>
+            <if test="updateTime != null">#{updateTime,jdbcType=TIMESTAMP},</if>
+            <if test="updateBy != null">#{updateBy,jdbcType=VARCHAR},</if>
+            <if test="remark != null">#{remark,jdbcType=VARCHAR},</if>
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="com.icezhg.sunflower.domain.PriceRule">
+        update t_price_rule
+        <set>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="tagId != null">
+                tag_id = #{tagId,jdbcType=INTEGER},
+            </if>
+            <if test="resourceId != null">
+                resource_id = #{resourceId,jdbcType=BIGINT},
+            </if>
+            <if test="type != null">
+                type = #{type,jdbcType=TINYINT},
+            </if>
+            <if test="detail != null">
+                detail = #{detail,jdbcType=VARCHAR},
+            </if>
+            <if test="deleted != null">
+                deleted = #{deleted,jdbcType=TINYINT},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateBy != null">
+                update_by = #{updateBy,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null">
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <sql id="find_detail_query">
+        select pr.id,
+               pr.name,
+               pr.tag_id,
+               ct.name tag_name,
+               ct.style_class,
+               pr.resource_id,
+               r.name  resource_name,
+               pr.type,
+               pr.detail,
+               pr.deleted,
+               pr.create_time,
+               pr.create_by,
+               pr.update_time,
+               pr.update_by,
+               pr.remark
+        from t_price_rule pr
+        left join t_resource r on pr.resource_id = r.id
+        left join t_customer_tag ct on pr.tag_id = ct.id
+    </sql>
+
+    <select id="findPriceRuleDetailById" parameterType="long" resultType="com.icezhg.sunflower.pojo.PriceRuleDetail">
+        <include refid="find_detail_query" />
+        <where>
+            id = #{id,jdbcType=BIGINT}
+        </where>
+    </select>
+
+    <sql id="find_condition">
+        <where>
+            <if test="!isRoot">
+                and pr.deleted = 0
+            </if>
+            <if test="name != null">
+                and LOCATE(#{name,jdbcType=VARCHAR}, pr.name) > 0
+            </if>
+            <if test="type != null">
+                and pr.type = #{type,jdbcType=TINYINT}
+            </if>
+            <if test="beginTime != null and endTime != null">
+                and create_time between #{beginTime,jdbcType=TIMESTAMP} and #{endTime,jdbcType=TIMESTAMP}
+            </if>
+        </where>
+    </sql>
+
+    <select id="count" resultType="int">
+        select count(*) from t_price_rule pr
+        <include refid="find_condition" />
+    </select>
+
+    <select id="findPriceRuleDetails" resultType="com.icezhg.sunflower.pojo.PriceRuleDetail">
+        <include refid="find_detail_query" />
+        <include refid="find_condition" />
+        order by pr.id asc
+        limit #{offset,jdbcType=INTEGER}, #{pageSize,jdbcType=INTEGER}
+    </select>
+
+</mapper>

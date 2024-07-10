@@ -181,6 +181,9 @@
 
     <sql id="findCondition">
         <where>
+            <if test="!isRoot">
+                and deleted = 0
+            </if>
             <if test="name != null">
                 and LOCATE(#{name,jdbcType=VARCHAR}, `name`) > 0
             </if>

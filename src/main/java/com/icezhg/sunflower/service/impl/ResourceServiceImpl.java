@@ -116,6 +116,7 @@ public class ResourceServiceImpl implements ResourceService {
             info.setId(resource.getId());
             info.setName(resource.getName());
             info.setDescription(resource.getDescription());
+            info.setDetail(resource.getDetail());
             info.setRemark(resource.getRemark());
         }
         return info;
@@ -127,6 +128,7 @@ public class ResourceServiceImpl implements ResourceService {
         resource.setName(info.getName());
         resource.setDescription(info.getDescription());
         resource.setType(resourceType.getType());
+        resource.setDetail(info.getDetail());
         resource.setStatus(Constant.NORMAL);
         resource.setRemark(info.getRemark());
         return resource;

@@ -130,9 +130,6 @@
             <if test="resourceId != null">
                 resource_id = #{resourceId,jdbcType=BIGINT},
             </if>
-            <if test="type != null">
-                type = #{type,jdbcType=TINYINT},
-            </if>
             <if test="detail != null">
                 detail = #{detail,jdbcType=VARCHAR},
             </if>
@@ -146,7 +143,13 @@
                 remark = #{remark,jdbcType=VARCHAR},
             </if>
         </set>
-        where id = #{id,jdbcType=BIGINT} and deleted = 0
+        <where>
+            id = #{id,jdbcType=BIGINT}
+            and deleted = 0
+            <if test="type != null">
+                and type = #{type,jdbcType=TINYINT}
+            </if>
+        </where>
     </update>
 
     <sql id="find_detail_query">

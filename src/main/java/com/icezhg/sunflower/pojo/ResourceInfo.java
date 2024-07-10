@@ -29,6 +29,11 @@ public class ResourceInfo {
     private String description;
 
     /**
+     * 规则详细
+     */
+    private String detail;
+
+    /**
      * 备注
      */
     private String remark;

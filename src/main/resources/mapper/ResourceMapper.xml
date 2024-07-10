@@ -9,6 +9,7 @@
         <result property="name" column="name" jdbcType="VARCHAR"/>
         <result property="description" column="description" jdbcType="VARCHAR"/>
         <result property="type" column="type" jdbcType="TINYINT"/>
+        <result property="detail" column="detail" jdbcType="VARCHAR"/>
         <result property="status" column="status" jdbcType="CHAR"/>
         <result property="deleted" column="deleted" jdbcType="TINYINT"/>
         <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
@@ -20,7 +21,7 @@
 
     <sql id="Base_Column_List">
         id, `name`, `description`,
-        `type`, `status`, deleted,
+        `type`, detail, `status`, deleted,
         create_time, create_by, update_time,
         update_by, remark
     </sql>
@@ -131,6 +132,7 @@
             <if test="name != null">`name`,</if>
             <if test="description != null">`description`,</if>
             <if test="type != null">`type`,</if>
+            <if test="detail != null">detail,</if>
             <if test="status != null">`status`,</if>
             <if test="deleted != null">deleted,</if>
             <if test="createTime != null">create_time,</if>
@@ -144,6 +146,7 @@
             <if test="name != null">#{name,jdbcType=VARCHAR},</if>
             <if test="description != null">#{description,jdbcType=VARCHAR},</if>
             <if test="type != null">#{type,jdbcType=TINYINT},</if>
+            <if test="detail != null">#{detail,jdbcType=VARCHAR},</if>
             <if test="status != null">#{status,jdbcType=CHAR},</if>
             <if test="deleted != null">#{deleted,jdbcType=TINYINT},</if>
             <if test="createTime != null">#{createTime,jdbcType=TIMESTAMP},</if>
@@ -163,6 +166,9 @@
             <if test="description != null">
                 `description` = #{description,jdbcType=VARCHAR},
             </if>
+            <if test="detail != null">
+                detail = #{detail,jdbcType=VARCHAR},
+            </if>
             <if test="status != null">
                 `status` = #{status,jdbcType=CHAR},
             </if>
@@ -176,7 +182,13 @@
                 remark = #{remark,jdbcType=VARCHAR},
             </if>
         </set>
-        where id = #{id,jdbcType=BIGINT} and deleted = 0
+        <where>
+            id = #{id,jdbcType=BIGINT}
+            and deleted = 0
+            <if test="type != null">
+                and type = #{type,jdbcType=TINYINT}
+            </if>
+        </where>
     </update>
 
     <sql id="findCondition">

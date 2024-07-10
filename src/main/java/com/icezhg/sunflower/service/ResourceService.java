@@ -1,7 +1,9 @@
 package com.icezhg.sunflower.service;
 
 import com.icezhg.sunflower.domain.Resource;
+import com.icezhg.sunflower.enums.ResourceType;
 import com.icezhg.sunflower.pojo.ChangeStatus;
+import com.icezhg.sunflower.pojo.ResourceInfo;
 import com.icezhg.sunflower.pojo.query.Query;
 
 import java.util.List;
@@ -11,9 +13,9 @@ import java.util.List;
  */
 public interface ResourceService {
 
-    Object insert(Resource resource);
+    ResourceInfo insert(ResourceInfo info, ResourceType resourceType);
 
-    Object update(Resource resource);
+    ResourceInfo update(ResourceInfo info, ResourceType resourceType);
 
     Resource findById(Long id);
 

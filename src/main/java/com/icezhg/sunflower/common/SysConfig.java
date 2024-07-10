@@ -8,4 +8,5 @@ public interface SysConfig {
     String DEFAULT_AVATAR_PICTURE = "sys.user.defaultAvatar";
     String INIT_CLIENT_PASSWD = "sys.client.initPassword";
     String PASSWD_SM4_SALT = "sys.pw.sm4.salt";
+    String RESOURCE_AMOUNT_LIMIT = "resource.amount.limit";
 }

@@ -163,9 +163,6 @@
             <if test="description != null">
                 `description` = #{description,jdbcType=VARCHAR},
             </if>
-            <if test="type != null">
-                `type` = #{type,jdbcType=TINYINT},
-            </if>
             <if test="status != null">
                 `status` = #{status,jdbcType=CHAR},
             </if>

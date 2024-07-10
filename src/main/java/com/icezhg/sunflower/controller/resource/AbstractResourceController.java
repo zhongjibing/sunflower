@@ -1,10 +1,7 @@
 package com.icezhg.sunflower.controller.resource;
 
 import com.icezhg.commons.exception.InvalidAccessException;
-import com.icezhg.sunflower.common.Constant;
-import com.icezhg.sunflower.domain.Resource;
 import com.icezhg.sunflower.enums.ResourceType;
-import com.icezhg.sunflower.pojo.ResourceInfo;
 import com.icezhg.sunflower.service.ResourceService;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -24,16 +21,6 @@ public abstract class AbstractResourceController {
 
     abstract ResourceType resourceType();
 
-    protected Resource buildResource(ResourceInfo info) {
-        Resource resource = new Resource();
-        resource.setId(info.getId());
-        resource.setName(info.getName());
-        resource.setDescription(info.getDescription());
-        resource.setType(resourceType().getType());
-        resource.setStatus(Constant.NORMAL);
-        resource.setRemark(info.getRemark());
-        return resource;
-    }
 
     protected void checkDataPermission(List<Long> resourceIds) {
         boolean matched = this.resourceService.findByIds(resourceIds)

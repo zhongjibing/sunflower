@@ -38,7 +38,7 @@ public class ConferenceResourceController extends AbstractResourceController {
     @Secured(Authority.Resource.ConferenceRoom.ADD)
     @Operation(title = "conference rooms addition", type = OperationType.INSERT)
     public Object add(@Validated @RequestBody ResourceInfo info) {
-        return this.resourceService.insert(buildResource(info));
+        return this.resourceService.insert(info, resourceType());
     }
 
     @PutMapping
@@ -46,7 +46,7 @@ public class ConferenceResourceController extends AbstractResourceController {
     @Operation(title = "conference rooms modification", type = OperationType.UPDATE)
     public Object edit(@Validated @RequestBody ResourceInfo info) {
         checkDataPermission(List.of(info.getId()));
-        return this.resourceService.update(buildResource(info));
+        return this.resourceService.update(info, resourceType());
     }
 
     @DeleteMapping

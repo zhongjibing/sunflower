@@ -41,7 +41,7 @@
         </foreach>
     </select>
 
-    <sql id="Delete_Statement">
+    <update id="delete" parameterType="map">
         update t_resource
         <set>
             deleted = 1,
@@ -62,10 +62,6 @@
                 </when>
             </choose>
         </set>
-    </sql>
-
-    <update id="delete" parameterType="map">
-        <include refid="Delete_Statement"/>
         <where>
             <choose>
                 <when test="id != null">
@@ -74,23 +70,9 @@
                 <when test="data != null">
                     id = #{data,jdbcType=BIGINT}
                 </when>
-                <otherwise>
-                    false
-                </otherwise>
-            </choose>
-        </where>
-    </update>
-
-    <update id="deleteByIds" parameterType="map">
-        <include refid="Delete_Statement"/>
-        <where>
-            <choose>
-                <when test="id != null">
-                    id = #{id,jdbcType=BIGINT}
-                </when>
-                <when test="data != null and data.size() > 0">
+                <when test="list != null and list.size() > 0">
                     id in
-                    <foreach collection="data" item="item" open="(" separator=", " close=")">
+                    <foreach collection="list" item="item" open="(" separator=", " close=")">
                         #{item,jdbcType=BIGINT}
                     </foreach>
                 </when>
@@ -127,9 +109,12 @@
                 <when test="id != null">
                     id = #{id,jdbcType=BIGINT}
                 </when>
-                <when test="data != null and data.size() > 0">
+                <when test="data != null">
+                    id = #{data,jdbcType=BIGINT}
+                </when>
+                <when test="list != null and list.size() > 0">
                     id in
-                    <foreach collection="data" item="item" open="(" separator=", " close=")">
+                    <foreach collection="list" item="item" open="(" separator=", " close=")">
                         #{item,jdbcType=BIGINT}
                     </foreach>
                 </when>

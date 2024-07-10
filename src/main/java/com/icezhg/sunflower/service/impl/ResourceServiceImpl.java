@@ -70,7 +70,7 @@ public class ResourceServiceImpl implements ResourceService {
     @Override
     public void deleteByIds(List<Long> ids) {
         if (CollectionUtils.isNotEmpty(ids)) {
-            this.resourceDao.deleteByIds(DeleteQuery.of(ids).toMap());
+            this.resourceDao.delete(DeleteQuery.of(ids).toMap());
         }
     }
 

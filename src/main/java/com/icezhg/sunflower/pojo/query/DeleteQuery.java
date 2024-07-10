@@ -3,6 +3,7 @@ package com.icezhg.sunflower.pojo.query;
 import com.icezhg.sunflower.util.SecurityUtil;
 import lombok.Getter;
 
+import java.util.Collection;
 import java.util.Date;
 
 /**
@@ -12,13 +13,21 @@ import java.util.Date;
 public class DeleteQuery implements Query {
 
     private final Object data;
+    private final Object list;
 
     private final Object user;
 
     private final Date date;
 
     private DeleteQuery(Object data, Object user, Date date) {
-        this.data = data;
+        if (data instanceof Collection) {
+            this.data = null;
+            this.list = data;
+
+        } else {
+            this.data = data;
+            this.list = null;
+        }
         this.user = user;
         this.date = date;
     }

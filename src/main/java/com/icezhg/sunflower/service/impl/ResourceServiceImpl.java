@@ -97,7 +97,6 @@ public class ResourceServiceImpl implements ResourceService {
             info.setId(resource.getId());
             info.setName(resource.getName());
             info.setDescription(resource.getDescription());
-            info.setNumber(resource.getNumber());
             info.setRemark(resource.getRemark());
         }
         return info;

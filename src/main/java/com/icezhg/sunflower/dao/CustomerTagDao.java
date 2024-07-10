@@ -13,9 +13,7 @@ import java.util.Map;
 @Repository
 public interface CustomerTagDao {
 
-    int delete(Integer id);
-
-    int deleteByIds(List<Integer> tagIds);
+    int delete(Map<String, Object> params);
 
     int insert(CustomerTag record);
 
@@ -29,4 +27,5 @@ public interface CustomerTagDao {
 
     List<CustomerTag> findAll();
 
+    boolean hasUsed(List<Integer> tagIds);
 }

@@ -1,8 +1,10 @@
 package com.icezhg.sunflower.service.impl;
 
+import com.icezhg.commons.exception.InvalidDataStateException;
 import com.icezhg.sunflower.dao.CustomerTagDao;
 import com.icezhg.sunflower.domain.CustomerTag;
 import com.icezhg.sunflower.pojo.CustomerTagInfo;
+import com.icezhg.sunflower.pojo.query.DeleteQuery;
 import com.icezhg.sunflower.pojo.query.Query;
 import com.icezhg.sunflower.service.CustomerTagService;
 import com.icezhg.sunflower.util.SecurityUtil;
@@ -45,9 +47,16 @@ public class CustomerTagServiceImpl implements CustomerTagService {
 
     @Override
     public void deleteByIds(List<Integer> tagIds) {
-        if (CollectionUtils.isNotEmpty(tagIds)) {
-            customerTagDao.deleteByIds(tagIds);
+        if (CollectionUtils.isEmpty(tagIds)) {
+            return;
         }
+
+        boolean used = customerTagDao.hasUsed(tagIds);
+        if (used) {
+            throw new InvalidDataStateException("", "can not delete tags in use");
+        }
+
+        customerTagDao.delete(DeleteQuery.of(tagIds).toMap());
     }
 
     @Override

@@ -30,7 +30,6 @@ public abstract class AbstractResourceController {
         resource.setName(info.getName());
         resource.setDescription(info.getDescription());
         resource.setType(resourceType().getType());
-        resource.setNumber(info.getNumber());
         resource.setStatus(Constant.NORMAL);
         resource.setRemark(info.getRemark());
         return resource;

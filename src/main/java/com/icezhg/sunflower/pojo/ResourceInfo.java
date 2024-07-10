@@ -1,6 +1,5 @@
 package com.icezhg.sunflower.pojo;
 
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
@@ -28,12 +27,6 @@ public class ResourceInfo {
      */
     @Size(max = 256)
     private String description;
-
-    /**
-     * 数量
-     */
-    @Min(0)
-    private Integer number;
 
     /**
      * 备注

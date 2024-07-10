@@ -30,6 +30,11 @@ public class CustomerTag {
     private String styleClass;
 
     /**
+     * 是否删除
+     */
+    private Integer deleted;
+
+    /**
      * 创建时间
      */
     private Date createTime;

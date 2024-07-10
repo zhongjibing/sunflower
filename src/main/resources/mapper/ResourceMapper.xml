@@ -9,7 +9,6 @@
         <result property="name" column="name" jdbcType="VARCHAR"/>
         <result property="description" column="description" jdbcType="VARCHAR"/>
         <result property="type" column="type" jdbcType="TINYINT"/>
-        <result property="number" column="number" jdbcType="INTEGER"/>
         <result property="status" column="status" jdbcType="CHAR"/>
         <result property="deleted" column="deleted" jdbcType="TINYINT"/>
         <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
@@ -21,7 +20,7 @@
 
     <sql id="Base_Column_List">
         id, `name`, `description`,
-        `type`, `number`, `status`, deleted,
+        `type`, `status`, deleted,
         create_time, create_by, update_time,
         update_by, remark
     </sql>
@@ -132,7 +131,6 @@
             <if test="name != null">`name`,</if>
             <if test="description != null">`description`,</if>
             <if test="type != null">`type`,</if>
-            <if test="number != null">`number`,</if>
             <if test="status != null">`status`,</if>
             <if test="deleted != null">deleted,</if>
             <if test="createTime != null">create_time,</if>
@@ -146,7 +144,6 @@
             <if test="name != null">#{name,jdbcType=VARCHAR},</if>
             <if test="description != null">#{description,jdbcType=VARCHAR},</if>
             <if test="type != null">#{type,jdbcType=TINYINT},</if>
-            <if test="number != null">#{number,jdbcType=OTHER},</if>
             <if test="status != null">#{status,jdbcType=CHAR},</if>
             <if test="deleted != null">#{deleted,jdbcType=TINYINT},</if>
             <if test="createTime != null">#{createTime,jdbcType=TIMESTAMP},</if>
@@ -169,14 +166,8 @@
             <if test="type != null">
                 `type` = #{type,jdbcType=TINYINT},
             </if>
-            <if test="number != null">
-                `number` = #{number,jdbcType=OTHER},
-            </if>
             <if test="status != null">
                 `status` = #{status,jdbcType=CHAR},
-            </if>
-            <if test="deleted != null">
-                deleted = #{deleted,jdbcType=TINYINT},
             </if>
             <if test="updateTime != null">
                 update_time = #{updateTime,jdbcType=TIMESTAMP},
@@ -188,7 +179,7 @@
                 remark = #{remark,jdbcType=VARCHAR},
             </if>
         </set>
-        where id = #{id,jdbcType=BIGINT}
+        where id = #{id,jdbcType=BIGINT} and deleted = 0
     </update>
 
     <sql id="findCondition">

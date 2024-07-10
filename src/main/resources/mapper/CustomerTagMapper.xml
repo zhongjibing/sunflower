@@ -9,6 +9,7 @@
         <result property="name" column="name" jdbcType="VARCHAR"/>
         <result property="description" column="description" jdbcType="VARCHAR"/>
         <result property="styleClass" column="style_class" jdbcType="VARCHAR"/>
+        <result property="deleted" column="deleted" jdbcType="TINYINT"/>
         <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
         <result property="createBy" column="create_by" jdbcType="VARCHAR"/>
         <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
@@ -18,7 +19,7 @@
 
     <sql id="Base_Column_List">
         id, name, description,
-        style_class, create_time, create_by,
+        style_class, deleted, create_time, create_by,
         update_time, update_by, remark
     </sql>
 
@@ -29,20 +30,47 @@
         where id = #{id,jdbcType=INTEGER}
     </select>
 
-    <delete id="delete" parameterType="int">
-        delete
-        from t_customer_tag
-        where id = #{id,jdbcType=INTEGER}
-    </delete>
-
-    <delete id="deleteByIds" parameterType="list">
-        delete
-        from t_customer_tag
-        where id in
-        <foreach collection="list" item="item" open="(" separator=", " close=")">
-            #{item,jdbcType=INTEGER}
-        </foreach>
-    </delete>
+    <update id="delete" parameterType="map">
+        update t_customer_tag
+        <set>
+            deleted = 1,
+            <choose>
+                <when test="updateTime != null">
+                    update_time = #{updateTime,jdbcType=TIMESTAMP},
+                </when>
+                <when test="date != null">
+                    update_time = #{date,jdbcType=TIMESTAMP},
+                </when>
+            </choose>
+            <choose>
+                <when test="updateBy != null">
+                    update_by = #{updateBy,jdbcType=VARCHAR},
+                </when>
+                <when test="user != null">
+                    update_by = #{user,jdbcType=VARCHAR},
+                </when>
+            </choose>
+        </set>
+        <where>
+            <choose>
+                <when test="id != null">
+                    id = #{id,jdbcType=BIGINT}
+                </when>
+                <when test="data != null">
+                    id = #{data,jdbcType=BIGINT}
+                </when>
+                <when test="list != null and list.size() > 0">
+                    id in
+                    <foreach collection="list" item="item" open="(" separator=", " close=")">
+                        #{item,jdbcType=BIGINT}
+                    </foreach>
+                </when>
+                <otherwise>
+                    false
+                </otherwise>
+            </choose>
+        </where>
+    </update>
 
     <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.icezhg.sunflower.domain.CustomerTag"
             useGeneratedKeys="true">
@@ -83,12 +111,6 @@
             <if test="styleClass != null">
                 style_class = #{styleClass,jdbcType=VARCHAR},
             </if>
-            <if test="createTime != null">
-                create_time = #{createTime,jdbcType=TIMESTAMP},
-            </if>
-            <if test="createBy != null">
-                create_by = #{createBy,jdbcType=VARCHAR},
-            </if>
             <if test="updateTime != null">
                 update_time = #{updateTime,jdbcType=TIMESTAMP},
             </if>
@@ -104,6 +126,7 @@
 
     <sql id="findCondition">
         <where>
+            deleted = 0
             <if test="name != null">
                 and LOCATE(#{name,jdbcType=VARCHAR}, `name`) > 0
             </if>
@@ -129,5 +152,17 @@
         from t_customer_tag
         <include refid="findCondition"/>
         order by id asc
+    </select>
+
+    <select id="hasUsed" parameterType="list" resultType="boolean">
+        select count(*) > 0 result
+        from (
+            select id from t_price_rule
+            where tag_id in
+            <foreach collection="list" item="item" open="(" separator=", " close=")">
+                #{item,jdbcType=INTEGER}
+            </foreach>
+            limit 1
+        ) a
     </select>
 </mapper>

@@ -30,11 +30,6 @@ public class Resource extends BaseEntity {
     private Integer type;
 
     /**
-     * 数量
-     */
-    private Integer number;
-
-    /**
      * 状态
      */
     private String status;

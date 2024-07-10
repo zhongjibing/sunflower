@@ -32,7 +32,16 @@
     <delete id="delete" parameterType="int">
         delete
         from t_customer_tag
-        where id = #{id,jdbcType=OTHER}
+        where id = #{id,jdbcType=INTEGER}
+    </delete>
+
+    <delete id="deleteByIds" parameterType="list">
+        delete
+        from t_customer_tag
+        where id in
+        <foreach collection="list" item="item" open="(" separator=", " close=")">
+            #{item,jdbcType=INTEGER}
+        </foreach>
     </delete>
 
     <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.icezhg.sunflower.domain.CustomerTag"

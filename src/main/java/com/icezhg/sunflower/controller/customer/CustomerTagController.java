@@ -2,10 +2,9 @@ package com.icezhg.sunflower.controller.customer;
 
 import com.icezhg.sunflower.annotation.Operation;
 import com.icezhg.sunflower.common.Authority;
-import com.icezhg.sunflower.domain.CustomerTag;
 import com.icezhg.sunflower.enums.OperationType;
+import com.icezhg.sunflower.pojo.CustomerTagInfo;
 import com.icezhg.sunflower.pojo.PageResult;
-import com.icezhg.sunflower.pojo.PriceRuleInfo;
 import com.icezhg.sunflower.pojo.query.NameQuery;
 import com.icezhg.sunflower.service.CustomerTagService;
 import org.springframework.security.access.annotation.Secured;
@@ -35,42 +34,40 @@ public class CustomerTagController {
     }
 
     @PostMapping
-    @Secured(Authority.Price.BanquetHall.ADD)
+    @Secured(Authority.Customer.Tags.ADD)
     @Operation(title = "banquet halls addition", type = OperationType.INSERT)
-    public Object add(@Validated @RequestBody CustomerTag info) {
-        return this.customerTagService.insert(buildPriceRule(info));
+    public Object add(@Validated @RequestBody CustomerTagInfo info) {
+        return this.customerTagService.insert(info);
     }
 
     @PutMapping
-    @Secured(Authority.Price.BanquetHall.EDIT)
+    @Secured(Authority.Customer.Tags.EDIT)
     @Operation(title = "banquet halls modification", type = OperationType.UPDATE)
-    public Object edit(@Validated @RequestBody PriceRuleInfo info) {
-        checkDataPermission(List.of(info.getId()));
-        return this.customerTagService.update(buildPriceRule(info));
+    public Object edit(@Validated @RequestBody CustomerTagInfo info) {
+        return this.customerTagService.update(info);
     }
 
     @DeleteMapping
-    @Secured(Authority.Price.BanquetHall.DELETE)
+    @Secured(Authority.Customer.Tags.DELETE)
     @Operation(title = "banquet halls deletion", type = OperationType.DELETE)
-    public void delete(@RequestBody List<Long> resourceIds) {
-        this.customerTagService.deleteByIds(resourceIds);
+    public void delete(@RequestBody List<Integer> tagIds) {
+        this.customerTagService.deleteByIds(tagIds);
     }
 
     @GetMapping("/list")
-    @Secured(Authority.Price.BanquetHall.QUERY)
+    @Secured(Authority.Customer.Tags.QUERY)
     public PageResult list(NameQuery query) {
         return new PageResult(customerTagService.count(query), customerTagService.find(query));
     }
 
     @GetMapping("/all")
-    @Secured(Authority.Price.BanquetHall.QUERY)
-    public Object listAll(NameQuery query) {
-        return customerTagService.listAll(query);
+    public Object listAll() {
+        return customerTagService.listAll();
     }
 
     @GetMapping("/{id}")
-    @Secured(Authority.Price.BanquetHall.QUERY)
-    public Object get(@PathVariable Long id) {
+    @Secured(Authority.Customer.Tags.QUERY)
+    public Object get(@PathVariable Integer id) {
         return this.customerTagService.findById(id);
     }
 }

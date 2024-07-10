@@ -151,4 +151,14 @@ public interface Authority {
             String DELETE = "price:room:delete";
         }
     }
+
+    interface Customer {
+
+        interface Tags {
+            String QUERY = "customer:tags:query";
+            String ADD = "customer:tags:add";
+            String EDIT = "customer:tags:edit";
+            String DELETE = "customer:tags:delete";
+        }
+    }
 }

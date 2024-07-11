@@ -87,4 +87,10 @@ public class RoomResourceController extends AbstractResourceController {
         return this.resourceService.changeStatus(change);
     }
 
+    @GetMapping("/all")
+    @Secured({Authority.Price.GuestRoom.ADD, Authority.Price.GuestRoom.EDIT})
+    public Object listAll() {
+        return resourceService.listAll(resourceType());
+    }
+
 }

@@ -26,5 +26,6 @@ public interface ResourceDao {
 
     List<Resource> find(Map<String, Object> params);
 
+    List<Resource> findAll(Map<String, Object> params);
     int restoreByIds(Map<String, Object> params);
 }

@@ -78,6 +78,13 @@ public class ResourceServiceImpl implements ResourceService {
     }
 
     @Override
+    public List<Resource> listAll(ResourceType resourceType) {
+        ResourceQuery query = new ResourceQuery();
+        query.setType(resourceType.getType());
+        return resourceDao.findAll(query.toMap());
+    }
+
+    @Override
     public List<Resource> findByIds(List<Long> ids) {
         if (CollectionUtils.isEmpty(ids)) {
             return Collections.emptyList();

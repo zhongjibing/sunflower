@@ -176,7 +176,7 @@
     <select id="findPriceRuleDetailById" parameterType="long" resultType="com.icezhg.sunflower.pojo.PriceRuleDetail">
         <include refid="find_detail_query" />
         <where>
-            id = #{id,jdbcType=BIGINT}
+            pr.id = #{id,jdbcType=BIGINT}
         </where>
     </select>
 

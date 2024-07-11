@@ -61,6 +61,11 @@ public class CustomerTagController {
     }
 
     @GetMapping("/all")
+    @Secured({
+            Authority.Price.BanquetHall.ADD, Authority.Price.BanquetHall.EDIT,
+            Authority.Price.ConferenceRoom.ADD, Authority.Price.ConferenceRoom.EDIT,
+            Authority.Price.GuestRoom.ADD, Authority.Price.GuestRoom.EDIT
+    })
     public Object listAll() {
         return customerTagService.listAll();
     }

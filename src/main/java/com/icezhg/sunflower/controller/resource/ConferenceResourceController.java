@@ -87,4 +87,10 @@ public class ConferenceResourceController extends AbstractResourceController {
         return this.resourceService.changeStatus(change);
     }
 
+    @GetMapping("/all")
+    @Secured({Authority.Price.ConferenceRoom.ADD, Authority.Price.ConferenceRoom.EDIT})
+    public Object listAll() {
+        return resourceService.listAll(resourceType());
+    }
+
 }

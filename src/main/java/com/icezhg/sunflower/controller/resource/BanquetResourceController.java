@@ -87,4 +87,10 @@ public class BanquetResourceController extends AbstractResourceController {
         return resourceService.changeStatus(change);
     }
 
+    @GetMapping("/all")
+    @Secured({Authority.Price.BanquetHall.ADD, Authority.Price.BanquetHall.EDIT})
+    public Object listAll() {
+        return resourceService.listAll(resourceType());
+    }
+
 }

@@ -23,6 +23,8 @@ public interface ResourceService {
 
     List<Resource> find(Query query);
 
+    List<Resource> listAll(ResourceType resourceType);
+
     List<Resource> findByIds(List<Long> ids);
 
     void deleteByIds(List<Long> ids);

@@ -225,4 +225,11 @@
         limit #{offset,jdbcType=INTEGER}, #{pageSize,jdbcType=INTEGER}
     </select>
 
+    <select id="findAll" parameterType="map" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/>
+        from t_resource
+        <include refid="findCondition"/>
+        order by deleted asc, id asc
+    </select>
+
 </mapper>

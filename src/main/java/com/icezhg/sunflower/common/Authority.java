@@ -135,6 +135,7 @@ public interface Authority {
             String ADD = "price:banquet:add";
             String EDIT = "price:banquet:edit";
             String DELETE = "price:banquet:delete";
+            String GENERATE = "price:banquet:generate";
         }
 
         interface ConferenceRoom {
@@ -142,6 +143,7 @@ public interface Authority {
             String ADD = "price:conference:add";
             String EDIT = "price:conference:edit";
             String DELETE = "price:conference:delete";
+            String GENERATE = "price:conference:generate";
         }
 
         interface GuestRoom {
@@ -149,6 +151,7 @@ public interface Authority {
             String ADD = "price:room:add";
             String EDIT = "price:room:edit";
             String DELETE = "price:room:delete";
+            String GENERATE = "price:room:generate";
         }
     }
 

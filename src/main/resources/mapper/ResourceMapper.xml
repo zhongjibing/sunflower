@@ -225,11 +225,12 @@
         limit #{offset,jdbcType=INTEGER}, #{pageSize,jdbcType=INTEGER}
     </select>
 
-    <select id="findAll" parameterType="map" resultMap="BaseResultMap">
-        select <include refid="Base_Column_List"/>
-        from t_resource
-        <include refid="findCondition"/>
-        order by deleted asc, id asc
+    <select id="findByType" parameterType="int" resultType="com.icezhg.sunflower.pojo.ResourceInfo">
+        select r.id, r.name, r.description, r.detail, r.remark, count(pr.id) > 0 as refered
+        from t_resource r left join t_price_rule pr on r.id = pr.resource_id
+        where r.type = #{type,jdbcType=TINYINT} and r.deleted = 0
+        group by r.id
+        order by r.id asc
     </select>
 
 </mapper>

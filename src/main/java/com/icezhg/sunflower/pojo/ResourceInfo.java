@@ -37,4 +37,5 @@ public class ResourceInfo {
      * 备注
      */
     private String remark;
+
 }

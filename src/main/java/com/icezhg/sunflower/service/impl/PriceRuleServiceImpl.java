@@ -1,5 +1,6 @@
 package com.icezhg.sunflower.service.impl;
 
+import com.icezhg.commons.exception.InvalidParameterException;
 import com.icezhg.sunflower.dao.PriceRuleDao;
 import com.icezhg.sunflower.domain.PriceRule;
 import com.icezhg.sunflower.pojo.PriceRuleDetail;
@@ -29,13 +30,22 @@ public class PriceRuleServiceImpl implements PriceRuleService {
     @Override
     public PriceRuleInfo insert(PriceRule priceRule) {
         priceRule.setId(null);
+        checkUnique(priceRule);
         CommonUtils.completeBaseInfo(priceRule);
         this.priceRuleDao.insert(priceRule);
         return buildPriceRuleInfo(this.priceRuleDao.findById(priceRule.getId()));
     }
 
+    private void checkUnique(PriceRule priceRule) {
+        PriceRule existing = priceRuleDao.findByResourceIdAndTagId(priceRule.getResourceId(), priceRule.getTagId());
+        if (existing != null && (priceRule.getId() == null || !priceRule.getId().equals(existing.getId()))) {
+            throw new InvalidParameterException("", "a record already exists with same resource and tag");
+        }
+    }
+
     @Override
     public PriceRuleInfo update(PriceRule priceRule) {
+        checkUnique(priceRule);
         CommonUtils.completeBaseInfo(priceRule);
         this.priceRuleDao.update(priceRule);
         return buildPriceRuleInfo(this.priceRuleDao.findById(priceRule.getId()));

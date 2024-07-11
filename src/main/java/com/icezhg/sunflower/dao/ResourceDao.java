@@ -1,6 +1,7 @@
 package com.icezhg.sunflower.dao;
 
 import com.icezhg.sunflower.domain.Resource;
+import com.icezhg.sunflower.pojo.ResourceInfo;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -26,6 +27,7 @@ public interface ResourceDao {
 
     List<Resource> find(Map<String, Object> params);
 
-    List<Resource> findAll(Map<String, Object> params);
+    List<ResourceInfo> findByType(Integer type);
+
     int restoreByIds(Map<String, Object> params);
 }

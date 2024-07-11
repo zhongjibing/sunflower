@@ -3,6 +3,7 @@ package com.icezhg.sunflower.dao;
 
 import com.icezhg.sunflower.domain.PriceRule;
 import com.icezhg.sunflower.pojo.PriceRuleDetail;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -30,4 +31,5 @@ public interface PriceRuleDao {
 
     List<PriceRuleDetail> findPriceRuleDetails(Map<String, Object> params);
 
+    PriceRule findByResourceIdAndTagId(@Param("resourceId") Long resourceId, @Param("tagId") Integer tagId);
 }

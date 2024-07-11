@@ -124,12 +124,6 @@
             <if test="name != null">
                 name = #{name,jdbcType=VARCHAR},
             </if>
-            <if test="tagId != null">
-                tag_id = #{tagId,jdbcType=INTEGER},
-            </if>
-            <if test="resourceId != null">
-                resource_id = #{resourceId,jdbcType=BIGINT},
-            </if>
             <if test="detail != null">
                 detail = #{detail,jdbcType=VARCHAR},
             </if>
@@ -207,6 +201,15 @@
         <include refid="find_condition" />
         order by pr.deleted asc, pr.id asc
         limit #{offset,jdbcType=INTEGER}, #{pageSize,jdbcType=INTEGER}
+    </select>
+
+    <select id="findByResourceIdAndTagId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_price_rule
+        where resource_id = #{resourceId,jdbcType=BIGINT}
+        and tag_id = #{tagId,jdbcType=INTEGER}
+        and deleted = 0
     </select>
 
 </mapper>

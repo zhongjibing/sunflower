@@ -78,10 +78,8 @@ public class ResourceServiceImpl implements ResourceService {
     }
 
     @Override
-    public List<Resource> listAll(ResourceType resourceType) {
-        ResourceQuery query = new ResourceQuery();
-        query.setType(resourceType.getType());
-        return resourceDao.findAll(query.toMap());
+    public List<ResourceInfo> listAll(ResourceType resourceType) {
+        return resourceDao.findByType(resourceType.getType());
     }
 
     @Override

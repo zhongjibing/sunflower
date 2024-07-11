@@ -62,7 +62,7 @@ public class ConferencePriceController extends AbstractPriceController {
         return new PageResult(priceRuleService.count(query), priceRuleService.find(query));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{id:\\d+}")
     @Secured(Authority.Price.ConferenceRoom.QUERY)
     public Object getRule(@PathVariable Long id) {
         checkDataPermission(List.of(id));

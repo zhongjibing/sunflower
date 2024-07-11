@@ -72,7 +72,7 @@ public class RoomResourceController extends AbstractResourceController {
         return new PageResult(resourceService.count(query), resourceService.find(query));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{id:\\d+}")
     @Secured(Authority.Resource.GuestRoom.QUERY)
     public Resource get(@PathVariable Long id) {
         checkDataPermission(List.of(id));

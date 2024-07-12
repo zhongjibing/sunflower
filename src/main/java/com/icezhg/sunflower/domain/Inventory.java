@@ -29,4 +29,9 @@ public class Inventory extends BaseEntity {
      */
     private Integer number;
 
+    /**
+     * 是否删除
+     */
+    private Integer deleted;
+
 }

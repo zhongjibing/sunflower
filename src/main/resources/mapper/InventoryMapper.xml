@@ -5,89 +5,204 @@
 <mapper namespace="com.icezhg.sunflower.dao.InventoryDao">
 
     <resultMap id="BaseResultMap" type="com.icezhg.sunflower.domain.Inventory">
-            <id property="id" column="id" jdbcType="BIGINT"/>
-            <result property="resourceId" column="resource_id" jdbcType="BIGINT"/>
-            <result property="type" column="type" jdbcType="TINYINT"/>
-            <result property="number" column="number" jdbcType="INTEGER"/>
-            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
-            <result property="createBy" column="create_by" jdbcType="VARCHAR"/>
-            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
-            <result property="updateBy" column="update_by" jdbcType="VARCHAR"/>
-            <result property="remark" column="remark" jdbcType="VARCHAR"/>
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="resourceId" column="resource_id" jdbcType="BIGINT"/>
+        <result property="type" column="type" jdbcType="TINYINT"/>
+        <result property="number" column="number" jdbcType="INTEGER"/>
+        <result property="deleted" column="deleted" jdbcType="TINYINT"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="createBy" column="create_by" jdbcType="VARCHAR"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="updateBy" column="update_by" jdbcType="VARCHAR"/>
+        <result property="remark" column="remark" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,resource_id,type,
-        number,create_time,create_by,
-        update_time,update_by,remark
+        id, resource_id, `type`,
+        `number`, deleted, create_time, create_by,
+        update_time, update_by, remark
     </sql>
 
-    <select id="findById" parameterType="long" resultMap="BaseResultMap">
-        select
-        <include refid="Base_Column_List" />
-        from t_inventory
-        where  id = #{id,jdbcType=BIGINT} 
-    </select>
+    <update id="delete" parameterType="map">
+        update t_inventory
+        <set>
+            deleted = 1,
+            <choose>
+                <when test="updateTime != null">
+                    update_time = #{updateTime,jdbcType=TIMESTAMP},
+                </when>
+                <when test="date != null">
+                    update_time = #{date,jdbcType=TIMESTAMP},
+                </when>
+            </choose>
+            <choose>
+                <when test="updateBy != null">
+                    update_by = #{updateBy,jdbcType=VARCHAR},
+                </when>
+                <when test="user != null">
+                    update_by = #{user,jdbcType=VARCHAR},
+                </when>
+            </choose>
+        </set>
+        <where>
+            <choose>
+                <when test="id != null">
+                    id = #{id,jdbcType=BIGINT}
+                </when>
+                <when test="data != null">
+                    id = #{data,jdbcType=BIGINT}
+                </when>
+                <when test="list != null and list.size() > 0">
+                    id in
+                    <foreach collection="list" item="item" open="(" separator=", " close=")">
+                        #{item,jdbcType=BIGINT}
+                    </foreach>
+                </when>
+                <otherwise>
+                    false
+                </otherwise>
+            </choose>
+        </where>
+    </update>
 
-    <delete id="delete" parameterType="long">
-        delete from t_inventory
-        where  id = #{id,jdbcType=BIGINT} 
-    </delete>
-
-    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.icezhg.sunflower.domain.Inventory" useGeneratedKeys="true">
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.icezhg.sunflower.domain.Inventory"
+            useGeneratedKeys="true">
         insert into t_inventory
         <trim prefix="(" suffix=")" suffixOverrides=",">
-                <if test="id != null">id,</if>
-                <if test="resourceId != null">resource_id,</if>
-                <if test="type != null">type,</if>
-                <if test="number != null">number,</if>
-                <if test="createTime != null">create_time,</if>
-                <if test="createBy != null">create_by,</if>
-                <if test="updateTime != null">update_time,</if>
-                <if test="updateBy != null">update_by,</if>
-                <if test="remark != null">remark,</if>
+            <if test="id != null">id,</if>
+            <if test="resourceId != null">resource_id,</if>
+            <if test="type != null">type,</if>
+            <if test="number != null">number,</if>
+            <if test="deleted != null">deleted,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="remark != null">remark,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-                <if test="id != null">#{id,jdbcType=BIGINT},</if>
-                <if test="resourceId != null">#{resourceId,jdbcType=BIGINT},</if>
-                <if test="type != null">#{type,jdbcType=TINYINT},</if>
-                <if test="number != null">#{number,jdbcType=INTEGER},</if>
-                <if test="createTime != null">#{createTime,jdbcType=TIMESTAMP},</if>
-                <if test="createBy != null">#{createBy,jdbcType=VARCHAR},</if>
-                <if test="updateTime != null">#{updateTime,jdbcType=TIMESTAMP},</if>
-                <if test="updateBy != null">#{updateBy,jdbcType=VARCHAR},</if>
-                <if test="remark != null">#{remark,jdbcType=VARCHAR},</if>
+            <if test="id != null">#{id,jdbcType=BIGINT},</if>
+            <if test="resourceId != null">#{resourceId,jdbcType=BIGINT},</if>
+            <if test="type != null">#{type,jdbcType=TINYINT},</if>
+            <if test="number != null">#{number,jdbcType=INTEGER},</if>
+            <if test="deleted != null">#{deleted,jdbcType=TINYINT},</if>
+            <if test="createTime != null">#{createTime,jdbcType=TIMESTAMP},</if>
+            <if test="createBy != null">#{createBy,jdbcType=VARCHAR},</if>
+            <if test="updateTime != null">#{updateTime,jdbcType=TIMESTAMP},</if>
+            <if test="updateBy != null">#{updateBy,jdbcType=VARCHAR},</if>
+            <if test="remark != null">#{remark,jdbcType=VARCHAR},</if>
         </trim>
     </insert>
 
     <update id="update" parameterType="com.icezhg.sunflower.domain.Inventory">
         update t_inventory
         <set>
-                <if test="resourceId != null">
-                    resource_id = #{resourceId,jdbcType=BIGINT},
-                </if>
-                <if test="type != null">
-                    type = #{type,jdbcType=TINYINT},
-                </if>
-                <if test="number != null">
-                    number = #{number,jdbcType=INTEGER},
-                </if>
-                <if test="createTime != null">
-                    create_time = #{createTime,jdbcType=TIMESTAMP},
-                </if>
-                <if test="createBy != null">
-                    create_by = #{createBy,jdbcType=VARCHAR},
-                </if>
-                <if test="updateTime != null">
-                    update_time = #{updateTime,jdbcType=TIMESTAMP},
-                </if>
-                <if test="updateBy != null">
-                    update_by = #{updateBy,jdbcType=VARCHAR},
-                </if>
-                <if test="remark != null">
-                    remark = #{remark,jdbcType=VARCHAR},
-                </if>
+            <if test="number != null">
+                `number` = #{number,jdbcType=INTEGER},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateBy != null">
+                update_by = #{updateBy,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null">
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
         </set>
-        where   id = #{id,jdbcType=BIGINT} 
+        <where>
+            id = #{id,jdbcType=BIGINT}
+            and deleted = 0
+            <if test="type != null">
+                and type = #{type,jdbcType=TINYINT}
+            </if>
+        </where>
     </update>
+
+    <select id="findById" parameterType="long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from t_inventory
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="findByResourceId" parameterType="long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_inventory
+        where resource_id = #{resourceId,jdbcType=BIGINT}
+        and deleted = 0
+    </select>
+
+    <select id="findByIds" parameterType="list" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from t_inventory
+        where id in
+        <foreach collection="list" item="item" open=" (" separator="," close=")">
+            #{item,jdbcType=BIGINT}
+        </foreach>
+    </select>
+
+    <select id="findAllOfType" parameterType="int" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from t_inventory
+        where type = #{type,jdbcType=TINYINT} and deleted = 0
+    </select>
+
+    <sql id="detail_columns">
+        i.id,
+        i.resource_id,
+        r.name resource_name,
+        i.type,
+        i.number,
+        i.deleted,
+        i.create_time,
+        i.create_by,
+        i.update_time,
+        i.update_by,
+        i.remark
+    </sql>
+
+    <select id="findInventoryDetailById" parameterType="long" resultType="com.icezhg.sunflower.pojo.InventoryDetail">
+        select <include refid="detail_columns"/>
+        from t_inventory i
+        left join t_resource r on i.resource_id = r.id
+        where i.id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <sql id="find_condition">
+        <where>
+            <if test="!isRoot">
+                and i.deleted = 0
+            </if>
+            <if test="name != null">
+                and LOCATE(#{name,jdbcType=VARCHAR}, r.name) > 0
+            </if>
+            <if test="type != null">
+                and i.type = #{type,jdbcType=TINYINT}
+            </if>
+            <if test="beginTime != null and endTime != null">
+                and i.create_time between #{beginTime,jdbcType=TIMESTAMP} and #{endTime,jdbcType=TIMESTAMP}
+            </if>
+        </where>
+    </sql>
+
+    <select id="count" parameterType="map" resultType="int">
+        select count(*)
+        from t_inventory i
+        left join t_resource r on i.resource_id = r.id
+        <include refid="find_condition" />
+    </select>
+
+    <select id="findInventoryDetails" parameterType="map" resultType="com.icezhg.sunflower.pojo.InventoryDetail">
+        select <include refid="detail_columns"/>
+        from t_inventory i
+        left join t_resource r on i.resource_id = r.id
+        <include refid="find_condition" />
+        order by i.deleted asc, i.id asc
+        limit #{offset,jdbcType=INTEGER}, #{pageSize,jdbcType=INTEGER}
+    </select>
+
 </mapper>

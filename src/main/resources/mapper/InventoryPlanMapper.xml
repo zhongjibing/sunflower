@@ -72,8 +72,8 @@
 
     <insert id="batchInsert" keyColumn="id" keyProperty="id" parameterType="list" useGeneratedKeys="true">
         insert into t_inventory_plan (
-            inventory_id, date,
-            resource_id, type, total,
+            inventory_id, `date`,
+            resource_id, `type`, total,
             used, create_time, update_time
         ) values
         <foreach collection="list" item="item" open="(" separator="), (" close=")">

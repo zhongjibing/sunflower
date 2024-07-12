@@ -129,6 +129,32 @@ public interface Authority {
         }
     }
 
+    interface Inventory {
+        interface BanquetHall {
+            String QUERY = "inventory:banquet:query";
+            String ADD = "inventory:banquet:add";
+            String EDIT = "inventory:banquet:edit";
+            String DELETE = "inventory:banquet:delete";
+            String GENERATE = "inventory:banquet:generate";
+        }
+
+        interface ConferenceRoom {
+            String QUERY = "inventory:conference:query";
+            String ADD = "inventory:conference:add";
+            String EDIT = "inventory:conference:edit";
+            String DELETE = "inventory:conference:delete";
+            String GENERATE = "inventory:conference:generate";
+        }
+
+        interface GuestRoom {
+            String QUERY = "inventory:room:query";
+            String ADD = "inventory:room:add";
+            String EDIT = "inventory:room:edit";
+            String DELETE = "inventory:room:delete";
+            String GENERATE = "inventory:room:generate";
+        }
+    }
+
     interface Price {
         interface BanquetHall {
             String QUERY = "price:banquet:query";

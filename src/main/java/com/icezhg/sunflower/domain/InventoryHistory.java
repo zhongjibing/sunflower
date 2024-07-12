@@ -1,6 +1,7 @@
 package com.icezhg.sunflower.domain;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.Date;
 
@@ -8,7 +9,8 @@ import java.util.Date;
  * @TableName t_inventory_history
  */
 @Data
-public class InventoryHistory {
+@EqualsAndHashCode(callSuper = true)
+public class InventoryHistory extends BaseEntity {
     /**
      * 主键id
      */
@@ -32,32 +34,12 @@ public class InventoryHistory {
     /**
      * 数量
      */
-    private Object number;
+    private Integer number;
 
     /**
-     * 创建时间
+     * 是否删除
      */
-    private Date createTime;
-
-    /**
-     * 创建人
-     */
-    private String createBy;
-
-    /**
-     * 更新时间
-     */
-    private Date updateTime;
-
-    /**
-     * 更新时间
-     */
-    private String updateBy;
-
-    /**
-     * 备注
-     */
-    private String remark;
+    private Integer deleted;
 
     /**
      * 操作时间

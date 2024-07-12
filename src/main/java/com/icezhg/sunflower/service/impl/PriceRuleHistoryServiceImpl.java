@@ -6,6 +6,8 @@ import com.icezhg.sunflower.domain.PriceRuleHistory;
 import com.icezhg.sunflower.service.PriceRuleHistoryService;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+
 /**
  * Created by zhongjibing on 2023/07/12.
  */
@@ -37,6 +39,7 @@ public class PriceRuleHistoryServiceImpl implements PriceRuleHistoryService {
         history.setCreateTime(priceRule.getCreateTime());
         history.setUpdateBy(priceRule.getUpdateBy());
         history.setUpdateTime(priceRule.getUpdateTime());
+        history.setOperateTime(new Date());
         return history;
     }
 }

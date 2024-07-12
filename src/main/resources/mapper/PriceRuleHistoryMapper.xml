@@ -5,19 +5,20 @@
 <mapper namespace="com.icezhg.sunflower.dao.PriceRuleHistoryDao">
 
     <resultMap id="BaseResultMap" type="com.icezhg.sunflower.domain.PriceRuleHistory">
-            <id property="id" column="id" jdbcType="BIGINT"/>
-            <result property="ruleId" column="rule_id" jdbcType="BIGINT"/>
-            <result property="name" column="name" jdbcType="VARCHAR"/>
-            <result property="tagId" column="tag_id" jdbcType="INTEGER"/>
-            <result property="resourceId" column="resource_id" jdbcType="BIGINT"/>
-            <result property="type" column="type" jdbcType="TINYINT"/>
-            <result property="detail" column="detail" jdbcType="VARCHAR"/>
-            <result property="deleted" column="deleted" jdbcType="TINYINT"/>
-            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
-            <result property="createBy" column="create_by" jdbcType="VARCHAR"/>
-            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
-            <result property="updateBy" column="update_by" jdbcType="VARCHAR"/>
-            <result property="remark" column="remark" jdbcType="VARCHAR"/>
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="ruleId" column="rule_id" jdbcType="BIGINT"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="tagId" column="tag_id" jdbcType="INTEGER"/>
+        <result property="resourceId" column="resource_id" jdbcType="BIGINT"/>
+        <result property="type" column="type" jdbcType="TINYINT"/>
+        <result property="detail" column="detail" jdbcType="VARCHAR"/>
+        <result property="deleted" column="deleted" jdbcType="TINYINT"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="createBy" column="create_by" jdbcType="VARCHAR"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="updateBy" column="update_by" jdbcType="VARCHAR"/>
+        <result property="remark" column="remark" jdbcType="VARCHAR"/>
+        <result property="operateTime" column="operate_time" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -25,7 +26,7 @@
         tag_id, resource_id, `type`,
         detail, deleted, create_time,
         create_by, update_time, update_by,
-        remark
+        remark, operate_time
     </sql>
 
     <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.icezhg.sunflower.domain.PriceRuleHistory" useGeneratedKeys="true">
@@ -44,6 +45,7 @@
             <if test="updateTime != null">update_time,</if>
             <if test="updateBy != null">update_by,</if>
             <if test="remark != null">remark,</if>
+            <if test="operateTime != null">operate_time,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id,jdbcType=BIGINT},</if>
@@ -59,6 +61,7 @@
             <if test="updateTime != null">#{updateTime,jdbcType=TIMESTAMP},</if>
             <if test="updateBy != null">#{updateBy,jdbcType=VARCHAR},</if>
             <if test="remark != null">#{remark,jdbcType=VARCHAR},</if>
+            <if test="operateTime != null">#{operateTime,jdbcType=TIMESTAMP},</if>
         </trim>
     </insert>
 </mapper>

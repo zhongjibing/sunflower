@@ -8,11 +8,13 @@ import com.icezhg.sunflower.pojo.PriceRuleDetail;
 import com.icezhg.sunflower.pojo.PriceRuleInfo;
 import com.icezhg.sunflower.pojo.query.DeleteQuery;
 import com.icezhg.sunflower.pojo.query.Query;
+import com.icezhg.sunflower.service.PriceRuleHistoryService;
 import com.icezhg.sunflower.service.PriceRuleService;
 import com.icezhg.sunflower.util.ApplicationContextUtil;
 import com.icezhg.sunflower.util.CommonUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -26,8 +28,15 @@ public class PriceRuleServiceImpl implements PriceRuleService {
 
     private final PriceRuleDao priceRuleDao;
 
+    private PriceRuleHistoryService priceRuleHistoryService;
+
     public PriceRuleServiceImpl(PriceRuleDao priceRuleDao) {
         this.priceRuleDao = priceRuleDao;
+    }
+
+    @Autowired
+    public void setPriceRuleHistoryService(PriceRuleHistoryService priceRuleHistoryService) {
+        this.priceRuleHistoryService = priceRuleHistoryService;
     }
 
     @Override
@@ -51,8 +60,13 @@ public class PriceRuleServiceImpl implements PriceRuleService {
     public PriceRuleInfo update(PriceRule priceRule) {
         checkUnique(priceRule);
         PriceRule existing = findById(priceRule.getId());
+        if (existing == null) {
+            throw new InvalidParameterException("", "parameter error");
+        }
+
         CommonUtils.completeBaseInfo(priceRule);
         this.priceRuleDao.update(priceRule);
+        this.priceRuleHistoryService.save(existing);
         if (priceRule.getDetail() != null && !StringUtils.equals(priceRule.getDetail(), existing.getDetail())) {
             ApplicationContextUtil.publishEvent(new PriceUpdateEvent(priceRule.getId()));
         }
@@ -61,7 +75,9 @@ public class PriceRuleServiceImpl implements PriceRuleService {
 
     @Override
     public void deleteByIds(List<Long> ids) {
-        this.priceRuleDao.delete(DeleteQuery.of(ids).toMap());
+        if (CollectionUtils.isNotEmpty(ids)) {
+            this.priceRuleDao.delete(DeleteQuery.of(ids).toMap());
+        }
     }
 
     @Override

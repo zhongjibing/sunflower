@@ -38,4 +38,9 @@ public class ResourceInfo {
      */
     private String remark;
 
+    /**
+     * 是否被引用
+     */
+    private boolean refered;
+
 }

@@ -20,6 +20,6 @@ public class PricePlanGenerateTask {
 
     public void generate(Integer type) {
         log.info("generate price plan. type={}", type);
-        this.pricePlanService.generate(type);
+        this.pricePlanService.generateByType(type);
     }
 }

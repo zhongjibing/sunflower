@@ -3,13 +3,16 @@ package com.icezhg.sunflower.service.impl;
 import com.icezhg.commons.exception.InvalidParameterException;
 import com.icezhg.sunflower.dao.PriceRuleDao;
 import com.icezhg.sunflower.domain.PriceRule;
+import com.icezhg.sunflower.event.PriceUpdateEvent;
 import com.icezhg.sunflower.pojo.PriceRuleDetail;
 import com.icezhg.sunflower.pojo.PriceRuleInfo;
 import com.icezhg.sunflower.pojo.query.DeleteQuery;
 import com.icezhg.sunflower.pojo.query.Query;
 import com.icezhg.sunflower.service.PriceRuleService;
+import com.icezhg.sunflower.util.ApplicationContextUtil;
 import com.icezhg.sunflower.util.CommonUtils;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -33,6 +36,7 @@ public class PriceRuleServiceImpl implements PriceRuleService {
         checkUnique(priceRule);
         CommonUtils.completeBaseInfo(priceRule);
         this.priceRuleDao.insert(priceRule);
+        ApplicationContextUtil.publishEvent(new PriceUpdateEvent(priceRule.getId()));
         return buildPriceRuleInfo(findById(priceRule.getId()));
     }
 
@@ -46,8 +50,12 @@ public class PriceRuleServiceImpl implements PriceRuleService {
     @Override
     public PriceRuleInfo update(PriceRule priceRule) {
         checkUnique(priceRule);
+        PriceRule existing = findById(priceRule.getId());
         CommonUtils.completeBaseInfo(priceRule);
         this.priceRuleDao.update(priceRule);
+        if (priceRule.getDetail() != null && !StringUtils.equals(priceRule.getDetail(), existing.getDetail())) {
+            ApplicationContextUtil.publishEvent(new PriceUpdateEvent(priceRule.getId()));
+        }
         return buildPriceRuleInfo(findById(priceRule.getId()));
     }
 

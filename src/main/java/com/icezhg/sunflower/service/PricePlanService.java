@@ -11,5 +11,5 @@ public interface PricePlanService {
 
     void generate(Long priceRuleId, LocalDate date);
 
-    void generate(Integer type);
+    void generateByType(Integer type);
 }

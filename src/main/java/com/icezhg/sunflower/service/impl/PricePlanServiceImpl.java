@@ -72,7 +72,7 @@ public class PricePlanServiceImpl implements PricePlanService {
     }
 
     @Override
-    public void generate(Integer type) {
+    public void generateByType(Integer type) {
         List<PriceRule> priceRules = this.priceRuleService.findAll(type);
         if (priceRules.isEmpty()) {
             log.warn("price rules is empty. type={}", type);

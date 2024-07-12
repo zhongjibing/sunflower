@@ -68,4 +68,12 @@ public class ConferencePriceController extends AbstractPriceController {
         checkDataPermission(List.of(id));
         return this.priceRuleService.findDetailById(id);
     }
+
+    @PostMapping("/generate")
+    @Secured(Authority.Price.ConferenceRoom.GENERATE)
+    @Operation(title = "conference rooms price plan generated", type = OperationType.DELETE)
+    public void generate(Long id) {
+        checkDataPermission(List.of(id));
+        this.pricePlanService.generate(id);
+    }
 }

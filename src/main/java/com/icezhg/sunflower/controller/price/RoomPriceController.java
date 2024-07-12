@@ -34,14 +34,14 @@ public class RoomPriceController extends AbstractPriceController {
 
     @PostMapping
     @Secured(Authority.Price.GuestRoom.ADD)
-    @Operation(title = "guest rooms addition", type = OperationType.INSERT)
+    @Operation(title = "guest rooms price rules addition", type = OperationType.INSERT)
     public Object addRule(@Validated @RequestBody PriceRuleInfo info) {
         return this.priceRuleService.insert(buildPriceRule(info));
     }
 
     @PutMapping
     @Secured(Authority.Price.GuestRoom.EDIT)
-    @Operation(title = "guest rooms modification", type = OperationType.UPDATE)
+    @Operation(title = "guest rooms price rules modification", type = OperationType.UPDATE)
     public Object editRule(@Validated @RequestBody PriceRuleInfo info) {
         checkDataPermission(List.of(info.getId()));
         return this.priceRuleService.update(buildPriceRule(info));
@@ -49,7 +49,7 @@ public class RoomPriceController extends AbstractPriceController {
 
     @DeleteMapping
     @Secured(Authority.Price.GuestRoom.DELETE)
-    @Operation(title = "guest rooms deletion", type = OperationType.DELETE)
+    @Operation(title = "guest rooms price rules deletion", type = OperationType.DELETE)
     public void deleteRule(@RequestBody List<Long> resourceIds) {
         checkDataPermission(resourceIds);
         this.priceRuleService.deleteByIds(resourceIds);
@@ -71,7 +71,7 @@ public class RoomPriceController extends AbstractPriceController {
 
     @PostMapping("/generate")
     @Secured(Authority.Price.GuestRoom.GENERATE)
-    @Operation(title = "guest rooms price plan generated", type = OperationType.DELETE)
+    @Operation(title = "guest rooms price plan generated", type = OperationType.GENERATE)
     public void generate(Long id) {
         checkDataPermission(List.of(id));
         this.pricePlanService.generate(id);

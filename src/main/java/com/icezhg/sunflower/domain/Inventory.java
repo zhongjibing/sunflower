@@ -1,14 +1,14 @@
 package com.icezhg.sunflower.domain;
 
 import lombok.Data;
-
-import java.util.Date;
+import lombok.EqualsAndHashCode;
 
 /**
  * @TableName t_inventory
  */
 @Data
-public class Inventory {
+@EqualsAndHashCode(callSuper = true)
+public class Inventory extends BaseEntity {
     /**
      * 主键id
      */
@@ -28,30 +28,5 @@ public class Inventory {
      * 数量
      */
     private Integer number;
-
-    /**
-     * 创建时间
-     */
-    private Date createTime;
-
-    /**
-     * 创建人
-     */
-    private String createBy;
-
-    /**
-     * 更新时间
-     */
-    private Date updateTime;
-
-    /**
-     * 更新时间
-     */
-    private String updateBy;
-
-    /**
-     * 备注
-     */
-    private String remark;
 
 }

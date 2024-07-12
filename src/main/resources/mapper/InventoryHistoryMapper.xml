@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.icezhg.sunflower.dao.InventoryHistoryDao">
+
+    <resultMap id="BaseResultMap" type="com.icezhg.sunflower.domain.InventoryHistory">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="inventoryId" column="inventory_id" jdbcType="BIGINT"/>
+        <result property="resourceId" column="resource_id" jdbcType="BIGINT"/>
+        <result property="type" column="type" jdbcType="TINYINT"/>
+        <result property="number" column="number" jdbcType="INTEGER"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="createBy" column="create_by" jdbcType="VARCHAR"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="updateBy" column="update_by" jdbcType="VARCHAR"/>
+        <result property="remark" column="remark" jdbcType="VARCHAR"/>
+        <result property="operateTime" column="operate_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, inventory_id, resource_id,
+        `type`, `number`, create_time,
+        create_by, update_time, update_by,
+        remark, operate_time
+    </sql>
+
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.icezhg.sunflower.domain.InventoryHistory"
+            useGeneratedKeys="true">
+        insert into t_inventory_history
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="inventoryId != null">inventory_id,</if>
+            <if test="resourceId != null">resource_id,</if>
+            <if test="type != null">type,</if>
+            <if test="number != null">number,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="remark != null">remark,</if>
+            <if test="operateTime != null">operate_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id,jdbcType=BIGINT},</if>
+            <if test="inventoryId != null">#{inventoryId,jdbcType=BIGINT},</if>
+            <if test="resourceId != null">#{resourceId,jdbcType=BIGINT},</if>
+            <if test="type != null">#{type,jdbcType=TINYINT},</if>
+            <if test="number != null">#{number,jdbcType=INTEGER},</if>
+            <if test="createTime != null">#{createTime,jdbcType=TIMESTAMP},</if>
+            <if test="createBy != null">#{createBy,jdbcType=VARCHAR},</if>
+            <if test="updateTime != null">#{updateTime,jdbcType=TIMESTAMP},</if>
+            <if test="updateBy != null">#{updateBy,jdbcType=VARCHAR},</if>
+            <if test="remark != null">#{remark,jdbcType=VARCHAR},</if>
+            <if test="operateTime != null">#{operateTime,jdbcType=TIMESTAMP},</if>
+        </trim>
+    </insert>
+
+</mapper>

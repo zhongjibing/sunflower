@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.icezhg.sunflower.dao.InventoryPlanDao">
+
+    <resultMap id="BaseResultMap" type="com.icezhg.sunflower.domain.InventoryPlan">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="inventoryId" column="inventory_id" jdbcType="BIGINT"/>
+        <result property="date" column="date" jdbcType="DATE"/>
+        <result property="resourceId" column="resource_id" jdbcType="BIGINT"/>
+        <result property="type" column="type" jdbcType="TINYINT"/>
+        <result property="total" column="total" jdbcType="INTEGER"/>
+        <result property="used" column="used" jdbcType="INTEGER"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, inventory_id, `date`,
+        resource_id, `type`, total,
+        used, create_time, update_time
+    </sql>
+
+    <select id="findById" parameterType="long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_inventory_plan
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.icezhg.sunflower.domain.InventoryPlan"
+            useGeneratedKeys="true">
+        insert into t_inventory_plan
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="inventoryId != null">inventory_id,</if>
+            <if test="date != null">date,</if>
+            <if test="resourceId != null">resource_id,</if>
+            <if test="type != null">type,</if>
+            <if test="total != null">total,</if>
+            <if test="used != null">used,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id,jdbcType=BIGINT},</if>
+            <if test="inventoryId != null">#{inventoryId,jdbcType=BIGINT},</if>
+            <if test="date != null">#{date,jdbcType=DATE},</if>
+            <if test="resourceId != null">#{resourceId,jdbcType=BIGINT},</if>
+            <if test="type != null">#{type,jdbcType=TINYINT},</if>
+            <if test="total != null">#{total,jdbcType=INTEGER},</if>
+            <if test="used != null">#{used,jdbcType=INTEGER},</if>
+            <if test="createTime != null">#{createTime,jdbcType=TIMESTAMP},</if>
+            <if test="updateTime != null">#{updateTime,jdbcType=TIMESTAMP},</if>
+        </trim>
+        on duplicate key update
+        <trim prefix="" suffix="" suffixOverrides=",">
+            <if test="total != null">
+                total = values(total),
+            </if>
+            <choose>
+                <when test="updateTime != null">
+                    update_time = values(update_time),
+                </when>
+                <otherwise>
+                    update_time = now(),
+                </otherwise>
+            </choose>
+        </trim>
+    </insert>
+
+    <insert id="batchInsert" keyColumn="id" keyProperty="id" parameterType="list" useGeneratedKeys="true">
+        insert into t_inventory_plan (
+            inventory_id, date,
+            resource_id, type, total,
+            used, create_time, update_time
+        ) values
+        <foreach collection="list" item="item" open="(" separator="), (" close=")">
+            #{item.inventoryId,jdbcType=BIGINT}, #{item.date,jdbcType=DATE},
+            #{item.resourceId,jdbcType=BIGINT}, #{item.type,jdbcType=TINYINT}, #{item.total,jdbcType=INTEGER},
+            #{item.used,jdbcType=INTEGER}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateTime,jdbcType=TIMESTAMP}
+        </foreach>
+        on duplicate key update
+            total = values(total),
+            update_time = values(update_time)
+    </insert>
+</mapper>

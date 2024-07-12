@@ -5,7 +5,6 @@ import com.icezhg.sunflower.dao.InventoryDao;
 import com.icezhg.sunflower.domain.Inventory;
 import com.icezhg.sunflower.enums.ResourceType;
 import com.icezhg.sunflower.event.InventoryUpdateEvent;
-import com.icezhg.sunflower.event.PriceUpdateEvent;
 import com.icezhg.sunflower.pojo.InventoryDetail;
 import com.icezhg.sunflower.pojo.InventoryInfo;
 import com.icezhg.sunflower.pojo.query.DeleteQuery;
@@ -47,7 +46,7 @@ public class InventoryServiceImpl implements InventoryService {
         checkUnique(inventory);
         CommonUtils.completeBaseInfo(inventory);
         this.inventoryDao.insert(inventory);
-        ApplicationContextUtil.publishEvent(new InventoryUpdateEvent(inventory.getId()));
+        ApplicationContextUtil.publishEvent(new InventoryUpdateEvent(inventory));
         return buildInventoryInfo(findById(inventory.getId()));
     }
 
@@ -71,7 +70,7 @@ public class InventoryServiceImpl implements InventoryService {
         this.inventoryDao.update(inventory);
         this.inventoryHistoryService.save(existing);
         if (inventory.getNumber() != null && !inventory.getNumber().equals(existing.getNumber())) {
-            ApplicationContextUtil.publishEvent(new PriceUpdateEvent(inventory.getId()));
+            ApplicationContextUtil.publishEvent(new InventoryUpdateEvent(inventory));
         }
         return buildInventoryInfo(findById(inventory.getId()));
     }

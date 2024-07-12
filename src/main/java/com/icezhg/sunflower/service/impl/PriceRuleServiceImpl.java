@@ -45,7 +45,7 @@ public class PriceRuleServiceImpl implements PriceRuleService {
         checkUnique(priceRule);
         CommonUtils.completeBaseInfo(priceRule);
         this.priceRuleDao.insert(priceRule);
-        ApplicationContextUtil.publishEvent(new PriceUpdateEvent(priceRule.getId()));
+        ApplicationContextUtil.publishEvent(new PriceUpdateEvent(priceRule));
         return buildPriceRuleInfo(findById(priceRule.getId()));
     }
 
@@ -68,7 +68,7 @@ public class PriceRuleServiceImpl implements PriceRuleService {
         this.priceRuleDao.update(priceRule);
         this.priceRuleHistoryService.save(existing);
         if (priceRule.getDetail() != null && !StringUtils.equals(priceRule.getDetail(), existing.getDetail())) {
-            ApplicationContextUtil.publishEvent(new PriceUpdateEvent(priceRule.getId()));
+            ApplicationContextUtil.publishEvent(new PriceUpdateEvent(priceRule));
         }
         return buildPriceRuleInfo(findById(priceRule.getId()));
     }

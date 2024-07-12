@@ -70,7 +70,7 @@ public class CaptchaFilter extends OncePerRequestFilter {
 
     private void handleBadCaptcha(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.addHeader("X-Captcha-Matched", "false");
-        response.sendError(HttpStatus.FORBIDDEN.value(), "Bad captcha");
+        response.sendError(HttpStatus.UNAUTHORIZED.value(), "Bad captcha");
 
         String username = request.getParameter(UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_USERNAME_KEY);
         Authentication authentication = UsernamePasswordAuthenticationToken.unauthenticated(username, "");

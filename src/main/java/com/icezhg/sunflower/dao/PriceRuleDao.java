@@ -23,6 +23,8 @@ public interface PriceRuleDao {
 
     List<PriceRule> findByIds(List<Long> ids);
 
+    List<PriceRule> findAllOfType(Integer type);
+
     PriceRuleDetail findPriceRuleDetailById(Long id);
 
     int update(PriceRule record);

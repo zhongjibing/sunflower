@@ -43,6 +43,13 @@
         </foreach>
     </select>
 
+    <select id="findAllOfType" parameterType="int" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_price_rule
+        where type = #{type,jdbcType=TINYINT} and deleted = 0
+    </select>
+
     <update id="delete" parameterType="map">
         update t_price_rule
         <set>

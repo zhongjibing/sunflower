@@ -18,6 +18,8 @@ public interface PriceRuleService {
 
     int count(Query query);
 
+    List<PriceRule> findAll(Integer type);
+
     List<PriceRuleDetail> findDetails(Query query);
 
     PriceRule findById(Long id);

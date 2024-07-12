@@ -62,6 +62,11 @@ public class PriceRuleServiceImpl implements PriceRuleService {
     }
 
     @Override
+    public List<PriceRule> findAll(Integer type) {
+        return this.priceRuleDao.findAllOfType(type);
+    }
+
+    @Override
     public List<PriceRuleDetail> findDetails(Query query) {
         return this.priceRuleDao.findPriceRuleDetails(query.toMap());
     }

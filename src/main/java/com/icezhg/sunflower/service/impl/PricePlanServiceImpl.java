@@ -16,6 +16,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.ChronoField;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -42,7 +43,7 @@ public class PricePlanServiceImpl implements PricePlanService {
 
     @Override
     public void generate(Long priceRuleId) {
-        PriceRule priceRule = priceRuleService.findById(priceRuleId);
+        PriceRule priceRule = this.priceRuleService.findById(priceRuleId);
         if (priceRule == null) {
             log.warn("price rule is not exist. id={}", priceRuleId);
             return;
@@ -56,15 +57,41 @@ public class PricePlanServiceImpl implements PricePlanService {
             date = date.plusDays(1);
         }
 
-        //        pricePlanDao.batchSave(pricePlans);
+        this.pricePlanDao.batchInsert(pricePlans);
+    }
+
+    @Override
+    public void generate(Long priceRuleId, LocalDate date) {
+        PriceRule priceRule = this.priceRuleService.findById(priceRuleId);
+        if (priceRule == null) {
+            log.warn("price rule is not exist. id={}", priceRuleId);
+            return;
+        }
+
+        this.pricePlanDao.batchInsert(List.of(generatePricePlan(priceRule, date)));
+    }
+
+    @Override
+    public void generate(Integer type) {
+        List<PriceRule> priceRules = this.priceRuleService.findAll(type);
+        if (priceRules.isEmpty()) {
+            log.warn("price rules is empty. type={}", type);
+            return;
+        }
+        List<PricePlan> pricePlans = new ArrayList<>(priceRules.size());
+        LocalDate date = LocalDate.now(ZoneId.systemDefault()).plusMonths(1);
+        for (PriceRule priceRule : priceRules) {
+            pricePlans.add(generatePricePlan(priceRule, date));
+        }
+        this.pricePlanDao.batchInsert(pricePlans);
     }
 
     private PricePlan generatePricePlan(PriceRule priceRule, LocalDate date) {
         PricePlan pricePlan = new PricePlan();
         pricePlan.setRuleId(priceRule.getId());
         pricePlan.setDate(parseDate(date));
-        pricePlan.setResourceId(pricePlan.getResourceId());
-        pricePlan.setType(pricePlan.getType());
+        pricePlan.setResourceId(priceRule.getResourceId());
+        pricePlan.setType(priceRule.getType());
         pricePlan.setPrice(determinePrice(priceRule.getDetail(), date));
         pricePlan.setCreateTime(new Date());
         pricePlan.setUpdateTime(new Date());
@@ -98,10 +125,5 @@ public class PricePlanServiceImpl implements PricePlanService {
 
     private Date parseDate(LocalDate localDate) {
         return Date.from(localDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
-    }
-
-    @Override
-    public void generate() {
-
     }
 }

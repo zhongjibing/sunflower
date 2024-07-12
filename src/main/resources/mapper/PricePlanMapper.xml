@@ -51,33 +51,35 @@
             <if test="createTime != null">#{createTime,jdbcType=TIMESTAMP},</if>
             <if test="updateTime != null">#{updateTime,jdbcType=TIMESTAMP},</if>
         </trim>
+        on duplicate key update
+        <trim prefix="" suffix="" suffixOverrides=",">
+            <if test="price != null">
+                price = values(price),
+            </if>
+            <choose>
+                <when test="updateTime != null">
+                    update_time = values(update_time),
+                </when>
+                <otherwise>
+                    update_time = now(),
+                </otherwise>
+            </choose>
+        </trim>
     </insert>
 
-    <update id="update" parameterType="com.icezhg.sunflower.domain.PricePlan">
-        update t_price_plan
-        <set>
-            <if test="ruleId != null">
-                rule_id = #{ruleId,jdbcType=BIGINT},
-            </if>
-            <if test="date != null">
-                date = #{date,jdbcType=DATE},
-            </if>
-            <if test="resourceId != null">
-                resource_id = #{resourceId,jdbcType=BIGINT},
-            </if>
-            <if test="type != null">
-                type = #{type,jdbcType=TINYINT},
-            </if>
-            <if test="price != null">
-                price = #{price,jdbcType=BIGINT},
-            </if>
-            <if test="createTime != null">
-                create_time = #{createTime,jdbcType=TIMESTAMP},
-            </if>
-            <if test="updateTime != null">
-                update_time = #{updateTime,jdbcType=TIMESTAMP},
-            </if>
-        </set>
-        where id = #{id,jdbcType=BIGINT}
-    </update>
+    <insert id="batchInsert" keyColumn="id" keyProperty="id" parameterType="list" useGeneratedKeys="true">
+        insert into t_price_plan (
+            rule_id, `date`,
+            resource_id, type, price,
+            create_time, update_time
+        ) values
+        <foreach collection="list" item="item" open="(" separator="), (" close=")">
+            #{item.ruleId,jdbcType=BIGINT}, #{item.date,jdbcType=DATE},
+            #{item.resourceId,jdbcType=BIGINT}, #{item.type,jdbcType=TINYINT}, #{item.price,jdbcType=BIGINT},
+            #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateTime,jdbcType=TIMESTAMP}
+        </foreach>
+        on duplicate key update
+            price = values(price),
+            update_time = values(update_time)
+    </insert>
 </mapper>

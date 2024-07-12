@@ -33,7 +33,6 @@ public abstract class AbstractPriceController {
     protected PriceRule buildPriceRule(PriceRuleInfo info) {
         PriceRule priceRule = new PriceRule();
         priceRule.setId(info.getId());
-        priceRule.setName(info.getName());
         priceRule.setTagId(info.getTagId());
         priceRule.setResourceId(info.getResourceId());
         priceRule.setType(resourceType().getType());

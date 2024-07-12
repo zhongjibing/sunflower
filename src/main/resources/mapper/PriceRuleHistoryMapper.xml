@@ -7,7 +7,6 @@
     <resultMap id="BaseResultMap" type="com.icezhg.sunflower.domain.PriceRuleHistory">
         <id property="id" column="id" jdbcType="BIGINT"/>
         <result property="ruleId" column="rule_id" jdbcType="BIGINT"/>
-        <result property="name" column="name" jdbcType="VARCHAR"/>
         <result property="tagId" column="tag_id" jdbcType="INTEGER"/>
         <result property="resourceId" column="resource_id" jdbcType="BIGINT"/>
         <result property="type" column="type" jdbcType="TINYINT"/>
@@ -22,7 +21,7 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        id, rule_id, `name`,
+        id, rule_id,
         tag_id, resource_id, `type`,
         detail, deleted, create_time,
         create_by, update_time, update_by,
@@ -34,7 +33,6 @@
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
             <if test="ruleId != null">rule_id,</if>
-            <if test="name != null">name,</if>
             <if test="tagId != null">tag_id,</if>
             <if test="resourceId != null">resource_id,</if>
             <if test="type != null">type,</if>
@@ -50,7 +48,6 @@
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id,jdbcType=BIGINT},</if>
             <if test="ruleId != null">#{ruleId,jdbcType=BIGINT},</if>
-            <if test="name != null">#{name,jdbcType=VARCHAR},</if>
             <if test="tagId != null">#{tagId,jdbcType=OTHER},</if>
             <if test="resourceId != null">#{resourceId,jdbcType=BIGINT},</if>
             <if test="type != null">#{type,jdbcType=TINYINT},</if>

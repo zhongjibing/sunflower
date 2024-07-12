@@ -4,7 +4,7 @@ import com.icezhg.sunflower.domain.PriceRuleHistory;
 import org.springframework.stereotype.Repository;
 
 /**
- * Created by zhongjibing on 2023/07/08.
+ * Created by zhongjibing on 2023/07/12.
  */
 @Repository
 public interface PriceRuleHistoryDao {

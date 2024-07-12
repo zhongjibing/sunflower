@@ -17,13 +17,6 @@ public class PriceRuleInfo {
     private Long id;
 
     /**
-     * 名称
-     */
-    @NotBlank
-    @Size(max = 128)
-    private String name;
-
-    /**
      * 客户标签
      */
     @NotNull
@@ -45,5 +38,6 @@ public class PriceRuleInfo {
     /**
      * 备注
      */
+    @Size(max = 128)
     private String remark;
 }

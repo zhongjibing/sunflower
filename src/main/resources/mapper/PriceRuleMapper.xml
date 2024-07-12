@@ -6,7 +6,6 @@
 
     <resultMap id="BaseResultMap" type="com.icezhg.sunflower.domain.PriceRule">
         <id property="id" column="id" jdbcType="BIGINT"/>
-        <result property="name" column="name" jdbcType="VARCHAR"/>
         <result property="tagId" column="tag_id" jdbcType="INTEGER"/>
         <result property="resourceId" column="resource_id" jdbcType="BIGINT"/>
         <result property="type" column="type" jdbcType="TINYINT"/>
@@ -20,7 +19,7 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        id, `name`, tag_id,
+        id, tag_id,
         resource_id, `type`, detail,
         deleted, create_time, create_by,
         update_time, update_by, remark
@@ -97,7 +96,6 @@
         insert into t_price_rule
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
-            <if test="name != null">name,</if>
             <if test="tagId != null">tag_id,</if>
             <if test="resourceId != null">resource_id,</if>
             <if test="type != null">type,</if>
@@ -111,7 +109,6 @@
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id,jdbcType=BIGINT},</if>
-            <if test="name != null">#{name,jdbcType=VARCHAR},</if>
             <if test="tagId != null">#{tagId,jdbcType=INTEGER},</if>
             <if test="resourceId != null">#{resourceId,jdbcType=BIGINT},</if>
             <if test="type != null">#{type,jdbcType=TINYINT},</if>
@@ -128,9 +125,6 @@
     <update id="update" parameterType="com.icezhg.sunflower.domain.PriceRule">
         update t_price_rule
         <set>
-            <if test="name != null">
-                name = #{name,jdbcType=VARCHAR},
-            </if>
             <if test="detail != null">
                 detail = #{detail,jdbcType=VARCHAR},
             </if>
@@ -155,12 +149,11 @@
 
     <sql id="find_detail_query">
         select pr.id,
-               pr.name,
                pr.tag_id,
                ct.name tag_name,
                ct.style_class,
                pr.resource_id,
-               r.name  resource_name,
+               r.name resource_name,
                pr.type,
                pr.detail,
                pr.deleted,
@@ -187,19 +180,21 @@
                 and pr.deleted = 0
             </if>
             <if test="name != null">
-                and LOCATE(#{name,jdbcType=VARCHAR}, pr.name) > 0
+                and LOCATE(#{name,jdbcType=VARCHAR}, r.name) > 0
             </if>
             <if test="type != null">
                 and pr.type = #{type,jdbcType=TINYINT}
             </if>
             <if test="beginTime != null and endTime != null">
-                and create_time between #{beginTime,jdbcType=TIMESTAMP} and #{endTime,jdbcType=TIMESTAMP}
+                and pr.create_time between #{beginTime,jdbcType=TIMESTAMP} and #{endTime,jdbcType=TIMESTAMP}
             </if>
         </where>
     </sql>
 
     <select id="count" resultType="int">
-        select count(*) from t_price_rule pr
+        select count(*)
+        from t_price_rule pr
+        left join t_resource r on pr.resource_id = r.id
         <include refid="find_condition" />
     </select>
 

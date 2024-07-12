@@ -1,6 +1,7 @@
 package com.icezhg.sunflower.domain;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.Date;
 
@@ -8,7 +9,8 @@ import java.util.Date;
  * @TableName t_price_rule_history
  */
 @Data
-public class PriceRuleHistory {
+@EqualsAndHashCode(callSuper = true)
+public class PriceRuleHistory extends BaseEntity {
     /**
      * 主键id
      */
@@ -18,11 +20,6 @@ public class PriceRuleHistory {
      * 规则id
      */
     private Long ruleId;
-
-    /**
-     * 名称
-     */
-    private String name;
 
     /**
      * 客户标签
@@ -48,31 +45,6 @@ public class PriceRuleHistory {
      * 是否删除
      */
     private Integer deleted;
-
-    /**
-     * 创建时间
-     */
-    private Date createTime;
-
-    /**
-     * 创建人
-     */
-    private String createBy;
-
-    /**
-     * 更新时间
-     */
-    private Date updateTime;
-
-    /**
-     * 更新人
-     */
-    private String updateBy;
-
-    /**
-     * 备注
-     */
-    private String remark;
 
     /**
      * 操作时间

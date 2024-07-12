@@ -59,13 +59,13 @@ public class BanquetPriceController extends AbstractPriceController {
     @Secured(Authority.Price.BanquetHall.QUERY)
     public PageResult list(PriceQuery query) {
         query.setType(resourceType().getType());
-        return new PageResult(priceRuleService.count(query), priceRuleService.find(query));
+        return new PageResult(priceRuleService.count(query), priceRuleService.findDetails(query));
     }
 
     @GetMapping("/{id:\\d+}")
     @Secured(Authority.Price.BanquetHall.QUERY)
     public Object getRule(@PathVariable Long id) {
         checkDataPermission(List.of(id));
-        return this.priceRuleService.findById(id);
+        return this.priceRuleService.findDetailById(id);
     }
 }

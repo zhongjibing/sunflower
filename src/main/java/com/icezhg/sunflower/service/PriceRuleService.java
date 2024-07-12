@@ -18,9 +18,11 @@ public interface PriceRuleService {
 
     int count(Query query);
 
-    List<PriceRuleDetail> find(Query query);
+    List<PriceRuleDetail> findDetails(Query query);
 
-    PriceRuleDetail findById(Long id);
+    PriceRule findById(Long id);
+
+    PriceRuleDetail findDetailById(Long id);
 
     List<PriceRule> findByIds(List<Long> ids);
 }

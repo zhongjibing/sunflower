@@ -33,7 +33,7 @@ public class PriceRuleServiceImpl implements PriceRuleService {
         checkUnique(priceRule);
         CommonUtils.completeBaseInfo(priceRule);
         this.priceRuleDao.insert(priceRule);
-        return buildPriceRuleInfo(this.priceRuleDao.findById(priceRule.getId()));
+        return buildPriceRuleInfo(findById(priceRule.getId()));
     }
 
     private void checkUnique(PriceRule priceRule) {
@@ -48,7 +48,7 @@ public class PriceRuleServiceImpl implements PriceRuleService {
         checkUnique(priceRule);
         CommonUtils.completeBaseInfo(priceRule);
         this.priceRuleDao.update(priceRule);
-        return buildPriceRuleInfo(this.priceRuleDao.findById(priceRule.getId()));
+        return buildPriceRuleInfo(findById(priceRule.getId()));
     }
 
     @Override
@@ -62,12 +62,17 @@ public class PriceRuleServiceImpl implements PriceRuleService {
     }
 
     @Override
-    public List<PriceRuleDetail> find(Query query) {
+    public List<PriceRuleDetail> findDetails(Query query) {
         return this.priceRuleDao.findPriceRuleDetails(query.toMap());
     }
 
     @Override
-    public PriceRuleDetail findById(Long id) {
+    public PriceRule findById(Long id) {
+        return this.priceRuleDao.findById(id);
+    }
+
+    @Override
+    public PriceRuleDetail findDetailById(Long id) {
         return this.priceRuleDao.findPriceRuleDetailById(id);
     }
 

@@ -83,7 +83,7 @@ public abstract class QuartzJob implements Job {
         taskLog.setMessage(message);
         String exceptionInfo = ExceptionUtils.getStackTrace(ex);
         taskLog.setExceptionInfo(StringUtils.substring(exceptionInfo, 0, 2000));
-        getLogger().info("[{}] {}\n{}", taskLog.getTaskId(), message, exceptionInfo);
+        getLogger().error("[{}] {}\n{}", taskLog.getTaskId(), message, exceptionInfo);
     }
 
     private void saveTaskLog(TaskLog taskLog) {

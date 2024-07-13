@@ -8,6 +8,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.icezhg.sunflower.security.UserDetail;
+import com.icezhg.sunflower.security.authentication.AuthCodeAuthenticationToken;
+import com.icezhg.sunflower.serial.AuthCodeAuthenticationTokenMixin;
 import com.icezhg.sunflower.serial.AuthenticationExceptionMixIn;
 import com.icezhg.sunflower.serial.UserDetailMixIn;
 import org.springframework.security.core.AuthenticationException;
@@ -27,6 +29,7 @@ public class ObjectMapperFactory {
                 .addModules(SecurityJackson2Modules.getModules(null))
                 .addMixIn(AuthenticationException.class, AuthenticationExceptionMixIn.class)
                 .addMixIn(UserDetail.class, UserDetailMixIn.class)
+                .addMixIn(AuthCodeAuthenticationToken.class, AuthCodeAuthenticationTokenMixin.class)
                 .build();
     }
 }

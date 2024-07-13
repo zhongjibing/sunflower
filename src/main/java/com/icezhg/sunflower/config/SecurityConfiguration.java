@@ -1,6 +1,7 @@
 package com.icezhg.sunflower.config;
 
 import com.icezhg.sunflower.security.authorization.AuthoritiesAuthorizationManager;
+import com.icezhg.sunflower.security.configurer.AuthCodeConfigurer;
 import com.icezhg.sunflower.security.configurer.AuthenticatedRequestConfigurer;
 import com.icezhg.sunflower.security.configurer.CaptchaConfigurer;
 import com.icezhg.sunflower.security.configurer.UsernamePasswordLoginConfigurer;
@@ -61,6 +62,7 @@ public class SecurityConfiguration {
         http.apply(new CaptchaConfigurer<>());
         http.apply(new UsernamePasswordLoginConfigurer<>());
         http.apply(new AuthenticatedRequestConfigurer<>());
+        http.apply(new AuthCodeConfigurer<>());
 
         return http.build();
     }

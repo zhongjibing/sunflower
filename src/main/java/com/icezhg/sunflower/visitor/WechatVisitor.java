@@ -2,6 +2,8 @@ package com.icezhg.sunflower.visitor;
 
 import com.icezhg.sunflower.visitor.pojo.WechatProperty;
 import com.icezhg.sunflower.visitor.pojo.WechatSession;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.stereotype.Component;
@@ -15,6 +17,7 @@ import java.util.Map;
 @Component
 @EnableConfigurationProperties(WechatProperty.class)
 public class WechatVisitor {
+    private static final Logger log = LoggerFactory.getLogger(WechatVisitor.class);
 
     private RestTemplate restTemplate;
 

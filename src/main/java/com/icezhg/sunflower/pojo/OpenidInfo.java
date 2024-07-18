@@ -1,25 +1,19 @@
-package com.icezhg.sunflower.domain;
+package com.icezhg.sunflower.pojo;
 
 import lombok.Data;
 
 import java.util.Date;
 
 /**
- * 微信账号
- *
- * @TableName sys_openid
+ * Created by zhongjibing on 2023/07/18.
  */
 @Data
-public class Openid {
+public class OpenidInfo {
+
     /**
      * id
      */
     private Long id;
-
-    /**
-     * 微信id
-     */
-    private String openid;
 
     /**
      * 昵称
@@ -55,5 +49,4 @@ public class Openid {
      * 备注
      */
     private String remark;
-
 }

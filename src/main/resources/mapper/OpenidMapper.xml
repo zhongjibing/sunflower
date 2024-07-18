@@ -8,6 +8,9 @@
         <id property="id" column="id" jdbcType="BIGINT"/>
         <result property="openid" column="openid" jdbcType="VARCHAR"/>
         <result property="nickname" column="nickname" jdbcType="VARCHAR"/>
+        <result property="mobile" column="mobile" jdbcType="VARCHAR"/>
+        <result property="role" column="role" jdbcType="TINYINT"/>
+        <result property="status" column="status" jdbcType="CHAR"/>
         <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
         <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
         <result property="remark" column="remark" jdbcType="VARCHAR"/>
@@ -15,6 +18,7 @@
 
     <sql id="Base_Column_List">
         id, openid, nickname,
+        mobile, `role`, `status`,
         create_time, update_time, remark
     </sql>
 
@@ -25,6 +29,13 @@
         where openid = #{openid,jdbcType=VARCHAR}
     </select>
 
+    <select id="findById" parameterType="long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_openid
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
     <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.icezhg.sunflower.domain.Openid"
             useGeneratedKeys="true">
         insert into sys_openid
@@ -32,6 +43,9 @@
             <if test="id != null">id,</if>
             <if test="openid != null">openid,</if>
             <if test="nickname != null">nickname,</if>
+            <if test="mobile != null">mobile,</if>
+            <if test="role != null">`role`,</if>
+            <if test="status != null">`status`,</if>
             <if test="createTime != null">create_time,</if>
             <if test="updateTime != null">update_time,</if>
             <if test="remark != null">remark,</if>
@@ -40,6 +54,9 @@
             <if test="id != null">#{id,jdbcType=BIGINT},</if>
             <if test="openid != null">#{openid,jdbcType=VARCHAR},</if>
             <if test="nickname != null">#{nickname,jdbcType=VARCHAR},</if>
+            <if test="mobile != null">#{mobile,jdbcType=VARCHAR},</if>
+            <if test="role != null">#{role,jdbcType=TINYINT},</if>
+            <if test="status != null">#{status,jdbcType=CHAR},</if>
             <if test="createTime != null">#{createTime,jdbcType=TIMESTAMP},</if>
             <if test="updateTime != null">#{updateTime,jdbcType=TIMESTAMP},</if>
             <if test="remark != null">#{remark,jdbcType=VARCHAR},</if>
@@ -66,14 +83,17 @@
     <update id="update" parameterType="com.icezhg.sunflower.domain.Openid">
         update sys_openid
         <set>
-            <if test="openid != null">
-                openid = #{openid,jdbcType=VARCHAR},
-            </if>
             <if test="nickname != null">
                 nickname = #{nickname,jdbcType=VARCHAR},
             </if>
-            <if test="createTime != null">
-                create_time = #{createTime,jdbcType=TIMESTAMP},
+            <if test="mobile != null">
+                mobile = #{mobile,jdbcType=VARCHAR},
+            </if>
+            <if test="role != null">
+                `role` = #{role,jdbcType=TINYINT},
+            </if>
+            <if test="status != null">
+                `status` = #{status,jdbcType=CHAR},
             </if>
             <if test="updateTime != null">
                 update_time = #{updateTime,jdbcType=TIMESTAMP},
@@ -84,5 +104,34 @@
         </set>
         where id = #{id,jdbcType=BIGINT}
     </update>
+
+    <sql id="findCondition">
+        <where>
+            <if test="name != null">
+                and LOCATE(#{name,jdbcType=VARCHAR}, nickname) > 0
+            </if>
+            <if test="status != null">
+                and `status` = #{status,jdbcType=CHAR}
+            </if>
+            <if test="beginTime != null and endTime != null">
+                and create_time between #{beginTime,jdbcType=TIMESTAMP} and #{endTime,jdbcType=TIMESTAMP}
+            </if>
+        </where>
+    </sql>
+
+    <select id="count" parameterType="map" resultType="int">
+        select count(*)
+        from sys_openid
+        <include refid="findCondition"/>
+    </select>
+
+    <select id="find" parameterType="map" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_openid
+        <include refid="findCondition"/>
+        order by id asc
+        limit #{offset,jdbcType=INTEGER}, #{pageSize,jdbcType=INTEGER}
+    </select>
 
 </mapper>

@@ -30,7 +30,7 @@ public class OpenIdController {
         this.openidService = openidService;
     }
 
-    @PutMapping
+    @PutMapping("/update")
     @Secured(Authority.Resource.BanquetHall.EDIT)
     @Operation(title = "banquet halls modification", type = OperationType.UPDATE)
     public Object edit(@Validated @RequestBody OpenidInfo info) {

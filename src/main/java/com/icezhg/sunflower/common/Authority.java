@@ -7,6 +7,12 @@ public interface Authority {
 
     String AUTHENTICATED = "AUTHENTICATED";
 
+    interface Wx {
+        String ADMIN = "wx:admin";
+        String USER = "wx:user";
+    }
+
+
     interface System {
 
         interface User {

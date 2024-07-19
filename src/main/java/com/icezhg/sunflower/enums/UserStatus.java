@@ -7,7 +7,7 @@ public enum UserStatus {
     NORMAL(0, "正常"),
     LOCKED(1, "锁定"),
     ARCHIVED(2, "存档"),
-    INCOMPLETE(6, "信息不完善");
+    INCOMPLETE(4, "信息不完善");
 
     private final int status;
     private final String desc;
@@ -17,8 +17,12 @@ public enum UserStatus {
         this.desc = desc;
     }
 
-    public int getStatus() {
+    public int statusCode() {
         return status;
+    }
+
+    public String getStatus() {
+        return String.valueOf(status);
     }
 
     public String getDesc() {

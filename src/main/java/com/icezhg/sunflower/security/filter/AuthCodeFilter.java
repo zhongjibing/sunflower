@@ -5,6 +5,8 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
@@ -16,8 +18,9 @@ import java.io.IOException;
 /**
  * Created by zhongjibing on 2023/02/22.
  */
-//@Component
 public class AuthCodeFilter extends AbstractAuthenticationProcessingFilter {
+    private static final Logger log = LoggerFactory.getLogger(AuthCodeFilter.class);
+
     private static final String CODE_KEY = "code";
     private static final RequestMatcher REQUEST_MATCHER = new AntPathRequestMatcher("/auth", "POST");
 

@@ -1,8 +1,11 @@
 package com.icezhg.sunflower.service.impl;
 
+import com.icezhg.sunflower.common.Authority;
 import com.icezhg.sunflower.common.Constant;
 import com.icezhg.sunflower.domain.IpLocation;
 import com.icezhg.sunflower.domain.Openid;
+import com.icezhg.sunflower.enums.UserStatus;
+import com.icezhg.sunflower.enums.WxRole;
 import com.icezhg.sunflower.security.UserDetail;
 import com.icezhg.sunflower.service.AuthCodeService;
 import com.icezhg.sunflower.service.IpLocationService;
@@ -13,6 +16,7 @@ import com.icezhg.sunflower.util.Requests;
 import com.icezhg.sunflower.visitor.WechatVisitor;
 import com.icezhg.sunflower.visitor.pojo.WechatSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -59,27 +63,38 @@ public class AuthCodeServiceImpl implements AuthCodeService {
         if (openid == null) {
             openid = new Openid();
             openid.setOpenid(wechatSession.getOpenid());
-            openid.setNickname("");
-            // openid.setStatus(UserStatus.INCOMPLETE.getStatus());
+            openid.setRole(WxRole.USER.getRole());
+            openid.setStatus(UserStatus.INCOMPLETE.getStatus());
             openid.setCreateTime(new Date());
             openid.setUpdateTime(new Date());
-            openid.setRemark("");
             openidService.save(openid);
         }
 
         return UserDetail.builder()
                 .id(String.valueOf(openid.getId()))
-                .username(openid.getOpenid())
-                .name("")
+                .username(String.valueOf(openid.getId()))
+                .openid(openid.getOpenid())
+                .name(openid.getNickname())
                 .nickname(openid.getNickname())
                 .createTime(String.valueOf(openid.getCreateTime().getTime()))
                 .updateTime(String.valueOf(openid.getUpdateTime().getTime()))
-                .authorities(Set.of(new SimpleGrantedAuthority("wx")))
+                .authorities(authorities(openid.getRole()))
                 .accountNonExpired(true)
                 .accountNonLocked(true)
                 .credentialsNonExpired(true)
                 .attributes(attributeMap(wechatSession.getSessionKey()))
                 .build();
+    }
+
+    private Set<GrantedAuthority> authorities(Integer role) {
+        WxRole wxRole = WxRole.roleOf(role);
+        if (wxRole == WxRole.USER) {
+            return Set.of(new SimpleGrantedAuthority(Authority.Wx.USER));
+        } else if (wxRole == WxRole.ADMIN) {
+            return Set.of(new SimpleGrantedAuthority(Authority.Wx.ADMIN));
+        } else {
+            return Set.of();
+        }
     }
 
     private Map<String, String> attributeMap(String sessionKey) {

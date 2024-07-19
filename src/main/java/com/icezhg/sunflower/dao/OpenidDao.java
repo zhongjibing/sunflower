@@ -2,8 +2,10 @@ package com.icezhg.sunflower.dao;
 
 
 import com.icezhg.sunflower.domain.Openid;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -25,4 +27,5 @@ public interface OpenidDao {
 
     List<Openid> find(Map<String, Object> params);
 
+    int updateLastLoginTime(@Param("openid") String openid, @Param("lastLoginTime") Date lastLoginTime);
 }

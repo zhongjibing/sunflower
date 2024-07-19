@@ -20,6 +20,7 @@
             <result property="agent" column="agent" jdbcType="VARCHAR"/>
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
             <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="loginMethod" column="login_method" jdbcType="TINYINT"/>
     </resultMap>
 
     <sql id="BaseColumns">
@@ -27,14 +28,14 @@
         username, name, nickname,
         avatar, login_ip, login_location,
         login_time, last_accessed_time, agent,
-        create_time, update_time
+        create_time, update_time, login_method
     </sql>
 
     <select id="findById" parameterType="string" resultMap="BaseResultMap">
         select
         <include refid="BaseColumns" />
         from sys_session
-        where  id = #{id,jdbcType=VARCHAR} 
+        where  id = #{id,jdbcType=VARCHAR}
     </select>
 
     <delete id="deleteByIds" parameterType="list">
@@ -70,6 +71,7 @@
             <if test="agent != null">agent,</if>
             <if test="createTime != null">create_time,</if>
             <if test="updateTime != null">update_time,</if>
+            <if test="loginMethod != null">login_method,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id,jdbcType=VARCHAR},</if>
@@ -87,6 +89,7 @@
             <if test="agent != null">#{agent,jdbcType=VARCHAR},</if>
             <if test="createTime != null">#{createTime,jdbcType=TIMESTAMP},</if>
             <if test="updateTime != null">#{updateTime,jdbcType=TIMESTAMP},</if>
+            <if test="loginMethod != null">#{loginMethod,jdbcType=TINYINT},</if>
         </trim>
     </insert>
 
@@ -100,6 +103,9 @@
         <where>
             <if test="!isRoot">
                 and user_id > 0
+            </if>
+            <if test="loginMethod != null">
+                and login_method = #{loginMethod,jdbcType=TINYINT}
             </if>
             <choose>
                 <when test="isFuzzyQuery">

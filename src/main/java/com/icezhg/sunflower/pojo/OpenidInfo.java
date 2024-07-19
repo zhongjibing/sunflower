@@ -49,4 +49,9 @@ public class OpenidInfo {
      * 备注
      */
     private String remark;
+
+    /**
+     * 最后登录时间
+     */
+    private Date lastLoginTime;
 }

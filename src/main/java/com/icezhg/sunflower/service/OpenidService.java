@@ -24,4 +24,6 @@ public interface OpenidService {
     int changeStatus(ChangeStatus change);
 
     OpenidInfo update(OpenidInfo info);
+
+    void updateLastLoginTime(String openid);
 }

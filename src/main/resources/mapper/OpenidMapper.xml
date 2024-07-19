@@ -14,12 +14,14 @@
         <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
         <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
         <result property="remark" column="remark" jdbcType="VARCHAR"/>
+        <result property="lastLoginTime" column="last_login_time" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <sql id="Base_Column_List">
         id, openid, nickname,
         mobile, `role`, `status`,
-        create_time, update_time, remark
+        create_time, update_time, remark,
+        last_login_time
     </sql>
 
     <select id="findByOpenid" parameterType="string" resultMap="BaseResultMap">
@@ -49,6 +51,7 @@
             <if test="createTime != null">create_time,</if>
             <if test="updateTime != null">update_time,</if>
             <if test="remark != null">remark,</if>
+            <if test="lastLoginTime != null">last_login_time,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id,jdbcType=BIGINT},</if>
@@ -60,6 +63,7 @@
             <if test="createTime != null">#{createTime,jdbcType=TIMESTAMP},</if>
             <if test="updateTime != null">#{updateTime,jdbcType=TIMESTAMP},</if>
             <if test="remark != null">#{remark,jdbcType=VARCHAR},</if>
+            <if test="lastLoginTime != null">#{lastLoginTime,jdbcType=TIMESTAMP},</if>
         </trim>
         on duplicate key update
         <trim prefix="" suffix="" suffixOverrides=",">
@@ -68,6 +72,9 @@
             </if>
             <if test="remark != null">
                 remark = values(remark),
+            </if>
+            <if test="lastLoginTime != null">
+                last_login_time = values(last_login_time),
             </if>
             <choose>
                 <when test="updateTime != null">
@@ -101,8 +108,17 @@
             <if test="remark != null">
                 remark = #{remark,jdbcType=VARCHAR},
             </if>
+            <if test="lastLoginTime != null">
+                last_login_time = #{lastLoginTime,jdbcType=TIMESTAMP},
+            </if>
         </set>
         where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <update id="updateLastLoginTime">
+        update sys_openid
+        set last_login_time = #{lastLoginTime,jdbcType=TIMESTAMP}
+        where openid = #{openid,jdbcType=VARCHAR} and status = '0'
     </update>
 
     <sql id="findCondition">

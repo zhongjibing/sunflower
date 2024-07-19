@@ -56,6 +56,7 @@ public class OnlineUserServiceImpl implements OnlineUserService {
         user.setLoginTime(formatDateTime(session.getLoginTime()));
         user.setUserAgent(session.getAgent());
         user.setCurrentSession(StringUtils.equals(session.getNewSessionId(), SecurityUtil.getSessionId()));
+        user.setLoginMethod(session.getLoginMethod());
 
         UserAgent userAgent = UserAgent.parseUserAgentString(session.getAgent());
         user.setBrowser(userAgent.getBrowser().getName());

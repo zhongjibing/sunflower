@@ -32,4 +32,5 @@ public class OnlineUser {
     private String browser;
     private String os;
     private boolean currentSession;
+    private Integer loginMethod;
 }

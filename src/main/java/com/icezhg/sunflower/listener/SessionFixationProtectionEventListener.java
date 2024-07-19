@@ -42,6 +42,7 @@ public class SessionFixationProtectionEventListener implements ApplicationListen
             session.setAgent(userDetail.getAttributes().get(Constant.ATTRIBUTE_AGENT));
             session.setLoginTime(new Date());
             session.setLastAccessedTime(new Date());
+            session.setLoginMethod(userDetail.getLoginMethod());
 
             sessionService.save(session);
         }

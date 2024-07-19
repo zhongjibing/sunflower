@@ -16,13 +16,14 @@
         <result property="status" column="status" jdbcType="CHAR"/>
         <result property="msg" column="msg" jdbcType="VARCHAR"/>
         <result property="loginTime" column="login_time" jdbcType="TIMESTAMP"/>
+        <result property="loginMethod" column="login_method" jdbcType="TINYINT"/>
     </resultMap>
 
     <sql id="Base_Column_List">
         id,user_id,username,
         login_ip,login_location,agent,
         browser,os,status,
-        msg,login_time
+        msg,login_time,login_method
     </sql>
 
     <sql id="findCondition">
@@ -38,6 +39,9 @@
             </if>
             <if test="status != null">
                 and status = #{status}
+            </if>
+            <if test="loginMethod != null">
+                and login_method = #{loginMethod,jdbcType=TINYINT}
             </if>
             <if test="beginTime != null and endTime != null">
                 and login_time between #{beginTime,jdbcType=TIMESTAMP} and #{endTime,jdbcType=TIMESTAMP}
@@ -73,6 +77,7 @@
             <if test="status != null">status,</if>
             <if test="msg != null">msg,</if>
             <if test="loginTime != null">login_time,</if>
+            <if test="loginMethod != null">login_method,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id,jdbcType=BIGINT},</if>
@@ -86,6 +91,7 @@
             <if test="status != null">#{status,jdbcType=CHAR},</if>
             <if test="msg != null">#{msg,jdbcType=VARCHAR},</if>
             <if test="loginTime != null">#{loginTime,jdbcType=TIMESTAMP},</if>
+            <if test="loginMethod != null">#{loginMethod,jdbcType=TINYINT},</if>
         </trim>
     </insert>
 </mapper>

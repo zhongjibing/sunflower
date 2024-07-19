@@ -44,11 +44,12 @@ public class UserDetailSerializer extends JsonSerializer<UserDetail> {
             }
         }
         gen.writeEndObject();
+        gen.writeNumberField("loginMethod", value.getLoginMethod());
     }
 
     @Override
     public void serializeWithType(UserDetail value, JsonGenerator gen, SerializerProvider serializers,
-            TypeSerializer typeSer) throws IOException {
+                                  TypeSerializer typeSer) throws IOException {
         WritableTypeId typeIdDef = typeSer.typeId(value, JsonToken.START_OBJECT);
         typeSer.writeTypePrefix(gen, typeIdDef);
         gen.setCurrentValue(value);

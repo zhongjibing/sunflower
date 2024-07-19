@@ -14,6 +14,7 @@ public class LoginQuery extends PageQuery {
     private String username;
     private String loginIp;
     private String status;
+    private int loginMethod;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date beginTime;
     @DateTimeFormat(pattern = "yyyy-MM-dd")

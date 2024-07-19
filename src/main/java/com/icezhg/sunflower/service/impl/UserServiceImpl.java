@@ -8,6 +8,7 @@ import com.icezhg.sunflower.domain.AvatarPicture;
 import com.icezhg.sunflower.domain.IpLocation;
 import com.icezhg.sunflower.domain.Role;
 import com.icezhg.sunflower.domain.User;
+import com.icezhg.sunflower.enums.LoginMethod;
 import com.icezhg.sunflower.pojo.MenuInfo;
 import com.icezhg.sunflower.pojo.UserInfo;
 import com.icezhg.sunflower.pojo.UserPasswd;
@@ -126,6 +127,7 @@ public class UserServiceImpl implements UserService {
                 .accountNonLocked(user.accountNonLocked())
                 .credentialsNonExpired(user.credentialsNonExpired())
                 .attributes(attributeMap())
+                .loginMethod(LoginMethod.WEB.getMethod())
                 .build();
     }
 

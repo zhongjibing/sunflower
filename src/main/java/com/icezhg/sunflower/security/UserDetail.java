@@ -10,6 +10,7 @@ import org.springframework.security.core.CredentialsContainer;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.io.Serial;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
@@ -22,6 +23,9 @@ import java.util.Set;
 @JsonDeserialize(using = UserDetailDeserializer.class)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UserDetail implements UserDetails, CredentialsContainer {
+    @Serial
+    private static final long serialVersionUID = 1329240769639891571L;
+
     private String password;
     private final String id;
     private final String username;
@@ -40,12 +44,14 @@ public class UserDetail implements UserDetails, CredentialsContainer {
     private final boolean accountNonLocked;
     private final boolean credentialsNonExpired;
     private final Map<String, String> attributes;
+    private final int loginMethod;
 
 
     public UserDetail(String id, String username, String openid, String password, String name, String nickname,
                       String gender, String birthdate, String email, String mobile, String avatar, String createTime,
                       String updateTime, Set<GrantedAuthority> authorities, boolean accountNonExpired,
-                      boolean accountNonLocked, boolean credentialsNonExpired, Map<String, String> attributes) {
+                      boolean accountNonLocked, boolean credentialsNonExpired, Map<String, String> attributes,
+                      Integer loginMethod) {
         this.id = id;
         this.username = username;
         this.openid = openid;
@@ -68,6 +74,7 @@ public class UserDetail implements UserDetails, CredentialsContainer {
         this.accountNonLocked = accountNonLocked;
         this.credentialsNonExpired = credentialsNonExpired;
         this.attributes = attributes != null ? Collections.unmodifiableMap(attributes) : null;
+        this.loginMethod = loginMethod != null ? loginMethod : 0;
     }
 
     @Override
@@ -148,6 +155,10 @@ public class UserDetail implements UserDetails, CredentialsContainer {
         return attributes;
     }
 
+    public int getLoginMethod() {
+        return loginMethod;
+    }
+
     @Override
     public boolean isEnabled() {
         return true;
@@ -183,6 +194,7 @@ public class UserDetail implements UserDetails, CredentialsContainer {
         private boolean credentialsNonExpired;
 
         private Map<String, String> attributes;
+        private int loginMethod;
 
         public UserDetailBuilder password(String password) {
             this.password = password;
@@ -274,10 +286,15 @@ public class UserDetail implements UserDetails, CredentialsContainer {
             return this;
         }
 
+        public UserDetailBuilder loginMethod(Integer loginMethod) {
+            this.loginMethod = loginMethod != null ? loginMethod : 0;
+            return this;
+        }
+
         public UserDetail build() {
             return new UserDetail(id, username, openid, password, name, nickname, gender, birthdate, email, mobile, avatar,
                     createTime, updateTime, authorities, accountNonExpired, accountNonLocked, credentialsNonExpired,
-                    attributes);
+                    attributes, loginMethod);
         }
     }
 

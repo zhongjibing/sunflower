@@ -4,6 +4,7 @@ import com.icezhg.sunflower.common.Constant;
 import com.icezhg.sunflower.dao.LoginRecordDao;
 import com.icezhg.sunflower.domain.LoginRecord;
 import com.icezhg.sunflower.pojo.query.Query;
+import com.icezhg.sunflower.security.UserDetail;
 import com.icezhg.sunflower.service.LoginRecordService;
 import eu.bitwalker.useragentutils.UserAgent;
 import org.apache.commons.lang3.StringUtils;
@@ -34,13 +35,15 @@ public class LoginRecordServiceImpl implements LoginRecordService {
 
     @Override
     @Transactional
-    public void saveLoginInfo(String userId, String username, Map<String, String> attributes) {
-        saveLoginInfo(Long.parseLong(userId), username, Constant.LOGIN_SUCCESS, "login success", attributes);
+    public void saveLoginInfo(UserDetail userDetail) {
+        saveLoginInfo(Long.parseLong(userDetail.getId()), userDetail.getUsername(), Constant.LOGIN_SUCCESS,
+                "login success", userDetail.getAttributes(), userDetail.getLoginMethod());
     }
 
     @Override
     @Transactional
-    public void saveLoginInfo(Long userId, String username, String status, String msg, Map<String, String> attributes) {
+    public void saveLoginInfo(Long userId, String username, String status, String msg,
+                              Map<String, String> attributes, int loginMethod) {
         log.info("save login info: userId={}, username={}, status={}, msg={}, attributes={}", userId, username,
                 status, msg, attributes);
 
@@ -78,6 +81,7 @@ public class LoginRecordServiceImpl implements LoginRecordService {
             loginRecord.setOs(userAgent.getOperatingSystem().getName());
             loginRecord.setBrowser(userAgent.getBrowser().getName());
         }
+        loginRecord.setLoginMethod(loginMethod);
 
         loginRecordDao.save(loginRecord);
     }

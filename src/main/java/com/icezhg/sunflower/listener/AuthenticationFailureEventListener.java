@@ -3,9 +3,12 @@ package com.icezhg.sunflower.listener;
 
 import com.icezhg.sunflower.common.Constant;
 import com.icezhg.sunflower.domain.IpLocation;
+import com.icezhg.sunflower.domain.Openid;
 import com.icezhg.sunflower.domain.User;
+import com.icezhg.sunflower.enums.LoginMethod;
 import com.icezhg.sunflower.service.IpLocationService;
 import com.icezhg.sunflower.service.LoginRecordService;
+import com.icezhg.sunflower.service.OpenidService;
 import com.icezhg.sunflower.service.UserService;
 import com.icezhg.sunflower.util.IPAddressUtil;
 import com.icezhg.sunflower.util.IpUtil;
@@ -17,7 +20,6 @@ import org.springframework.security.authentication.event.AbstractAuthenticationF
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
-import java.util.Optional;
 
 /**
  * Created by zhongjibing on 2022/12/14.
@@ -31,13 +33,15 @@ public class AuthenticationFailureEventListener implements ApplicationListener<A
 
     private IpLocationService ipLocationService;
 
+    private OpenidService openidService;
+
     @Autowired
     public void setUserService(UserService userService) {
         this.userService = userService;
     }
 
     @Autowired
-    public void setLoginInfoService(LoginRecordService loginRecordService) {
+    public void setLoginRecordService(LoginRecordService loginRecordService) {
         this.loginRecordService = loginRecordService;
     }
 
@@ -46,13 +50,30 @@ public class AuthenticationFailureEventListener implements ApplicationListener<A
         this.ipLocationService = ipLocationService;
     }
 
+    @Autowired
+    public void setOpenidService(OpenidService openidService) {
+        this.openidService = openidService;
+    }
+
     @Override
     public void onApplicationEvent(AbstractAuthenticationFailureEvent event) {
         if (event.getAuthentication() instanceof UsernamePasswordAuthenticationToken authenticationToken) {
             if (authenticationToken.getPrincipal() instanceof String username) {
                 Map<String, String> attribute = attributeMap();
-                Long userId = Optional.ofNullable(userService.findUserByUsername(username)).map(User::getId).orElse(Constant.UNKNOWN_USER_ID);
-                loginRecordService.saveLoginInfo(userId, username, Constant.LOGIN_FAILURE, event.getException().getMessage(), attribute);
+                LoginMethod loginMethod = LoginMethod.WEB;
+                Long userId = Constant.UNKNOWN_USER_ID;
+                User user = userService.findUserByUsername(username);
+                if (user != null) {
+                    userId = user.getId();
+                } else {
+                    Openid openid = openidService.findByOpenid(username);
+                    if (openid != null) {
+                        userId = openid.getId();
+                        loginMethod = LoginMethod.WX;
+                    }
+                }
+                loginRecordService.saveLoginInfo(userId, username, Constant.LOGIN_FAILURE,
+                        event.getException().getMessage(), attribute, loginMethod.getMethod());
             }
         }
     }

@@ -67,4 +67,9 @@ public class LoginRecord {
      */
     private Date loginTime;
 
+    /**
+     * 登录方式
+     */
+    private Integer loginMethod;
+
 }

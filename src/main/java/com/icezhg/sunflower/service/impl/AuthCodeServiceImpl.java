@@ -4,6 +4,7 @@ import com.icezhg.sunflower.common.Authority;
 import com.icezhg.sunflower.common.Constant;
 import com.icezhg.sunflower.domain.IpLocation;
 import com.icezhg.sunflower.domain.Openid;
+import com.icezhg.sunflower.enums.LoginMethod;
 import com.icezhg.sunflower.enums.UserStatus;
 import com.icezhg.sunflower.enums.WxRole;
 import com.icezhg.sunflower.security.UserDetail;
@@ -72,7 +73,7 @@ public class AuthCodeServiceImpl implements AuthCodeService {
 
         return UserDetail.builder()
                 .id(String.valueOf(openid.getId()))
-                .username(String.valueOf(openid.getId()))
+                .username(openid.getOpenid())
                 .openid(openid.getOpenid())
                 .name(openid.getNickname())
                 .nickname(openid.getNickname())
@@ -83,6 +84,7 @@ public class AuthCodeServiceImpl implements AuthCodeService {
                 .accountNonLocked(true)
                 .credentialsNonExpired(true)
                 .attributes(attributeMap(wechatSession.getSessionKey()))
+                .loginMethod(LoginMethod.WX.getMethod())
                 .build();
     }
 

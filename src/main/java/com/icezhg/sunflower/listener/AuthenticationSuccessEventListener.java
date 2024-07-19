@@ -1,6 +1,7 @@
 package com.icezhg.sunflower.listener;
 
 
+import com.icezhg.sunflower.enums.LoginMethod;
 import com.icezhg.sunflower.security.UserDetail;
 import com.icezhg.sunflower.service.LoginRecordService;
 import com.icezhg.sunflower.service.UserService;
@@ -38,8 +39,10 @@ public class AuthenticationSuccessEventListener implements ApplicationListener<A
         Object principal = event.getAuthentication().getPrincipal();
         log.info("authentication success: {} | {}", principal, principal.getClass());
         if (principal instanceof UserDetail userDetail) {
-            userService.updateLastLoginTime(userDetail.getUsername());
-            loginRecordService.saveLoginInfo(userDetail.getId(), userDetail.getUsername(), userDetail.getAttributes());
+            if (userDetail.getLoginMethod() == LoginMethod.WEB.getMethod()) {
+                userService.updateLastLoginTime(userDetail.getUsername());
+            }
+            loginRecordService.saveLoginInfo(userDetail);
         }
     }
 }

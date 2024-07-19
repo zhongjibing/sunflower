@@ -31,8 +31,8 @@ public class SessionFixationProtectionEventListener implements ApplicationListen
     @Override
     public void onApplicationEvent(SessionFixationProtectionEvent event) {
         Object principal = event.getAuthentication().getPrincipal();
-        log.info("session fixation protection: {} | {}", principal, principal.getClass());
         if (principal instanceof UserDetail userDetail) {
+            log.info("session fixation protection: {} | {}", userDetail.getId(), userDetail.getUsername());
             Session session = new Session();
             session.setOldSessionId(event.getOldSessionId());
             session.setNewSessionId(event.getNewSessionId());

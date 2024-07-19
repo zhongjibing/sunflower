@@ -88,7 +88,7 @@ public class RoomResourceController extends AbstractResourceController {
     }
 
     @GetMapping("/all")
-    @Secured({Authority.Price.GuestRoom.ADD, Authority.Price.GuestRoom.EDIT})
+    @Secured({Authority.Price.GuestRoom.ADD, Authority.Price.GuestRoom.EDIT, Authority.Wx.ADMIN, Authority.Wx.USER})
     public Object listAll() {
         return resourceService.listAll(resourceType());
     }

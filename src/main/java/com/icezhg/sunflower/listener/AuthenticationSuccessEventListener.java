@@ -37,8 +37,8 @@ public class AuthenticationSuccessEventListener implements ApplicationListener<A
     @Override
     public void onApplicationEvent(AuthenticationSuccessEvent event) {
         Object principal = event.getAuthentication().getPrincipal();
-        log.info("authentication success: {} | {}", principal, principal.getClass());
         if (principal instanceof UserDetail userDetail) {
+            log.info("authentication success: {} | {}", userDetail.getId(), userDetail.getUsername());
             if (userDetail.getLoginMethod() == LoginMethod.WEB.getMethod()) {
                 userService.updateLastLoginTime(userDetail.getUsername());
             }

@@ -88,7 +88,7 @@ public class BanquetResourceController extends AbstractResourceController {
     }
 
     @GetMapping("/all")
-    @Secured({Authority.Price.BanquetHall.ADD, Authority.Price.BanquetHall.EDIT})
+    @Secured({Authority.Price.BanquetHall.ADD, Authority.Price.BanquetHall.EDIT, Authority.Wx.ADMIN, Authority.Wx.USER})
     public Object listAll() {
         return resourceService.listAll(resourceType());
     }

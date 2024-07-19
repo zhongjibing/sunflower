@@ -88,7 +88,7 @@ public class ConferenceResourceController extends AbstractResourceController {
     }
 
     @GetMapping("/all")
-    @Secured({Authority.Price.ConferenceRoom.ADD, Authority.Price.ConferenceRoom.EDIT})
+    @Secured({Authority.Price.ConferenceRoom.ADD, Authority.Price.ConferenceRoom.EDIT, Authority.Wx.ADMIN, Authority.Wx.USER})
     public Object listAll() {
         return resourceService.listAll(resourceType());
     }

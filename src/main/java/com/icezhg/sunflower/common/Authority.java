@@ -61,6 +61,12 @@ public interface Authority {
             String DELETE = "system:dict:query";
         }
 
+        interface Openid {
+            String QUERY = "system:openid:query";
+            String EDIT = "system:openid:edit";
+            String STATUS = "system:openid:status";
+        }
+
     }
 
     interface Monitor {

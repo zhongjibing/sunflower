@@ -31,26 +31,26 @@ public class OpenIdController {
     }
 
     @PutMapping("/update")
-    @Secured(Authority.Resource.BanquetHall.EDIT)
+    @Secured(Authority.System.Openid.EDIT)
     @Operation(title = "banquet halls modification", type = OperationType.UPDATE)
     public Object edit(@Validated @RequestBody OpenidInfo info) {
         return this.openidService.update(info);
     }
 
     @GetMapping("/list")
-    @Secured(Authority.Resource.GuestRoom.QUERY)
+    @Secured(Authority.System.Openid.QUERY)
     public PageResult list(OpenIdQuery query) {
         return new PageResult(openidService.count(query), openidService.find(query));
     }
 
     @GetMapping("/{id:\\d+}")
-    @Secured(Authority.Resource.GuestRoom.QUERY)
+    @Secured(Authority.System.Openid.QUERY)
     public Object get(@PathVariable Long id) {
         return this.openidService.findById(id);
     }
 
     @PutMapping("/changeStatus")
-    @Secured(Authority.Resource.GuestRoom.STATUS)
+    @Secured(Authority.System.Openid.STATUS)
     @Operation(title = "guest rooms status change", type = OperationType.UPDATE)
     public int changeStatus(@RequestBody ChangeStatus change) {
         return this.openidService.changeStatus(change);

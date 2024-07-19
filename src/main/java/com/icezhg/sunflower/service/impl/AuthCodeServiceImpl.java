@@ -16,6 +16,7 @@ import com.icezhg.sunflower.util.IpUtil;
 import com.icezhg.sunflower.util.Requests;
 import com.icezhg.sunflower.visitor.WechatVisitor;
 import com.icezhg.sunflower.visitor.pojo.WechatSession;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -65,7 +66,7 @@ public class AuthCodeServiceImpl implements AuthCodeService {
             openid = new Openid();
             openid.setOpenid(wechatSession.getOpenid());
             openid.setRole(WxRole.USER.getRole());
-            openid.setStatus(UserStatus.INCOMPLETE.getStatus());
+            openid.setStatus(UserStatus.NORMAL.getStatus());
             openid.setCreateTime(new Date());
             openid.setUpdateTime(new Date());
             openidService.save(openid);
@@ -81,7 +82,7 @@ public class AuthCodeServiceImpl implements AuthCodeService {
                 .updateTime(String.valueOf(openid.getUpdateTime().getTime()))
                 .authorities(authorities(openid.getRole()))
                 .accountNonExpired(true)
-                .accountNonLocked(true)
+                .accountNonLocked(StringUtils.equals(openid.getStatus(), UserStatus.NORMAL.getStatus()))
                 .credentialsNonExpired(true)
                 .attributes(attributeMap(wechatSession.getSessionKey()))
                 .loginMethod(LoginMethod.WX.getMethod())

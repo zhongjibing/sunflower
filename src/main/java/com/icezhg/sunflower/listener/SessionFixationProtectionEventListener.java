@@ -5,8 +5,6 @@ import com.icezhg.sunflower.common.Constant;
 import com.icezhg.sunflower.domain.Session;
 import com.icezhg.sunflower.security.UserDetail;
 import com.icezhg.sunflower.service.SessionService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.web.authentication.session.SessionFixationProtectionEvent;
@@ -19,7 +17,6 @@ import java.util.Date;
  */
 @Component
 public class SessionFixationProtectionEventListener implements ApplicationListener<SessionFixationProtectionEvent> {
-    private static final Logger log = LoggerFactory.getLogger(SessionFixationProtectionEventListener.class);
 
     private SessionService sessionService;
 
@@ -32,7 +29,6 @@ public class SessionFixationProtectionEventListener implements ApplicationListen
     public void onApplicationEvent(SessionFixationProtectionEvent event) {
         Object principal = event.getAuthentication().getPrincipal();
         if (principal instanceof UserDetail userDetail) {
-            log.info("session fixation protection: {} | {}", userDetail.getId(), userDetail.getUsername());
             Session session = new Session();
             session.setOldSessionId(event.getOldSessionId());
             session.setNewSessionId(event.getNewSessionId());

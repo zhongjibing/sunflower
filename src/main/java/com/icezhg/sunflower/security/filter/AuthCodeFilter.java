@@ -1,10 +1,7 @@
 package com.icezhg.sunflower.security.filter;
 
 import com.icezhg.sunflower.security.authentication.AuthCodeAuthenticationToken;
-import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
@@ -29,14 +26,6 @@ public class AuthCodeFilter extends AbstractAuthenticationProcessingFilter {
 
     public AuthCodeFilter() {
         super(REQUEST_MATCHER);
-    }
-
-    @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        if (request instanceof HttpServletRequest httpServletRequest) {
-            httpServletRequest.getSession(true);
-        }
-        super.doFilter(request, response, chain);
     }
 
     @Override

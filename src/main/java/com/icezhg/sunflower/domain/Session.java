@@ -84,4 +84,9 @@ public class Session {
      */
     private Date updateTime;
 
+    /**
+     * 登录方式
+     */
+    private Integer loginMethod;
+
 }

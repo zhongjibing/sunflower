@@ -1,6 +1,7 @@
 package com.icezhg.sunflower.security.authentication;
 
 import org.springframework.security.authentication.AbstractAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.Serial;
 
@@ -18,7 +19,7 @@ public class AuthCodeAuthenticationToken extends AbstractAuthenticationToken {
     }
 
     public AuthCodeAuthenticationToken(Object principal, boolean authenticated) {
-        super(null);
+        super(principal instanceof UserDetails details ? details.getAuthorities() : null);
         this.principal = principal;
         super.setAuthenticated(authenticated);
     }

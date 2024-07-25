@@ -28,6 +28,7 @@ public class PriceRuleHistoryServiceImpl implements PriceRuleHistoryService {
     private PriceRuleHistory buildPriceRuleHistory(PriceRule priceRule) {
         PriceRuleHistory history = new PriceRuleHistory();
         history.setRuleId(priceRule.getId());
+        history.setName(priceRule.getName());
         history.setTagId(priceRule.getTagId());
         history.setResourceId(priceRule.getResourceId());
         history.setType(priceRule.getType());

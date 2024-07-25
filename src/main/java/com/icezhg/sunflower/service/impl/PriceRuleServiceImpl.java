@@ -117,6 +117,7 @@ public class PriceRuleServiceImpl implements PriceRuleService {
         PriceRuleInfo priceRuleInfo = new PriceRuleInfo();
         if (priceRule != null) {
             priceRuleInfo.setId(priceRule.getId());
+            priceRuleInfo.setName(priceRule.getName());
             priceRuleInfo.setTagId(priceRule.getTagId());
             priceRuleInfo.setResourceId(priceRule.getResourceId());
             priceRuleInfo.setDetail(priceRule.getDetail());

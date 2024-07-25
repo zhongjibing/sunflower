@@ -22,6 +22,11 @@ public class PriceRuleHistory extends BaseEntity {
     private Long ruleId;
 
     /**
+     * 名称
+     */
+    private String name;
+
+    /**
      * 客户标签
      */
     private Object tagId;

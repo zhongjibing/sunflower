@@ -17,6 +17,11 @@ public class PriceRuleInfo {
     private Long id;
 
     /**
+     * 名称
+     */
+    private String name;
+
+    /**
      * 客户标签
      */
     @NotNull

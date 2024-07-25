@@ -6,6 +6,7 @@
 
     <resultMap id="BaseResultMap" type="com.icezhg.sunflower.domain.PriceRule">
         <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
         <result property="tagId" column="tag_id" jdbcType="INTEGER"/>
         <result property="resourceId" column="resource_id" jdbcType="BIGINT"/>
         <result property="type" column="type" jdbcType="TINYINT"/>
@@ -19,7 +20,7 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        id, tag_id,
+        id, `name`, tag_id,
         resource_id, `type`, detail,
         deleted, create_time, create_by,
         update_time, update_by, remark
@@ -96,6 +97,7 @@
         insert into t_price_rule
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
+            <if test="name != null">`name`,</if>
             <if test="tagId != null">tag_id,</if>
             <if test="resourceId != null">resource_id,</if>
             <if test="type != null">type,</if>
@@ -109,6 +111,7 @@
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id,jdbcType=BIGINT},</if>
+            <if test="name != null">#{name,jdbcType=VARCHAR},</if>
             <if test="tagId != null">#{tagId,jdbcType=INTEGER},</if>
             <if test="resourceId != null">#{resourceId,jdbcType=BIGINT},</if>
             <if test="type != null">#{type,jdbcType=TINYINT},</if>
@@ -125,6 +128,9 @@
     <update id="update" parameterType="com.icezhg.sunflower.domain.PriceRule">
         update t_price_rule
         <set>
+            <if test="name != null">
+                `name` = #{name,jdbcType=VARCHAR},
+            </if>
             <if test="detail != null">
                 detail = #{detail,jdbcType=VARCHAR},
             </if>
@@ -149,6 +155,7 @@
 
     <sql id="find_detail_query">
         select pr.id,
+               pr.name,
                pr.tag_id,
                ct.name tag_name,
                ct.style_class,
@@ -180,7 +187,7 @@
                 and pr.deleted = 0
             </if>
             <if test="name != null">
-                and LOCATE(#{name,jdbcType=VARCHAR}, r.name) > 0
+                and (LOCATE(#{name,jdbcType=VARCHAR}, pr.name) > 0 or LOCATE(#{name,jdbcType=VARCHAR}, r.name) > 0)
             </if>
             <if test="type != null">
                 and pr.type = #{type,jdbcType=TINYINT}
@@ -209,7 +216,7 @@
         select
         <include refid="Base_Column_List"/>
         from t_price_rule
-        where resource_id = #{resourceId,jdbcType=BIGINT}
+        where resource_id = #{resourceId,jdbcType=BIGINT} and resource_id > 0
         and tag_id = #{tagId,jdbcType=INTEGER}
         and deleted = 0
     </select>

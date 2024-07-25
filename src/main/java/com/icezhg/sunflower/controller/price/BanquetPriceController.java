@@ -2,6 +2,7 @@ package com.icezhg.sunflower.controller.price;
 
 import com.icezhg.sunflower.annotation.Operation;
 import com.icezhg.sunflower.common.Authority;
+import com.icezhg.sunflower.domain.PriceRule;
 import com.icezhg.sunflower.enums.OperationType;
 import com.icezhg.sunflower.enums.ResourceType;
 import com.icezhg.sunflower.pojo.PageResult;
@@ -75,5 +76,18 @@ public class BanquetPriceController extends AbstractPriceController {
     public void generate(Long id) {
         checkDataPermission(List.of(id));
         this.pricePlanService.generate(id);
+    }
+
+    @Override
+    protected PriceRule buildPriceRule(PriceRuleInfo info) {
+        PriceRule priceRule = new PriceRule();
+        priceRule.setId(info.getId());
+        priceRule.setName(info.getName());
+        priceRule.setTagId(info.getTagId());
+        priceRule.setResourceId(0L);
+        priceRule.setType(resourceType().getType());
+        priceRule.setDetail(info.getDetail());
+        priceRule.setRemark(info.getRemark());
+        return priceRule;
     }
 }

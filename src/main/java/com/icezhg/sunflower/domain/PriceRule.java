@@ -15,6 +15,11 @@ public class PriceRule extends BaseEntity {
     private Long id;
 
     /**
+     * 名称
+     */
+    private String name;
+
+    /**
      * 客户标签
      */
     private Integer tagId;

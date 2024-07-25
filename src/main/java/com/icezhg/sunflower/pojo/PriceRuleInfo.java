@@ -30,7 +30,6 @@ public class PriceRuleInfo {
     /**
      * 资源id
      */
-    @NotNull
     private Long resourceId;
 
     /**

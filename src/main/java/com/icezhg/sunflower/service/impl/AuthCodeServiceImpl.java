@@ -84,7 +84,7 @@ public class AuthCodeServiceImpl implements AuthCodeService {
                 .accountNonExpired(true)
                 .accountNonLocked(StringUtils.equals(openid.getStatus(), UserStatus.NORMAL.getStatus()))
                 .credentialsNonExpired(true)
-                .attributes(attributeMap(wechatSession.getSessionKey()))
+                .attributes(attributeMap(code, wechatSession.getSessionKey()))
                 .loginMethod(LoginMethod.WX.getMethod())
                 .build();
     }
@@ -100,13 +100,14 @@ public class AuthCodeServiceImpl implements AuthCodeService {
         }
     }
 
-    private Map<String, String> attributeMap(String sessionKey) {
+    private Map<String, String> attributeMap(String authCode, String sessionKey) {
         String requestIp = IpUtil.getRequestIp();
         String ipLocation = findAndSaveIpLocation(requestIp);
         Map<String, String> attributes = new java.util.HashMap<>();
         attributes.put(Constant.ATTRIBUTE_IP, requestIp);
         attributes.put(Constant.ATTRIBUTE_IP_LOCATION, ipLocation);
         attributes.put(Constant.ATTRIBUTE_AGENT, Requests.userAgent());
+        attributes.put(Constant.AUTH_CODE, authCode);
         attributes.put(Constant.SESSION_KEY, sessionKey);
         return attributes;
     }

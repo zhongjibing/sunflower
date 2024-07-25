@@ -110,6 +110,7 @@ public interface Constant {
 
     Locale DEFAULT_LOCALE = Locale.CHINA;
 
+    String AUTH_CODE = "auth_code";
     String SESSION_KEY = "session_key";
 
 }

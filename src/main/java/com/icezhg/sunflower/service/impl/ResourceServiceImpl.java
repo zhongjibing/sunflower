@@ -8,6 +8,7 @@ import com.icezhg.sunflower.domain.Resource;
 import com.icezhg.sunflower.enums.ResourceType;
 import com.icezhg.sunflower.pojo.ChangeStatus;
 import com.icezhg.sunflower.pojo.ResourceInfo;
+import com.icezhg.sunflower.pojo.ResourcePriceInfo;
 import com.icezhg.sunflower.pojo.query.DeleteQuery;
 import com.icezhg.sunflower.pojo.query.Query;
 import com.icezhg.sunflower.pojo.query.ResourceQuery;
@@ -116,8 +117,8 @@ public class ResourceServiceImpl implements ResourceService {
     }
 
     @Override
-    public Object listResourcePriceInfoAll(ResourceType banquetHall) {
-        return null;
+    public List<ResourcePriceInfo> listResourcePriceInfoAll(ResourceType resourceType) {
+        return this.resourceDao.listResourcePriceInfoAll(resourceType.getType());
     }
 
     private ResourceInfo buildResourceInfo(Resource resource) {

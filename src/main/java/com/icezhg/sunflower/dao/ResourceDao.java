@@ -2,6 +2,7 @@ package com.icezhg.sunflower.dao;
 
 import com.icezhg.sunflower.domain.Resource;
 import com.icezhg.sunflower.pojo.ResourceInfo;
+import com.icezhg.sunflower.pojo.ResourcePriceInfo;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -30,4 +31,6 @@ public interface ResourceDao {
     List<ResourceInfo> findByType(Integer type);
 
     int restoreByIds(Map<String, Object> params);
+
+    List<ResourcePriceInfo> listResourcePriceInfoAll(int type);
 }

@@ -4,6 +4,7 @@ import com.icezhg.sunflower.domain.Resource;
 import com.icezhg.sunflower.enums.ResourceType;
 import com.icezhg.sunflower.pojo.ChangeStatus;
 import com.icezhg.sunflower.pojo.ResourceInfo;
+import com.icezhg.sunflower.pojo.ResourcePriceInfo;
 import com.icezhg.sunflower.pojo.query.Query;
 
 import java.util.List;
@@ -33,5 +34,5 @@ public interface ResourceService {
 
     int changeStatus(ChangeStatus change);
 
-    Object listResourcePriceInfoAll(ResourceType banquetHall);
+    List<ResourcePriceInfo> listResourcePriceInfoAll(ResourceType resourceType);
 }

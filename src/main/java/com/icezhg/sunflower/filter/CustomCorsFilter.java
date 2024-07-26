@@ -34,7 +34,7 @@ public class CustomCorsFilter extends OncePerRequestFilter {
             response.setHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
             response.setHeader(HttpHeaders.ACCESS_CONTROL_MAX_AGE, "3600");
             response.setHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS, "User-Agent,X-Requested-With,Content-Type,X-CSRF-TOKEN");
-            response.setHeader(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, "X-CSRF-TOKEN, X-Captcha-Matched");
+            response.setHeader(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, "X-CSRF-TOKEN, X-Captcha-Matched, X-Data-Encrypt");
 
             if (HttpMethod.OPTIONS.matches(request.getMethod())) {
                 response.setStatus(HttpStatus.NO_CONTENT.value());

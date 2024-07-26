@@ -115,6 +115,11 @@ public class ResourceServiceImpl implements ResourceService {
         return this.resourceDao.update(resource);
     }
 
+    @Override
+    public Object listResourcePriceInfoAll(ResourceType banquetHall) {
+        return null;
+    }
+
     private ResourceInfo buildResourceInfo(Resource resource) {
         ResourceInfo info = new ResourceInfo();
         if (resource != null) {

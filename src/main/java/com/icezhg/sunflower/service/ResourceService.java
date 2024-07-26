@@ -32,4 +32,6 @@ public interface ResourceService {
     void restoreByIds(List<Long> ids);
 
     int changeStatus(ChangeStatus change);
+
+    Object listResourcePriceInfoAll(ResourceType banquetHall);
 }

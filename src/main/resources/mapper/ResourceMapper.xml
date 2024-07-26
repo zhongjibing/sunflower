@@ -233,4 +233,38 @@
         order by r.id asc
     </select>
 
+    <select id="a">
+        SELECT
+            r.id,
+            r.name,
+            r.description,
+            r.detail,
+            r.remark,
+            pr.id,
+            pr.name,
+            pr.detail,
+            pp.date,
+            pp.price
+        FROM
+            t_resource r
+                LEFT JOIN t_price_rule pr
+                          ON (
+                                      r.id = pr.resource_id
+                                  OR (
+                                                  r.type = pr.type
+                                              AND pr.resource_id = 0
+                                          )
+                              )
+                LEFT JOIN t_price_plan pp
+                          ON pr.id = pp.rule_id
+        WHERE r.type = 1
+          AND r.status = 0
+          AND r.deleted = 0
+          AND pr.deleted = 0
+          AND pp.date > DATE_ADD(NOW(), INTERVAL - 1 DAY)
+        ORDER BY r.id ASC,
+                 pr.id ASC,
+                 pp.date ASC
+    </select>
+
 </mapper>

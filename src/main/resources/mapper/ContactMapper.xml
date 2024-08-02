@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.icezhg.sunflower.dao.ContactMapper">
+
+    <resultMap id="BaseResultMap" type="com.icezhg.sunflower.domain.Contact">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="mobile" column="mobile" jdbcType="VARCHAR"/>
+        <result property="openid" column="openid" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, `name`, mobile,
+        openid, create_time, update_time
+    </sql>
+
+    <select id="findById" parameterType="long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_contact
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <delete id="delete" parameterType="long">
+        delete
+        from t_contact
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.icezhg.sunflower.domain.Contact" useGeneratedKeys="true">
+        insert into t_contact
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="name != null">`name`,</if>
+            <if test="mobile != null">mobile,</if>
+            <if test="openid != null">openid,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id,jdbcType=BIGINT},</if>
+            <if test="name != null">#{name,jdbcType=VARCHAR},</if>
+            <if test="mobile != null">#{mobile,jdbcType=VARCHAR},</if>
+            <if test="openid != null">#{openid,jdbcType=VARCHAR},</if>
+            <if test="createTime != null">#{createTime,jdbcType=TIMESTAMP},</if>
+            <if test="updateTime != null">#{updateTime,jdbcType=TIMESTAMP},</if>
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="com.icezhg.sunflower.domain.Contact">
+        update t_contact
+        <set>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="mobile != null">
+                mobile = #{mobile,jdbcType=VARCHAR},
+            </if>
+            <if test="openid != null">
+                openid = #{openid,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <sql id="findCondition">
+        <where>
+            <if test="openid != null">
+                and openid = #{openid,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </sql>
+
+    <select id="count" parameterType="map" resultType="int">
+        select count(*)
+        from t_contact
+        <include refid="findCondition"/>
+    </select>
+
+    <select id="find" parameterType="map" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/>
+        from t_contact
+        <include refid="findCondition"/>
+        order by id asc
+        limit #{offset,jdbcType=INTEGER}, #{pageSize,jdbcType=INTEGER}
+    </select>
+
+</mapper>

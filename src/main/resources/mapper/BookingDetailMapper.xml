@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.icezhg.sunflower.dao.BookingDetailDao">
+
+    <resultMap id="BaseResultMap" type="com.icezhg.sunflower.domain.BookingDetail">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="serialNumber" column="serial_number" jdbcType="VARCHAR"/>
+        <result property="resource" column="resource" jdbcType="BIGINT"/>
+        <result property="resourceName" column="resource_name" jdbcType="VARCHAR"/>
+        <result property="type" column="type" jdbcType="TINYINT"/>
+        <result property="startDate" column="start_date" jdbcType="DATE"/>
+        <result property="endDate" column="end_date" jdbcType="DATE"/>
+        <result property="detail" column="detail" jdbcType="LONGVARCHAR"/>
+        <result property="additions" column="additions" jdbcType="VARCHAR"/>
+        <result property="attentions" column="attentions" jdbcType="VARCHAR"/>
+        <result property="gratis" column="gratis" jdbcType="VARCHAR"/>
+        <result property="contactName" column="contact_name" jdbcType="VARCHAR"/>
+        <result property="contactMobile" column="contact_mobile" jdbcType="VARCHAR"/>
+        <result property="status" column="status" jdbcType="TINYINT"/>
+        <result property="channel" column="channel" jdbcType="TINYINT"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="createBy" column="create_by" jdbcType="VARCHAR"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="updateBy" column="update_by" jdbcType="VARCHAR"/>
+        <result property="remark" column="remark" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, serial_number, resource,
+        resource_name, `type`, start_date,
+        end_date, detail, additions,
+        attentions, gratis, contact_name,
+        contact_mobile, `status`, `channel`,
+        create_time, create_by, update_time,
+        update_by, remark
+    </sql>
+
+    <select id="findById" parameterType="long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_booking_detail
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.icezhg.sunflower.domain.BookingDetail"
+            useGeneratedKeys="true">
+        insert into t_booking_detail
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="serialNumber != null">serial_number,</if>
+            <if test="resource != null">resource,</if>
+            <if test="resourceName != null">resource_name,</if>
+            <if test="type != null">type,</if>
+            <if test="startDate != null">start_date,</if>
+            <if test="endDate != null">end_date,</if>
+            <if test="detail != null">detail,</if>
+            <if test="additions != null">additions,</if>
+            <if test="attentions != null">attentions,</if>
+            <if test="gratis != null">gratis,</if>
+            <if test="contactName != null">contact_name,</if>
+            <if test="contactMobile != null">contact_mobile,</if>
+            <if test="status != null">status,</if>
+            <if test="channel != null">channel,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="remark != null">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id,jdbcType=BIGINT},</if>
+            <if test="serialNumber != null">#{serialNumber,jdbcType=VARCHAR},</if>
+            <if test="resource != null">#{resource,jdbcType=BIGINT},</if>
+            <if test="resourceName != null">#{resourceName,jdbcType=VARCHAR},</if>
+            <if test="type != null">#{type,jdbcType=TINYINT},</if>
+            <if test="startDate != null">#{startDate,jdbcType=DATE},</if>
+            <if test="endDate != null">#{endDate,jdbcType=DATE},</if>
+            <if test="detail != null">#{detail,jdbcType=LONGVARCHAR},</if>
+            <if test="additions != null">#{additions,jdbcType=VARCHAR},</if>
+            <if test="attentions != null">#{attentions,jdbcType=VARCHAR},</if>
+            <if test="gratis != null">#{gratis,jdbcType=VARCHAR},</if>
+            <if test="contactName != null">#{contactName,jdbcType=VARCHAR},</if>
+            <if test="contactMobile != null">#{contactMobile,jdbcType=VARCHAR},</if>
+            <if test="status != null">#{status,jdbcType=TINYINT},</if>
+            <if test="channel != null">#{channel,jdbcType=TINYINT},</if>
+            <if test="createTime != null">#{createTime,jdbcType=TIMESTAMP},</if>
+            <if test="createBy != null">#{createBy,jdbcType=VARCHAR},</if>
+            <if test="updateTime != null">#{updateTime,jdbcType=TIMESTAMP},</if>
+            <if test="updateBy != null">#{updateBy,jdbcType=VARCHAR},</if>
+            <if test="remark != null">#{remark,jdbcType=VARCHAR},</if>
+        </trim>
+    </insert>
+
+    <insert id="batchInsert" keyColumn="id" keyProperty="id" parameterType="list" useGeneratedKeys="true">
+        insert into t_booking_detail (
+            serial_number, resource,
+            resource_name, `type`, start_date,
+            end_date, detail, additions,
+            attentions, gratis, contact_name,
+            contact_mobile, `status`, `channel`,
+            create_time, create_by, update_time,
+            update_by, remark
+        ) values
+        <foreach collection="records" item="item" open="(" separator="), (" close=")">
+            #{item.serialNumber,jdbcType=VARCHAR}, #{item.resource,jdbcType=BIGINT} ,
+            #{item.resourceName,jdbcType=VARCHAR}, #{item.type,jdbcType=TINYINT}, #{item.startDate,jdbcType=DATE} ,
+            #{item.endDate,jdbcType=DATE}, #{item.detail,jdbcType=VARCHAR}, #{item.additions,jdbcType=VARCHAR} ,
+            #{item.attentions,jdbcType=VARCHAR}, #{item.gratis,jdbcType=VARCHAR}, #{item.contactName,jdbcType=VARCHAR} ,
+            #{item.contactMobile,jdbcType=VARCHAR}, #{item.status,jdbcType=TINYINT}, #{item.channel,jdbcType=TINYINT} ,
+            #{item.createTime,jdbcType=TIMESTAMP}, #{item.createBy,jdbcType=VARCHAR},
+            #{item.updateTime,jdbcType=TIMESTAMP} ,
+            #{item.updateBy,jdbcType=VARCHAR}, #{item.remark,jdbcType=VARCHAR}
+        </foreach>
+    </insert>
+
+    <update id="update" parameterType="com.icezhg.sunflower.domain.BookingDetail">
+        update t_booking_detail
+        <set>
+            <if test="startDate != null">
+                start_date = #{startDate,jdbcType=DATE},
+            </if>
+            <if test="endDate != null">
+                end_date = #{endDate,jdbcType=DATE},
+            </if>
+            <if test="detail != null">
+                detail = #{detail,jdbcType=LONGVARCHAR},
+            </if>
+            <if test="additions != null">
+                additions = #{additions,jdbcType=VARCHAR},
+            </if>
+            <if test="attentions != null">
+                attentions = #{attentions,jdbcType=VARCHAR},
+            </if>
+            <if test="gratis != null">
+                gratis = #{gratis,jdbcType=VARCHAR},
+            </if>
+            <if test="contactName != null">
+                contact_name = #{contactName,jdbcType=VARCHAR},
+            </if>
+            <if test="contactMobile != null">
+                contact_mobile = #{contactMobile,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                `status` = #{status,jdbcType=TINYINT},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateBy != null">
+                update_by = #{updateBy,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null">
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+</mapper>

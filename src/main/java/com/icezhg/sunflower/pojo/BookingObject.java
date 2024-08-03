@@ -12,5 +12,5 @@ public class BookingObject {
 
     private List<BookingInfo> bookingInfos;
 
-    private List<ContactInfo> contactInfo;
+    private ContactInfo contactInfo;
 }

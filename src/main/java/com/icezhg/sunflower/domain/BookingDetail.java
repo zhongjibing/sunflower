@@ -1,20 +1,25 @@
-package com.icezhg.sunflower.pojo;
+package com.icezhg.sunflower.domain;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.Date;
 
 /**
- * Created by zhongjibing on 2023/08/02.
+ * Created by zhongjibing on 2023/08/03
  */
 @Data
-public class BookingInfo {
-
-
+@EqualsAndHashCode(callSuper = true)
+public class BookingDetail extends BaseEntity {
     /**
      * 主键
      */
     private Long id;
+
+    /**
+     * 序列号
+     */
+    private String serialNumber;
 
     /**
      * 资源id
@@ -75,5 +80,10 @@ public class BookingInfo {
      * 状态
      */
     private Integer status;
+
+    /**
+     * 渠道
+     */
+    private Integer channel;
 
 }

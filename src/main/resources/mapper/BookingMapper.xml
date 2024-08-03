@@ -7,15 +7,6 @@
     <resultMap id="BaseResultMap" type="com.icezhg.sunflower.domain.Booking">
         <id property="id" column="id" jdbcType="BIGINT"/>
         <result property="serialNumber" column="serial_number" jdbcType="VARCHAR"/>
-        <result property="resource" column="resource" jdbcType="BIGINT"/>
-        <result property="resourceName" column="resource_name" jdbcType="VARCHAR"/>
-        <result property="type" column="type" jdbcType="TINYINT"/>
-        <result property="startDate" column="start_date" jdbcType="DATE"/>
-        <result property="endDate" column="end_date" jdbcType="DATE"/>
-        <result property="detail" column="detail" jdbcType="LONGVARCHAR"/>
-        <result property="additions" column="additions" jdbcType="VARCHAR"/>
-        <result property="attentions" column="attentions" jdbcType="VARCHAR"/>
-        <result property="gratis" column="gratis" jdbcType="VARCHAR"/>
         <result property="contactName" column="contact_name" jdbcType="VARCHAR"/>
         <result property="contactMobile" column="contact_mobile" jdbcType="VARCHAR"/>
         <result property="status" column="status" jdbcType="TINYINT"/>
@@ -30,10 +21,7 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        id, serial_number, resource,
-        resource_name, `type`, start_date,
-        end_date, detail, additions,
-        attentions, gratis, contact_name,
+        id, serial_number, contact_name,
         contact_mobile, `status`, `channel`,
         user_id, username, create_time,
         create_by, update_time, update_by,
@@ -53,15 +41,6 @@
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
             <if test="serialNumber != null">serial_number,</if>
-            <if test="resource != null">resource,</if>
-            <if test="resourceName != null">resource_name,</if>
-            <if test="type != null">`type`,</if>
-            <if test="startDate != null">start_date,</if>
-            <if test="endDate != null">end_date,</if>
-            <if test="detail != null">detail,</if>
-            <if test="additions != null">additions,</if>
-            <if test="attentions != null">attentions,</if>
-            <if test="gratis != null">gratis,</if>
             <if test="contactName != null">contact_name,</if>
             <if test="contactMobile != null">contact_mobile,</if>
             <if test="status != null">`status`,</if>
@@ -77,15 +56,6 @@
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id,jdbcType=BIGINT},</if>
             <if test="serialNumber != null">#{serialNumber,jdbcType=VARCHAR},</if>
-            <if test="resource != null">#{resource,jdbcType=BIGINT},</if>
-            <if test="resourceName != null">#{resourceName,jdbcType=VARCHAR},</if>
-            <if test="type != null">#{type,jdbcType=TINYINT},</if>
-            <if test="startDate != null">#{startDate,jdbcType=DATE},</if>
-            <if test="endDate != null">#{endDate,jdbcType=DATE},</if>
-            <if test="detail != null">#{detail,jdbcType=LONGVARCHAR},</if>
-            <if test="additions != null">#{additions,jdbcType=VARCHAR},</if>
-            <if test="attentions != null">#{attentions,jdbcType=VARCHAR},</if>
-            <if test="gratis != null">#{gratis,jdbcType=VARCHAR},</if>
             <if test="contactName != null">#{contactName,jdbcType=VARCHAR},</if>
             <if test="contactMobile != null">#{contactMobile,jdbcType=VARCHAR},</if>
             <if test="status != null">#{status,jdbcType=TINYINT},</if>
@@ -103,24 +73,6 @@
     <update id="update" parameterType="com.icezhg.sunflower.domain.Booking">
         update t_booking
         <set>
-            <if test="startDate != null">
-                start_date = #{startDate,jdbcType=DATE},
-            </if>
-            <if test="endDate != null">
-                end_date = #{endDate,jdbcType=DATE},
-            </if>
-            <if test="detail != null">
-                detail = #{detail,jdbcType=VARCHAR},
-            </if>
-            <if test="additions != null">
-                additions = #{additions,jdbcType=VARCHAR},
-            </if>
-            <if test="attentions != null">
-                attentions = #{attentions,jdbcType=VARCHAR},
-            </if>
-            <if test="gratis != null">
-                gratis = #{gratis,jdbcType=VARCHAR},
-            </if>
             <if test="contactName != null">
                 contact_name = #{contactName,jdbcType=VARCHAR},
             </if>
@@ -129,9 +81,6 @@
             </if>
             <if test="status != null">
                 `status` = #{status,jdbcType=TINYINT},
-            </if>
-            <if test="channel != null">
-                `channel` = #{channel,jdbcType=TINYINT},
             </if>
             <if test="updateTime != null">
                 update_time = #{updateTime,jdbcType=TIMESTAMP},

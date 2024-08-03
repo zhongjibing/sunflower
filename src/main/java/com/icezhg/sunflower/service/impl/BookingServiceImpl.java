@@ -86,6 +86,7 @@ public class BookingServiceImpl implements BookingService {
 
     private BookingInfo buildBookingInfo(BookingDetail bookingDetail) {
         BookingInfo info = new BookingInfo();
+        info.setId(bookingDetail.getId());
         info.setResource(bookingDetail.getResource());
         info.setResourceName(bookingDetail.getResourceName());
         info.setType(bookingDetail.getType());

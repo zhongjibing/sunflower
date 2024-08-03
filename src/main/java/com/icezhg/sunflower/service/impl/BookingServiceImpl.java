@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -131,7 +132,10 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public List<BookingInfo> find(Query query) {
-        return bookingDetailDao.find(query.toMap()).stream().map(this::buildBookingInfo).collect(Collectors.toList());
+        Map<String, Object> params = query.toMap();
+        params.put("userId", SecurityUtil.currentUserId());
+        params.put("username", SecurityUtil.currentUserName());
+        return bookingDetailDao.find(params).stream().map(this::buildBookingInfo).collect(Collectors.toList());
     }
 
     @Override

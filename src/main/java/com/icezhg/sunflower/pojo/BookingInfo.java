@@ -1,5 +1,6 @@
 package com.icezhg.sunflower.pojo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -41,6 +42,7 @@ public class BookingInfo {
      * 起始日期
      */
     @NotNull
+    @JsonFormat(pattern = "yyyy-MM-dd")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date startDate;
 
@@ -48,6 +50,7 @@ public class BookingInfo {
      * 结束日期
      */
     @NotNull
+    @JsonFormat(pattern = "yyyy-MM-dd")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date endDate;
 

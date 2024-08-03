@@ -157,4 +157,50 @@
         </set>
         where id = #{id,jdbcType=BIGINT}
     </update>
+
+    <sql id="findCondition">
+        <where>
+            <if test="serialNumber != null">
+                and serial_number = #{serialNumber,jdbcType=VARCHAR}
+            </if>
+            <if test="name != null">
+                and LOCATE(#{name,jdbcType=VARCHAR}, resource_name) > 0
+            </if>
+            <if test="type != null">
+                and `type` = #{type,jdbcType=TINYINT}
+            </if>
+            <if test="date != null">
+                and start_date = #{date,jdbcType=DATE}
+            </if>
+            <if test="status != null">
+                and `status` = #{status,jdbcType=TINYINT}
+            </if>
+            <if test="channel != null">
+                and `channel` = #{channel,jdbcType=TINYINT}
+            </if>
+            <if test="userId != null">
+                and user_id = #{userId,jdbcType=BIGINT}
+            </if>
+            <if test="username != null">
+                and username = #{username,jdbcType=VARCHAR}
+            </if>
+            <if test="beginTime != null and endTime != null">
+                and create_time between #{beginTime,jdbcType=TIMESTAMP} and #{endTime,jdbcType=TIMESTAMP}
+            </if>
+        </where>
+    </sql>
+
+    <select id="count" parameterType="map" resultType="int">
+        select count(*)
+        from t_booking_detail
+        <include refid="findCondition"/>
+    </select>
+
+    <select id="find" parameterType="map" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/>
+        from t_booking_detail
+        <include refid="findCondition"/>
+        order by id dasc
+        limit #{offset,jdbcType=INTEGER}, #{pageSize,jdbcType=INTEGER}
+    </select>
 </mapper>

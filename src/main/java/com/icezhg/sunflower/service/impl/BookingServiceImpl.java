@@ -131,12 +131,13 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public List<BookingInfo> find(Query query) {
-        return null;
+        return bookingDetailDao.find(query.toMap()).stream().map(this::buildBookingInfo).collect(Collectors.toList());
     }
 
     @Override
     public BookingInfo findById(Long id) {
-        return null;
+        BookingDetail detail = bookingDetailDao.findById(id);
+        return detail != null ? buildBookingInfo(detail) : null;
     }
 
     @Override

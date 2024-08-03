@@ -20,7 +20,7 @@ import java.util.Map;
 /**
  * Created by zhongjibing on 2023/07/26.
  */
-@RestControllerAdvice("com.icezhg.sunflower.controller.business")
+//@RestControllerAdvice("com.icezhg.sunflower.controller.business")
 public class BusinessResponseAdvice implements ResponseBodyAdvice<Object> {
     private static final Logger log = LoggerFactory.getLogger(BusinessResponseAdvice.class);
 

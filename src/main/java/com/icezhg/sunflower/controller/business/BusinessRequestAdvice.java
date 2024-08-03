@@ -20,13 +20,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 import java.util.Map;
 
 /**
  * Created by zhongjibing on 2023/07/26.
  */
-@RestControllerAdvice("com.icezhg.sunflower.controller.business")
+//@RestControllerAdvice("com.icezhg.sunflower.controller.business")
 public class BusinessRequestAdvice extends RequestBodyAdviceAdapter {
     private static final Logger log = LoggerFactory.getLogger(BusinessRequestAdvice.class);
 

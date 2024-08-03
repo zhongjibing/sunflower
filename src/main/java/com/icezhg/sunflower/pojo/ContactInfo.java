@@ -1,5 +1,6 @@
 package com.icezhg.sunflower.pojo;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 /**
@@ -8,6 +9,8 @@ import lombok.Data;
 @Data
 public class ContactInfo {
 
+    @NotBlank
     private String name;
+    @NotBlank
     private String mobile;
 }

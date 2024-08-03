@@ -1,6 +1,9 @@
 package com.icezhg.sunflower.pojo;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
@@ -19,31 +22,39 @@ public class BookingInfo {
     /**
      * 资源id
      */
+    @NotNull
     private Long resource;
 
     /**
      * 资源名称
      */
+    @NotBlank
     private String resourceName;
 
     /**
      * 资源类型
      */
+    @NotNull
     private Integer type;
 
     /**
      * 起始日期
      */
+    @NotNull
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date startDate;
 
     /**
      * 结束日期
      */
+    @NotNull
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date endDate;
 
     /**
      * 详细
      */
+    @NotBlank
     private String detail;
 
     /**

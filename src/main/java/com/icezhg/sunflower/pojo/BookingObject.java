@@ -1,5 +1,7 @@
 package com.icezhg.sunflower.pojo;
 
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.util.List;
@@ -10,7 +12,9 @@ import java.util.List;
 @Data
 public class BookingObject {
 
+    @NotEmpty
     private List<BookingInfo> bookingInfos;
 
+    @NotNull
     private ContactInfo contactInfo;
 }

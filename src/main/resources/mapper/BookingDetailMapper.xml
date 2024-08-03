@@ -200,7 +200,7 @@
         select <include refid="Base_Column_List"/>
         from t_booking_detail
         <include refid="findCondition"/>
-        order by id dasc
+        order by create_time desc, id asc
         limit #{offset,jdbcType=INTEGER}, #{pageSize,jdbcType=INTEGER}
     </select>
 </mapper>

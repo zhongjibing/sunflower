@@ -7,10 +7,12 @@ import com.icezhg.sunflower.domain.Openid;
 import com.icezhg.sunflower.enums.LoginMethod;
 import com.icezhg.sunflower.enums.UserStatus;
 import com.icezhg.sunflower.enums.WxRole;
+import com.icezhg.sunflower.event.OpenUserRegisterEvent;
 import com.icezhg.sunflower.security.UserDetail;
 import com.icezhg.sunflower.service.AuthCodeService;
 import com.icezhg.sunflower.service.IpLocationService;
 import com.icezhg.sunflower.service.OpenidService;
+import com.icezhg.sunflower.util.ApplicationContextUtil;
 import com.icezhg.sunflower.util.IPAddressUtil;
 import com.icezhg.sunflower.util.IpUtil;
 import com.icezhg.sunflower.util.Requests;
@@ -70,6 +72,8 @@ public class AuthCodeServiceImpl implements AuthCodeService {
             openid.setCreateTime(new Date());
             openid.setUpdateTime(new Date());
             openidService.save(openid);
+
+            ApplicationContextUtil.publishEvent(new OpenUserRegisterEvent(openid));
         }
 
         return UserDetail.builder()

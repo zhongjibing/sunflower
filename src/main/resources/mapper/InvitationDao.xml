@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.icezhg.sunflower.dao.InvitationDao">
+
+    <resultMap id="BaseResultMap" type="com.icezhg.sunflower.domain.Invitation">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="userId" column="user_id" jdbcType="BIGINT"/>
+        <result property="openid" column="openid" jdbcType="VARCHAR"/>
+        <result property="code" column="code" jdbcType="VARCHAR"/>
+        <result property="inviterCode" column="inviter_code" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,user_id,openid,
+        code,inviter_code,create_time,
+        update_time
+    </sql>
+
+    <select id="findByUserIdAndOpenid" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_invitation
+        where user_id = #{userId,jdbcType=BIGINT} and openid = #{openid,jdbcType=VARCHAR}
+    </select>
+
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.icezhg.sunflower.domain.Invitation"
+            useGeneratedKeys="true">
+        insert ignore into t_invitation
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="openid != null">openid,</if>
+            <if test="code != null">code,</if>
+            <if test="inviterCode != null">inviter_code,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id,jdbcType=BIGINT},</if>
+            <if test="userId != null">#{userId,jdbcType=BIGINT},</if>
+            <if test="openid != null">#{openid,jdbcType=VARCHAR},</if>
+            <if test="code != null">#{code,jdbcType=VARCHAR},</if>
+            <if test="inviterCode != null">#{inviterCode,jdbcType=VARCHAR},</if>
+            <if test="createTime != null">#{createTime,jdbcType=TIMESTAMP},</if>
+            <if test="updateTime != null">#{updateTime,jdbcType=TIMESTAMP},</if>
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="com.icezhg.sunflower.domain.Invitation">
+        update t_invitation
+        <set>
+            <if test="inviterCode != null">
+                inviter_code = #{inviterCode,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+</mapper>

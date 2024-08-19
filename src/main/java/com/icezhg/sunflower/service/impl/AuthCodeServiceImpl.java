@@ -101,7 +101,7 @@ public class AuthCodeServiceImpl implements AuthCodeService {
         if (wxRole == WxRole.USER) {
             return Set.of(new SimpleGrantedAuthority(Authority.Wx.USER));
         } else if (wxRole == WxRole.ADMIN) {
-            return Set.of(new SimpleGrantedAuthority(Authority.Wx.ADMIN));
+            return Set.of(new SimpleGrantedAuthority(Authority.Wx.ADMIN), new SimpleGrantedAuthority(Authority.Wx.USER));
         } else {
             return Set.of();
         }

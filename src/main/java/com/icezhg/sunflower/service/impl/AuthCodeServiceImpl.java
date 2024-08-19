@@ -1,5 +1,6 @@
 package com.icezhg.sunflower.service.impl;
 
+import com.icezhg.commons.util.ShortUuid;
 import com.icezhg.sunflower.common.Authority;
 import com.icezhg.sunflower.common.Constant;
 import com.icezhg.sunflower.domain.IpLocation;
@@ -69,6 +70,7 @@ public class AuthCodeServiceImpl implements AuthCodeService {
             openid.setOpenid(wechatSession.getOpenid());
             openid.setRole(WxRole.USER.getRole());
             openid.setStatus(UserStatus.NORMAL.getStatus());
+            openid.setCode(ShortUuid.random());
             openid.setCreateTime(new Date());
             openid.setUpdateTime(new Date());
             openidService.save(openid);
@@ -90,6 +92,7 @@ public class AuthCodeServiceImpl implements AuthCodeService {
                 .credentialsNonExpired(true)
                 .attributes(attributeMap(code, wechatSession.getSessionKey()))
                 .loginMethod(LoginMethod.WX.getMethod())
+                .code(openid.getCode())
                 .build();
     }
 

@@ -99,6 +99,7 @@ public class SecurityUtil {
                 .createTime(detail.getCreateTime())
                 .updateTime(detail.getUpdateTime())
                 .authorities(detail.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList())
+                .code(detail.getCode())
                 .build();
 
     }

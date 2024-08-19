@@ -11,6 +11,7 @@
         <result property="mobile" column="mobile" jdbcType="VARCHAR"/>
         <result property="role" column="role" jdbcType="TINYINT"/>
         <result property="status" column="status" jdbcType="CHAR"/>
+        <result property="code" column="code" jdbcType="VARCHAR"/>
         <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
         <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
         <result property="remark" column="remark" jdbcType="VARCHAR"/>
@@ -19,7 +20,7 @@
 
     <sql id="Base_Column_List">
         id, openid, nickname,
-        mobile, `role`, `status`,
+        mobile, `role`, `status`, `code`,
         create_time, update_time, remark,
         last_login_time
     </sql>
@@ -48,6 +49,7 @@
             <if test="mobile != null">mobile,</if>
             <if test="role != null">`role`,</if>
             <if test="status != null">`status`,</if>
+            <if test="code != null">code,</if>
             <if test="createTime != null">create_time,</if>
             <if test="updateTime != null">update_time,</if>
             <if test="remark != null">remark,</if>
@@ -60,6 +62,7 @@
             <if test="mobile != null">#{mobile,jdbcType=VARCHAR},</if>
             <if test="role != null">#{role,jdbcType=TINYINT},</if>
             <if test="status != null">#{status,jdbcType=CHAR},</if>
+            <if test="code != null">#{code,jdbcType=VARCHAR},</if>
             <if test="createTime != null">#{createTime,jdbcType=TIMESTAMP},</if>
             <if test="updateTime != null">#{updateTime,jdbcType=TIMESTAMP},</if>
             <if test="remark != null">#{remark,jdbcType=VARCHAR},</if>

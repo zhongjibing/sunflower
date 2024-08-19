@@ -45,6 +45,7 @@ public class UserDetailSerializer extends JsonSerializer<UserDetail> {
         }
         gen.writeEndObject();
         gen.writeNumberField("loginMethod", value.getLoginMethod());
+        gen.writeStringField("code", value.getCode());
     }
 
     @Override

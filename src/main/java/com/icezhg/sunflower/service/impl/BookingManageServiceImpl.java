@@ -12,7 +12,7 @@ import com.icezhg.sunflower.pojo.BookingInfo;
 import com.icezhg.sunflower.pojo.BookingObject;
 import com.icezhg.sunflower.pojo.ContactInfo;
 import com.icezhg.sunflower.pojo.query.Query;
-import com.icezhg.sunflower.service.BookingService;
+import com.icezhg.sunflower.service.BookingManageService;
 import com.icezhg.sunflower.util.SecurityUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -30,14 +30,14 @@ import java.util.stream.Collectors;
  * Created by zhongjibing on 2023/08/02.
  */
 @Service
-public class BookingServiceImpl implements BookingService {
+public class BookingManageServiceImpl implements BookingManageService {
 
 
     private BookingDao bookingDao;
 
     private BookingDetailDao bookingDetailDao;
 
-    public BookingServiceImpl(BookingDao bookingDao, BookingDetailDao bookingDetailDao) {
+    public BookingManageServiceImpl(BookingDao bookingDao, BookingDetailDao bookingDetailDao) {
         this.bookingDao = bookingDao;
         this.bookingDetailDao = bookingDetailDao;
     }
@@ -154,13 +154,5 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public int cancel(BookingInfo bookingInfo) {
         return 0;
-    }
-
-    @Override
-    public void assertModifyStatus(Long detailId, BookingStatus status) {
-        BookingDetail detail = bookingDetailDao.findById(detailId);
-        if (detail == null || !Objects.equals(detail.getStatus(), status.getStatus())) {
-            throw new InvalidAccessException("", "access denied");
-        }
     }
 }

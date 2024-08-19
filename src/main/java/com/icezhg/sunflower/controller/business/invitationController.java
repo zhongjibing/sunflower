@@ -1,6 +1,8 @@
 package com.icezhg.sunflower.controller.business;
 
+import com.icezhg.sunflower.common.Authority;
 import com.icezhg.sunflower.service.InvitationService;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,6 +21,7 @@ public class invitationController {
     }
 
     @PutMapping
+    @Secured(Authority.Wx.USER)
     public void update(String code) {
         invitationService.updateInviterCode(code);
     }

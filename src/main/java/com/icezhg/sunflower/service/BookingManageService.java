@@ -1,6 +1,5 @@
 package com.icezhg.sunflower.service;
 
-import com.icezhg.sunflower.enums.BookingStatus;
 import com.icezhg.sunflower.pojo.BookingInfo;
 import com.icezhg.sunflower.pojo.BookingObject;
 import com.icezhg.sunflower.pojo.query.Query;
@@ -10,7 +9,7 @@ import java.util.List;
 /**
  * Created by zhongjibing on 2023/08/02.
  */
-public interface BookingService {
+public interface BookingManageService {
 
     List<BookingInfo> create(BookingObject bookingObject);
 
@@ -24,5 +23,4 @@ public interface BookingService {
 
     int cancel(BookingInfo bookingInfo);
 
-    void assertModifyStatus(Long detailId, BookingStatus status);
 }

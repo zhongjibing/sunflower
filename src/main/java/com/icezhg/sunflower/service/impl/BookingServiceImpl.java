@@ -1,6 +1,5 @@
 package com.icezhg.sunflower.service.impl;
 
-import com.icezhg.commons.exception.InvalidAccessException;
 import com.icezhg.commons.util.IdGenerator;
 import com.icezhg.sunflower.dao.BookingDao;
 import com.icezhg.sunflower.dao.BookingDetailDao;
@@ -23,7 +22,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -89,7 +87,7 @@ public class BookingServiceImpl implements BookingService {
 
     private BookingInfo buildBookingInfo(BookingDetail bookingDetail) {
         BookingInfo info = new BookingInfo();
-        info.setDetailId(bookingDetail.getId());
+        info.setId(bookingDetail.getId());
         info.setResource(bookingDetail.getResource());
         info.setResourceName(bookingDetail.getResourceName());
         info.setType(bookingDetail.getType());
@@ -141,26 +139,28 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public BookingInfo findById(Long detailId) {
-        BookingDetail detail = bookingDetailDao.findById(detailId);
+    public BookingInfo findById(Long id) {
+        BookingDetail detail = bookingDetailDao.findById(id);
         return detail != null ? buildBookingInfo(detail) : null;
     }
 
     @Override
     public int confirm(BookingInfo bookingInfo) {
-        return 0;
+        BookingDetail detail = new BookingDetail();
+        detail.setId(bookingInfo.getId());
+        detail.setStatus(BookingStatus.CONFIRMED.getStatus());
+        detail.setUpdateTime(new Date());
+        detail.setUpdateBy(SecurityUtil.currentUserName());
+        return bookingDetailDao.update(detail);
     }
 
     @Override
     public int cancel(BookingInfo bookingInfo) {
-        return 0;
-    }
-
-    @Override
-    public void assertModifyStatus(Long detailId, BookingStatus status) {
-        BookingDetail detail = bookingDetailDao.findById(detailId);
-        if (detail == null || !Objects.equals(detail.getStatus(), status.getStatus())) {
-            throw new InvalidAccessException("", "access denied");
-        }
+        BookingDetail detail = new BookingDetail();
+        detail.setId(bookingInfo.getId());
+        detail.setStatus(BookingStatus.CANCELED.getStatus());
+        detail.setUpdateTime(new Date());
+        detail.setUpdateBy(SecurityUtil.currentUserName());
+        return bookingDetailDao.update(detail);
     }
 }

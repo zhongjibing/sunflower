@@ -45,14 +45,13 @@ public class UserDetail implements UserDetails, CredentialsContainer {
     private final boolean credentialsNonExpired;
     private final Map<String, String> attributes;
     private final int loginMethod;
-    private final String code;
 
 
     public UserDetail(String id, String username, String openid, String password, String name, String nickname,
                       String gender, String birthdate, String email, String mobile, String avatar, String createTime,
                       String updateTime, Set<GrantedAuthority> authorities, boolean accountNonExpired,
                       boolean accountNonLocked, boolean credentialsNonExpired, Map<String, String> attributes,
-                      Integer loginMethod, String code) {
+                      Integer loginMethod) {
         this.id = id;
         this.username = username;
         this.openid = openid;
@@ -76,7 +75,6 @@ public class UserDetail implements UserDetails, CredentialsContainer {
         this.credentialsNonExpired = credentialsNonExpired;
         this.attributes = attributes != null ? Collections.unmodifiableMap(attributes) : null;
         this.loginMethod = loginMethod != null ? loginMethod : 0;
-        this.code = code;
     }
 
     @Override
@@ -161,10 +159,6 @@ public class UserDetail implements UserDetails, CredentialsContainer {
         return loginMethod;
     }
 
-    public String getCode() {
-        return code;
-    }
-
     @Override
     public boolean isEnabled() {
         return true;
@@ -201,7 +195,6 @@ public class UserDetail implements UserDetails, CredentialsContainer {
 
         private Map<String, String> attributes;
         private int loginMethod;
-        private String code;
 
         public UserDetailBuilder password(String password) {
             this.password = password;
@@ -298,16 +291,10 @@ public class UserDetail implements UserDetails, CredentialsContainer {
             return this;
         }
 
-        public UserDetailBuilder code(String code) {
-            this.code = code;
-            return this;
-        }
-
-
         public UserDetail build() {
             return new UserDetail(id, username, openid, password, name, nickname, gender, birthdate, email, mobile, avatar,
                     createTime, updateTime, authorities, accountNonExpired, accountNonLocked, credentialsNonExpired,
-                    attributes, loginMethod, code);
+                    attributes, loginMethod);
         }
     }
 

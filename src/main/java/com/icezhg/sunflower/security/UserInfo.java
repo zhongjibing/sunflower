@@ -22,7 +22,6 @@ public class UserInfo {
     private String createTime;
     private String updateTime;
     private Collection<String> authorities;
-    private String code;
 
     public String getId() {
         return id;
@@ -128,14 +127,6 @@ public class UserInfo {
         this.authorities = authorities;
     }
 
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
     public static UserInfoBuilder builder() {
         return new UserInfoBuilder();
     }
@@ -155,7 +146,6 @@ public class UserInfo {
         private String createTime;
         private String updateTime;
         private Collection<String> authorities;
-        private String code;
 
         private UserInfoBuilder() {
         }
@@ -225,11 +215,6 @@ public class UserInfo {
             return this;
         }
 
-        public UserInfoBuilder code(String code) {
-            this.code = code;
-            return this;
-        }
-
         public UserInfo build() {
             UserInfo userinfo = new UserInfo();
             userinfo.setId(this.id);
@@ -245,7 +230,6 @@ public class UserInfo {
             userinfo.setCreateTime(this.createTime);
             userinfo.setUpdateTime(this.updateTime);
             userinfo.setAuthorities(this.authorities);
-            userinfo.setCode(this.code);
             return userinfo;
         }
     }

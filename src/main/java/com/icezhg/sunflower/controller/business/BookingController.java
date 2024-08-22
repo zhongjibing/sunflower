@@ -2,7 +2,6 @@ package com.icezhg.sunflower.controller.business;
 
 import com.icezhg.sunflower.annotation.Operation;
 import com.icezhg.sunflower.common.Authority;
-import com.icezhg.sunflower.enums.BookingStatus;
 import com.icezhg.sunflower.enums.OperationType;
 import com.icezhg.sunflower.pojo.BookingInfo;
 import com.icezhg.sunflower.pojo.BookingObject;
@@ -31,35 +30,41 @@ public class BookingController {
     }
 
     @PostMapping
-    @Secured(Authority.Wx.USER)
+    @Secured({Authority.Wx.ADMIN, Authority.Wx.USER})
     @Operation(title = "booking creation", type = OperationType.INSERT)
     public Object booking(@RequestBody BookingObject bookingObject) {
         return bookingService.create(bookingObject);
     }
 
     @PutMapping
-    @Secured(Authority.Wx.USER)
+    @Secured(Authority.Wx.ADMIN)
     @Operation(title = "booking modification", type = OperationType.UPDATE)
     public Object bookingModify(@RequestBody BookingInfo bookingInfo) {
-        bookingService.assertModifyStatus(bookingInfo.getDetailId(), BookingStatus.DRAFT);
         return bookingService.modify(bookingInfo);
     }
 
     @GetMapping("/list")
-    @Secured(Authority.Wx.USER)
+    @Secured({Authority.Wx.ADMIN, Authority.Wx.USER})
     public Object bookingList(BookingQuery query) {
         query.setPageSize(Integer.MAX_VALUE);
         return bookingService.find(query);
     }
 
     @GetMapping("/{id:\\d+}")
-    @Secured(Authority.Wx.USER)
+    @Secured({Authority.Wx.ADMIN, Authority.Wx.USER})
     public Object bookingInfo(@PathVariable Long id) {
         return bookingService.findById(id);
     }
 
+    @PutMapping("/confirm")
+    @Secured(Authority.Wx.ADMIN)
+    @Operation(title = "booking confirmed", type = OperationType.UPDATE)
+    public int bookingConfirm(@RequestBody BookingInfo bookingInfo) {
+        return bookingService.confirm(bookingInfo);
+    }
+
     @PutMapping("/cancel")
-    @Secured(Authority.Wx.USER)
+    @Secured({Authority.Wx.ADMIN, Authority.Wx.USER})
     @Operation(title = "booking canceled", type = OperationType.UPDATE)
     public int bookingCancel(@RequestBody BookingInfo bookingInfo) {
         return bookingService.cancel(bookingInfo);

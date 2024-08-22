@@ -9,6 +9,7 @@
         <result property="serialNumber" column="serial_number" jdbcType="VARCHAR"/>
         <result property="contactName" column="contact_name" jdbcType="VARCHAR"/>
         <result property="contactMobile" column="contact_mobile" jdbcType="VARCHAR"/>
+        <result property="status" column="status" jdbcType="TINYINT"/>
         <result property="channel" column="channel" jdbcType="TINYINT"/>
         <result property="userId" column="user_id" jdbcType="BIGINT"/>
         <result property="username" column="username" jdbcType="VARCHAR"/>
@@ -21,7 +22,7 @@
 
     <sql id="Base_Column_List">
         id, serial_number, contact_name,
-        contact_mobile, `channel`,
+        contact_mobile, `status`, `channel`,
         user_id, username, create_time,
         create_by, update_time, update_by,
         remark
@@ -42,6 +43,7 @@
             <if test="serialNumber != null">serial_number,</if>
             <if test="contactName != null">contact_name,</if>
             <if test="contactMobile != null">contact_mobile,</if>
+            <if test="status != null">`status`,</if>
             <if test="channel != null">`channel`,</if>
             <if test="userId != null">user_id,</if>
             <if test="username != null">username,</if>
@@ -56,6 +58,7 @@
             <if test="serialNumber != null">#{serialNumber,jdbcType=VARCHAR},</if>
             <if test="contactName != null">#{contactName,jdbcType=VARCHAR},</if>
             <if test="contactMobile != null">#{contactMobile,jdbcType=VARCHAR},</if>
+            <if test="status != null">#{status,jdbcType=TINYINT},</if>
             <if test="channel != null">#{channel,jdbcType=TINYINT},</if>
             <if test="userId != null">#{userId,jdbcType=BIGINT},</if>
             <if test="username != null">#{username,jdbcType=VARCHAR},</if>
@@ -75,6 +78,9 @@
             </if>
             <if test="contactMobile != null">
                 contact_mobile = #{contactMobile,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                `status` = #{status,jdbcType=TINYINT},
             </if>
             <if test="updateTime != null">
                 update_time = #{updateTime,jdbcType=TIMESTAMP},
@@ -102,6 +108,9 @@
             </if>
             <if test="date != null">
                 and start_date = #{date,jdbcType=DATE}
+            </if>
+            <if test="status != null">
+                and `status` = #{status,jdbcType=TINYINT}
             </if>
             <if test="channel != null">
                 and `channel` = #{channel,jdbcType=TINYINT}

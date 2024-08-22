@@ -47,7 +47,6 @@ public class UserDetailDeserializer extends JsonDeserializer<UserDetail> {
                 .credentialsNonExpired(readJsonNode(jsonNode, "credentialsNonExpired").asBoolean())
                 .attributes(parseAttributes(readJsonNode(jsonNode, "attributes")))
                 .loginMethod(readJsonNode(jsonNode, "loginMethod").asInt(0))
-                .code(readJsonNode(jsonNode, "code").asText())
                 .build();
     }
 

@@ -30,6 +30,11 @@ public class Booking extends BaseEntity {
     private String contactMobile;
 
     /**
+     * 状态
+     */
+    private Integer status;
+
+    /**
      * 渠道
      */
     private Integer channel;

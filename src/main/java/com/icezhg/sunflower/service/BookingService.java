@@ -1,6 +1,5 @@
 package com.icezhg.sunflower.service;
 
-import com.icezhg.sunflower.enums.BookingStatus;
 import com.icezhg.sunflower.pojo.BookingInfo;
 import com.icezhg.sunflower.pojo.BookingObject;
 import com.icezhg.sunflower.pojo.query.Query;
@@ -18,11 +17,9 @@ public interface BookingService {
 
     List<BookingInfo> find(Query query);
 
-    BookingInfo findById(Long detailId);
+    BookingInfo findById(Long id);
 
     int confirm(BookingInfo bookingInfo);
 
     int cancel(BookingInfo bookingInfo);
-
-    void assertModifyStatus(Long detailId, BookingStatus status);
 }

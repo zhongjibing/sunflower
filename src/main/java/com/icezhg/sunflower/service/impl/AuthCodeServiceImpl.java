@@ -1,6 +1,5 @@
 package com.icezhg.sunflower.service.impl;
 
-import com.icezhg.commons.util.ShortUuid;
 import com.icezhg.sunflower.common.Authority;
 import com.icezhg.sunflower.common.Constant;
 import com.icezhg.sunflower.domain.IpLocation;
@@ -8,12 +7,10 @@ import com.icezhg.sunflower.domain.Openid;
 import com.icezhg.sunflower.enums.LoginMethod;
 import com.icezhg.sunflower.enums.UserStatus;
 import com.icezhg.sunflower.enums.WxRole;
-import com.icezhg.sunflower.event.OpenUserRegisterEvent;
 import com.icezhg.sunflower.security.UserDetail;
 import com.icezhg.sunflower.service.AuthCodeService;
 import com.icezhg.sunflower.service.IpLocationService;
 import com.icezhg.sunflower.service.OpenidService;
-import com.icezhg.sunflower.util.ApplicationContextUtil;
 import com.icezhg.sunflower.util.IPAddressUtil;
 import com.icezhg.sunflower.util.IpUtil;
 import com.icezhg.sunflower.util.Requests;
@@ -70,12 +67,9 @@ public class AuthCodeServiceImpl implements AuthCodeService {
             openid.setOpenid(wechatSession.getOpenid());
             openid.setRole(WxRole.USER.getRole());
             openid.setStatus(UserStatus.NORMAL.getStatus());
-            openid.setCode(ShortUuid.random());
             openid.setCreateTime(new Date());
             openid.setUpdateTime(new Date());
             openidService.save(openid);
-
-            ApplicationContextUtil.publishEvent(new OpenUserRegisterEvent(openid));
         }
 
         return UserDetail.builder()
@@ -92,7 +86,6 @@ public class AuthCodeServiceImpl implements AuthCodeService {
                 .credentialsNonExpired(true)
                 .attributes(attributeMap(code, wechatSession.getSessionKey()))
                 .loginMethod(LoginMethod.WX.getMethod())
-                .code(openid.getCode())
                 .build();
     }
 
@@ -101,7 +94,7 @@ public class AuthCodeServiceImpl implements AuthCodeService {
         if (wxRole == WxRole.USER) {
             return Set.of(new SimpleGrantedAuthority(Authority.Wx.USER));
         } else if (wxRole == WxRole.ADMIN) {
-            return Set.of(new SimpleGrantedAuthority(Authority.Wx.ADMIN), new SimpleGrantedAuthority(Authority.Wx.USER));
+            return Set.of(new SimpleGrantedAuthority(Authority.Wx.ADMIN));
         } else {
             return Set.of();
         }

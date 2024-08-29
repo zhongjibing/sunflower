@@ -1,6 +1,5 @@
 package com.icezhg.sunflower.service.impl;
 
-import com.icezhg.commons.exception.InvalidAccessException;
 import com.icezhg.commons.util.IdGenerator;
 import com.icezhg.sunflower.dao.BookingDao;
 import com.icezhg.sunflower.dao.BookingDetailDao;
@@ -23,7 +22,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -77,7 +75,7 @@ public class BookingManageServiceImpl implements BookingManageService {
         detail.setGratis(StringUtils.defaultString(bookingInfo.getGratis()));
         detail.setContactName(StringUtils.defaultString(booking.getContactName()));
         detail.setContactMobile(StringUtils.defaultString(booking.getContactMobile()));
-        detail.setStatus(booking.getStatus());
+        detail.setStatus(BookingStatus.CHECKING.getStatus());
         detail.setChannel(booking.getChannel());
         detail.setCreateBy(StringUtils.defaultString(booking.getCreateBy()));
         detail.setCreateTime(booking.getCreateTime());
@@ -114,7 +112,6 @@ public class BookingManageServiceImpl implements BookingManageService {
             booking.setContactMobile(contactInfo.getMobile());
             booking.setContactName(contactInfo.getName());
         }
-        booking.setStatus(BookingStatus.CHECKING.getStatus());
         booking.setChannel(Channel.WX_MINI.getChannel());
 
         String username = SecurityUtil.currentUserName();
@@ -148,11 +145,21 @@ public class BookingManageServiceImpl implements BookingManageService {
 
     @Override
     public int confirm(BookingInfo bookingInfo) {
-        return 0;
+        BookingDetail detail = new BookingDetail();
+        detail.setId(bookingInfo.getDetailId());
+        detail.setStatus(BookingStatus.CONFIRMED.getStatus());
+        detail.setUpdateTime(new Date());
+        detail.setUpdateBy(SecurityUtil.currentUserName());
+        return bookingDetailDao.update(detail);
     }
 
     @Override
     public int cancel(BookingInfo bookingInfo) {
-        return 0;
+        BookingDetail detail = new BookingDetail();
+        detail.setId(bookingInfo.getDetailId());
+        detail.setStatus(BookingStatus.CANCELED.getStatus());
+        detail.setUpdateTime(new Date());
+        detail.setUpdateBy(SecurityUtil.currentUserName());
+        return bookingDetailDao.update(detail);
     }
 }

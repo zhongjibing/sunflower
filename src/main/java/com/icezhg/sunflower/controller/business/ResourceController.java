@@ -24,19 +24,19 @@ public class ResourceController {
     }
 
     @GetMapping("/banquet/all")
-    @Secured({Authority.Wx.ADMIN, Authority.Wx.USER})
+    @Secured(Authority.Wx.USER)
     public Object banquets() {
         return resourceService.listResourcePriceInfoAll(ResourceType.BANQUET_HALL);
     }
 
     @GetMapping("/conference/all")
-    @Secured({Authority.Wx.ADMIN, Authority.Wx.USER})
+    @Secured(Authority.Wx.USER)
     public Object conferences() {
         return resourceService.listResourcePriceInfoAll(ResourceType.CONFERENCE_ROOM);
     }
 
     @GetMapping("/room/all")
-    @Secured({Authority.Wx.ADMIN, Authority.Wx.USER})
+    @Secured(Authority.Wx.USER)
     public Object rooms() {
         return resourceService.listResourcePriceInfoAll(ResourceType.GUEST_ROOM);
     }

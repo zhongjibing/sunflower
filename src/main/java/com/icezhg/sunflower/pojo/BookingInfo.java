@@ -18,7 +18,7 @@ public class BookingInfo {
     /**
      * 主键
      */
-    private Long id;
+    private Long detailId;
 
     /**
      * 资源id

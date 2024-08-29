@@ -12,7 +12,7 @@ import com.icezhg.sunflower.pojo.BookingInfo;
 import com.icezhg.sunflower.pojo.BookingObject;
 import com.icezhg.sunflower.pojo.ContactInfo;
 import com.icezhg.sunflower.pojo.query.Query;
-import com.icezhg.sunflower.service.BookingService;
+import com.icezhg.sunflower.service.BookingManageService;
 import com.icezhg.sunflower.util.SecurityUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -30,14 +30,14 @@ import java.util.stream.Collectors;
  * Created by zhongjibing on 2023/08/02.
  */
 @Service
-public class BookingServiceImpl implements BookingService {
+public class BookingManageServiceImpl implements BookingManageService {
 
 
     private BookingDao bookingDao;
 
     private BookingDetailDao bookingDetailDao;
 
-    public BookingServiceImpl(BookingDao bookingDao, BookingDetailDao bookingDetailDao) {
+    public BookingManageServiceImpl(BookingDao bookingDao, BookingDetailDao bookingDetailDao) {
         this.bookingDao = bookingDao;
         this.bookingDetailDao = bookingDetailDao;
     }
@@ -77,7 +77,7 @@ public class BookingServiceImpl implements BookingService {
         detail.setGratis(StringUtils.defaultString(bookingInfo.getGratis()));
         detail.setContactName(StringUtils.defaultString(booking.getContactName()));
         detail.setContactMobile(StringUtils.defaultString(booking.getContactMobile()));
-        detail.setStatus(BookingStatus.CHECKING.getStatus());
+        detail.setStatus(booking.getStatus());
         detail.setChannel(booking.getChannel());
         detail.setCreateBy(StringUtils.defaultString(booking.getCreateBy()));
         detail.setCreateTime(booking.getCreateTime());
@@ -114,6 +114,7 @@ public class BookingServiceImpl implements BookingService {
             booking.setContactMobile(contactInfo.getMobile());
             booking.setContactName(contactInfo.getName());
         }
+        booking.setStatus(BookingStatus.CHECKING.getStatus());
         booking.setChannel(Channel.WX_MINI.getChannel());
 
         String username = SecurityUtil.currentUserName();
@@ -147,29 +148,11 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public int confirm(BookingInfo bookingInfo) {
-        BookingDetail detail = new BookingDetail();
-        detail.setId(bookingInfo.getDetailId());
-        detail.setStatus(BookingStatus.CONFIRMED.getStatus());
-        detail.setUpdateTime(new Date());
-        detail.setUpdateBy(SecurityUtil.currentUserName());
-        return bookingDetailDao.update(detail);
+        return 0;
     }
 
     @Override
     public int cancel(BookingInfo bookingInfo) {
-        BookingDetail detail = new BookingDetail();
-        detail.setId(bookingInfo.getDetailId());
-        detail.setStatus(BookingStatus.CANCELED.getStatus());
-        detail.setUpdateTime(new Date());
-        detail.setUpdateBy(SecurityUtil.currentUserName());
-        return bookingDetailDao.update(detail);
-    }
-
-    @Override
-    public void assertModifyStatus(Long detailId, BookingStatus status) {
-        BookingDetail detail = bookingDetailDao.findById(detailId);
-        if (detail == null || !Objects.equals(detail.getStatus(), status.getStatus())) {
-            throw new InvalidAccessException("", "access denied");
-        }
+        return 0;
     }
 }

@@ -34,8 +34,14 @@ public class InvitationServiceImpl implements InvitationService {
             return;
         }
 
+        Long userId = SecurityUtil.currentUserId();
+        Invitation existing = invitationDao.findByUserIdAndOpenid(userId, userDetail.getOpenid());
+        if (existing != null) {
+            return;
+        }
+
         Invitation invitation = new Invitation();
-        invitation.setUserId(SecurityUtil.currentUserId());
+        invitation.setUserId(userId);
         invitation.setOpenid(userDetail.getOpenid());
         invitation.setCode(userDetail.getCode());
         invitation.setInviterCode(inviterCode);

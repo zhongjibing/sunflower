@@ -9,6 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * Created by zhongjibing on 2023/08/07.
@@ -28,10 +29,13 @@ public class InvitationServiceImpl implements InvitationService {
             return;
         }
 
-        Long userId = SecurityUtil.currentUserId();
         UserDetail userDetail = SecurityUtil.currentUser();
+        if (Objects.equals(userDetail.getCode(), inviterCode)) {
+            return;
+        }
+
         Invitation invitation = new Invitation();
-        invitation.setUserId(userId);
+        invitation.setUserId(SecurityUtil.currentUserId());
         invitation.setOpenid(userDetail.getOpenid());
         invitation.setCode(userDetail.getCode());
         invitation.setInviterCode(inviterCode);

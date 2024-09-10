@@ -12,6 +12,7 @@
         <result property="role" column="role" jdbcType="TINYINT"/>
         <result property="status" column="status" jdbcType="CHAR"/>
         <result property="code" column="code" jdbcType="VARCHAR"/>
+        <result property="uid" column="uid" jdbcType="VARCHAR"/>
         <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
         <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
         <result property="remark" column="remark" jdbcType="VARCHAR"/>
@@ -20,7 +21,7 @@
 
     <sql id="Base_Column_List">
         id, openid, nickname,
-        mobile, `role`, `status`, `code`,
+        mobile, `role`, `status`, `code`, uid,
         create_time, update_time, remark,
         last_login_time
     </sql>
@@ -50,6 +51,7 @@
             <if test="role != null">`role`,</if>
             <if test="status != null">`status`,</if>
             <if test="code != null">code,</if>
+            <if test="uid != null">uid,</if>
             <if test="createTime != null">create_time,</if>
             <if test="updateTime != null">update_time,</if>
             <if test="remark != null">remark,</if>
@@ -63,6 +65,7 @@
             <if test="role != null">#{role,jdbcType=TINYINT},</if>
             <if test="status != null">#{status,jdbcType=CHAR},</if>
             <if test="code != null">#{code,jdbcType=VARCHAR},</if>
+            <if test="uid != null">#{uid,jdbcType=VARCHAR},</if>
             <if test="createTime != null">#{createTime,jdbcType=TIMESTAMP},</if>
             <if test="updateTime != null">#{updateTime,jdbcType=TIMESTAMP},</if>
             <if test="remark != null">#{remark,jdbcType=VARCHAR},</if>
@@ -122,6 +125,12 @@
         update sys_openid
         set last_login_time = #{lastLoginTime,jdbcType=TIMESTAMP}
         where openid = #{openid,jdbcType=VARCHAR} and status = '0'
+    </update>
+
+    <update id="updateUid">
+        update sys_openid
+        set uid = #{uid,jdbcType=VARCHAR}
+        where id = #{id,jdbcType=BIGINT}
     </update>
 
     <sql id="findCondition">

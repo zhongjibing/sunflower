@@ -36,6 +36,16 @@ public class OpenidInfo {
     private String status;
 
     /**
+     * 分享码
+     */
+    private String code;
+
+    /**
+     * uid
+     */
+    private String uid;
+
+    /**
      * 创建时间
      */
     private Date createTime;

@@ -47,6 +47,11 @@ public class Openid {
     private String code;
 
     /**
+     * uid
+     */
+    private String uid;
+
+    /**
      * 创建时间
      */
     private Date createTime;

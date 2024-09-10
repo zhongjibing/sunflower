@@ -28,4 +28,6 @@ public interface OpenidDao {
     List<Openid> find(Map<String, Object> params);
 
     int updateLastLoginTime(@Param("openid") String openid, @Param("lastLoginTime") Date lastLoginTime);
+
+    int updateUid(@Param("id") Long id, @Param("uid") String uid);
 }

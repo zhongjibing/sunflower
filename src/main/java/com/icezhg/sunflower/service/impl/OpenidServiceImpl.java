@@ -68,6 +68,11 @@ public class OpenidServiceImpl implements OpenidService {
         this.openidDao.updateLastLoginTime(openid, new Date());
     }
 
+    @Override
+    public void updateUid(Long id, String uid) {
+        this.openidDao.updateUid(id, uid);
+    }
+
     private Openid buildOpenid(OpenidInfo info) {
         Openid openid = new Openid();
         openid.setId(info.getId());
@@ -88,6 +93,8 @@ public class OpenidServiceImpl implements OpenidService {
             info.setMobile(openid.getMobile());
             info.setRole(openid.getRole());
             info.setStatus(openid.getStatus());
+            info.setCode(openid.getCode());
+            info.setUid(openid.getUid());
             info.setCreateTime(openid.getCreateTime());
             info.setUpdateTime(openid.getUpdateTime());
             info.setRemark(openid.getRemark());

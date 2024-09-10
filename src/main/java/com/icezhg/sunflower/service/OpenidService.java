@@ -26,4 +26,6 @@ public interface OpenidService {
     OpenidInfo update(OpenidInfo info);
 
     void updateLastLoginTime(String openid);
+
+    void updateUid(Long id, String uid);
 }

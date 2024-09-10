@@ -75,11 +75,14 @@ public class AuthCodeServiceImpl implements AuthCodeService {
             openid.setUpdateTime(new Date());
             openidService.save(openid);
 
+            openid.setUid(maskedUserId(openid.getId()));
+            openidService.updateUid(openid.getId(), openid.getUid());
+
             ApplicationContextUtil.publishEvent(new OpenUserRegisterEvent(openid));
         }
 
         return UserDetail.builder()
-                .id(String.valueOf(openid.getId()))
+                .id(openid.getUid())
                 .username(openid.getOpenid())
                 .openid(openid.getOpenid())
                 .name(openid.getNickname())
@@ -94,6 +97,10 @@ public class AuthCodeServiceImpl implements AuthCodeService {
                 .loginMethod(LoginMethod.WX.getMethod())
                 .code(openid.getCode())
                 .build();
+    }
+
+    private String maskedUserId(Long id) {
+        return "10" + ((2L << 26) + id) + ((id << 1) % 10);
     }
 
     private Set<GrantedAuthority> authorities(Integer role) {

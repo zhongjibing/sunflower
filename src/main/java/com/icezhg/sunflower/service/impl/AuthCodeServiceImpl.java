@@ -82,7 +82,8 @@ public class AuthCodeServiceImpl implements AuthCodeService {
         }
 
         return UserDetail.builder()
-                .id(openid.getUid())
+                .id(String.valueOf(openid.getId()))
+                .uid(openid.getUid())
                 .username(openid.getOpenid())
                 .openid(openid.getOpenid())
                 .name(openid.getNickname())

@@ -28,6 +28,7 @@ public class UserDetail implements UserDetails, CredentialsContainer {
 
     private String password;
     private final String id;
+    private final String uid;
     private final String username;
     private final String openid;
     private final String nickname;
@@ -48,12 +49,13 @@ public class UserDetail implements UserDetails, CredentialsContainer {
     private final String code;
 
 
-    public UserDetail(String id, String username, String openid, String password, String name, String nickname,
+    public UserDetail(String id, String uid, String username, String openid, String password, String name, String nickname,
                       String gender, String birthdate, String email, String mobile, String avatar, String createTime,
                       String updateTime, Set<GrantedAuthority> authorities, boolean accountNonExpired,
                       boolean accountNonLocked, boolean credentialsNonExpired, Map<String, String> attributes,
                       Integer loginMethod, String code) {
         this.id = id;
+        this.uid = uid;
         this.username = username;
         this.openid = openid;
         this.password = password;
@@ -86,6 +88,10 @@ public class UserDetail implements UserDetails, CredentialsContainer {
 
     public String getId() {
         return id;
+    }
+
+    public String getUid() {
+        return uid;
     }
 
     @Override
@@ -182,6 +188,7 @@ public class UserDetail implements UserDetails, CredentialsContainer {
     public static class UserDetailBuilder {
         private String password;
         private String id;
+        private String uid;
         private String username;
         private String openid;
         private String nickname;
@@ -210,6 +217,11 @@ public class UserDetail implements UserDetails, CredentialsContainer {
 
         public UserDetailBuilder id(String id) {
             this.id = id;
+            return this;
+        }
+
+        public UserDetailBuilder uid(String uid) {
+            this.uid = uid;
             return this;
         }
 
@@ -305,7 +317,7 @@ public class UserDetail implements UserDetails, CredentialsContainer {
 
 
         public UserDetail build() {
-            return new UserDetail(id, username, openid, password, name, nickname, gender, birthdate, email, mobile, avatar,
+            return new UserDetail(id, uid, username, openid, password, name, nickname, gender, birthdate, email, mobile, avatar,
                     createTime, updateTime, authorities, accountNonExpired, accountNonLocked, credentialsNonExpired,
                     attributes, loginMethod, code);
         }

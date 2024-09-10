@@ -20,6 +20,7 @@ public class UserDetailSerializer extends JsonSerializer<UserDetail> {
     @Override
     public void serialize(UserDetail value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
         gen.writeStringField("id", value.getId());
+        gen.writeStringField("uid", value.getUid());
         gen.writeStringField("username", value.getUsername());
         gen.writeStringField("openid", value.getOpenid());
         gen.writeStringField("nickname", value.getNickname());

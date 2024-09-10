@@ -30,6 +30,7 @@ public class UserDetailDeserializer extends JsonDeserializer<UserDetail> {
         JsonNode jsonNode = mapper.readTree(jp);
         return UserDetail.builder()
                 .id(readJsonNode(jsonNode, "id").asText())
+                .uid(readJsonNode(jsonNode, "uid").asText())
                 .username(readJsonNode(jsonNode, "username").asText())
                 .openid(readJsonNode(jsonNode, "openid").asText())
                 .nickname(readJsonNode(jsonNode, "nickname").asText())

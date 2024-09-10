@@ -88,6 +88,7 @@ public class SecurityUtil {
         UserDetail detail = currentUser();
         return UserInfo.builder()
                 .id(detail.getId())
+                .uid(detail.getUid())
                 .username(detail.getUsername())
                 .name(detail.getName())
                 .nickname(detail.getNickname())

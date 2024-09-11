@@ -1,11 +1,22 @@
 package com.icezhg.sunflower.service.impl;
 
+import com.icezhg.commons.util.ShortUuid;
+import com.icezhg.sunflower.common.SysConfig;
 import com.icezhg.sunflower.dao.OpenidDao;
+import com.icezhg.sunflower.domain.AvatarPicture;
 import com.icezhg.sunflower.domain.Openid;
+import com.icezhg.sunflower.enums.UserStatus;
+import com.icezhg.sunflower.enums.WxRole;
+import com.icezhg.sunflower.pojo.BizOpenid;
 import com.icezhg.sunflower.pojo.ChangeStatus;
 import com.icezhg.sunflower.pojo.OpenidInfo;
 import com.icezhg.sunflower.pojo.query.Query;
+import com.icezhg.sunflower.security.UserInfo;
+import com.icezhg.sunflower.service.AvatarPictureService;
+import com.icezhg.sunflower.service.ConfigService;
 import com.icezhg.sunflower.service.OpenidService;
+import com.icezhg.sunflower.util.SecurityUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -19,13 +30,45 @@ public class OpenidServiceImpl implements OpenidService {
 
     private final OpenidDao openidDao;
 
+    private AvatarPictureService avatarPictureService;
+
+
+    private ConfigService configService;
+
     public OpenidServiceImpl(OpenidDao openidDao) {
         this.openidDao = openidDao;
+    }
+
+    @Autowired
+    public void setAvatarPictureService(AvatarPictureService avatarPictureService) {
+        this.avatarPictureService = avatarPictureService;
+    }
+
+    @Autowired
+    public void setConfigService(ConfigService configService) {
+        this.configService = configService;
     }
 
     @Override
     public Openid findByOpenid(String openid) {
         return this.openidDao.findByOpenid(openid);
+    }
+
+    @Override
+    public Openid create(String openid) {
+        AvatarPicture avatarPicture = defaultAvatarPicture();
+        avatarPictureService.create(avatarPicture);
+
+        Openid newUser = new Openid();
+        newUser.setOpenid(openid);
+        newUser.setAvatar(avatarPicture.avatar());
+        newUser.setRole(WxRole.USER.getRole());
+        newUser.setStatus(UserStatus.NORMAL.getStatus());
+        newUser.setCode(ShortUuid.random());
+        newUser.setCreateTime(new Date());
+        newUser.setUpdateTime(new Date());
+        this.openidDao.insert(newUser);
+        return newUser;
     }
 
     @Override
@@ -64,6 +107,19 @@ public class OpenidServiceImpl implements OpenidService {
     }
 
     @Override
+    public void update(BizOpenid info) {
+        UserInfo userInfo = SecurityUtil.currentUserInfo();
+        AvatarPicture avatarPicture = new AvatarPicture(userInfo.getPicture(), info.getAvatar());
+        avatarPictureService.update(avatarPicture);
+
+        Openid openid = new Openid();
+        openid.setId(SecurityUtil.currentUserId());
+        openid.setNickname(info.getNickname());
+        openid.setUpdateTime(new Date());
+        this.openidDao.update(openid);
+    }
+
+    @Override
     public void updateLastLoginTime(String openid) {
         this.openidDao.updateLastLoginTime(openid, new Date());
     }
@@ -73,11 +129,16 @@ public class OpenidServiceImpl implements OpenidService {
         this.openidDao.updateUid(id, uid);
     }
 
+    private AvatarPicture defaultAvatarPicture() {
+        return new AvatarPicture(configService.findConfig(SysConfig.DEFAULT_AVATAR_PICTURE));
+    }
+
     private Openid buildOpenid(OpenidInfo info) {
         Openid openid = new Openid();
         openid.setId(info.getId());
         openid.setNickname(info.getNickname());
         openid.setMobile(info.getMobile());
+        openid.setAvatar(info.getAvatar());
         openid.setRole(info.getRole());
         openid.setStatus(info.getStatus());
         openid.setRemark(info.getRemark());
@@ -91,6 +152,7 @@ public class OpenidServiceImpl implements OpenidService {
             info.setId(openid.getId());
             info.setNickname(openid.getNickname());
             info.setMobile(openid.getMobile());
+            info.setAvatar(openid.getAvatar());
             info.setRole(openid.getRole());
             info.setStatus(openid.getStatus());
             info.setCode(openid.getCode());

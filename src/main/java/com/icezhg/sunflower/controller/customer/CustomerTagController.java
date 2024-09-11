@@ -35,21 +35,21 @@ public class CustomerTagController {
 
     @PostMapping
     @Secured(Authority.Customer.Tags.ADD)
-    @Operation(title = "banquet halls addition", type = OperationType.INSERT)
+    @Operation(title = "customer tags addition", type = OperationType.INSERT)
     public Object add(@Validated @RequestBody CustomerTagInfo info) {
         return this.customerTagService.insert(info);
     }
 
     @PutMapping
     @Secured(Authority.Customer.Tags.EDIT)
-    @Operation(title = "banquet halls modification", type = OperationType.UPDATE)
+    @Operation(title = "customer tags modification", type = OperationType.UPDATE)
     public Object edit(@Validated @RequestBody CustomerTagInfo info) {
         return this.customerTagService.update(info);
     }
 
     @DeleteMapping
     @Secured(Authority.Customer.Tags.DELETE)
-    @Operation(title = "banquet halls deletion", type = OperationType.DELETE)
+    @Operation(title = "customer tags deletion", type = OperationType.DELETE)
     public void delete(@RequestBody List<Integer> tagIds) {
         this.customerTagService.deleteByIds(tagIds);
     }

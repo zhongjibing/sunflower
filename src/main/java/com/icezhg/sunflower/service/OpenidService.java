@@ -1,6 +1,7 @@
 package com.icezhg.sunflower.service;
 
 import com.icezhg.sunflower.domain.Openid;
+import com.icezhg.sunflower.pojo.BizOpenid;
 import com.icezhg.sunflower.pojo.ChangeStatus;
 import com.icezhg.sunflower.pojo.OpenidInfo;
 import com.icezhg.sunflower.pojo.query.Query;
@@ -13,6 +14,8 @@ import java.util.List;
 public interface OpenidService {
     Openid findByOpenid(String openid);
 
+    Openid create(String openid);
+
     void save(Openid openid);
 
     Openid findById(Long id);
@@ -24,6 +27,8 @@ public interface OpenidService {
     int changeStatus(ChangeStatus change);
 
     OpenidInfo update(OpenidInfo info);
+
+    void update(BizOpenid info);
 
     void updateLastLoginTime(String openid);
 

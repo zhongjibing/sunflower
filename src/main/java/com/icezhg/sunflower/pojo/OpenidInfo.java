@@ -26,6 +26,11 @@ public class OpenidInfo {
     private String mobile;
 
     /**
+     * 头像
+     */
+    private String avatar;
+
+    /**
      * 角色
      */
     private Integer role;

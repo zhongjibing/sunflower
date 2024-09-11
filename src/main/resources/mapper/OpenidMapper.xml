@@ -9,6 +9,7 @@
         <result property="openid" column="openid" jdbcType="VARCHAR"/>
         <result property="nickname" column="nickname" jdbcType="VARCHAR"/>
         <result property="mobile" column="mobile" jdbcType="VARCHAR"/>
+        <result property="avatar" column="avatar" jdbcType="VARCHAR"/>
         <result property="role" column="role" jdbcType="TINYINT"/>
         <result property="status" column="status" jdbcType="CHAR"/>
         <result property="code" column="code" jdbcType="VARCHAR"/>
@@ -21,7 +22,8 @@
 
     <sql id="Base_Column_List">
         id, openid, nickname,
-        mobile, `role`, `status`, `code`, uid,
+        mobile, avatar, `role`,
+        `status`, `code`, uid,
         create_time, update_time, remark,
         last_login_time
     </sql>
@@ -48,6 +50,7 @@
             <if test="openid != null">openid,</if>
             <if test="nickname != null">nickname,</if>
             <if test="mobile != null">mobile,</if>
+            <if test="avatar != null">avatar,</if>
             <if test="role != null">`role`,</if>
             <if test="status != null">`status`,</if>
             <if test="code != null">code,</if>
@@ -62,6 +65,7 @@
             <if test="openid != null">#{openid,jdbcType=VARCHAR},</if>
             <if test="nickname != null">#{nickname,jdbcType=VARCHAR},</if>
             <if test="mobile != null">#{mobile,jdbcType=VARCHAR},</if>
+            <if test="avatar != null">#{avatar,jdbcType=VARCHAR},</if>
             <if test="role != null">#{role,jdbcType=TINYINT},</if>
             <if test="status != null">#{status,jdbcType=CHAR},</if>
             <if test="code != null">#{code,jdbcType=VARCHAR},</if>

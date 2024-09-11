@@ -1,6 +1,5 @@
 package com.icezhg.sunflower.service.impl;
 
-import com.icezhg.commons.util.ShortUuid;
 import com.icezhg.sunflower.common.Authority;
 import com.icezhg.sunflower.common.Constant;
 import com.icezhg.sunflower.domain.IpLocation;
@@ -26,7 +25,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 
@@ -66,14 +64,7 @@ public class AuthCodeServiceImpl implements AuthCodeService {
 
         Openid openid = openidService.findByOpenid(wechatSession.getOpenid());
         if (openid == null) {
-            openid = new Openid();
-            openid.setOpenid(wechatSession.getOpenid());
-            openid.setRole(WxRole.USER.getRole());
-            openid.setStatus(UserStatus.NORMAL.getStatus());
-            openid.setCode(ShortUuid.random());
-            openid.setCreateTime(new Date());
-            openid.setUpdateTime(new Date());
-            openidService.save(openid);
+            openid = openidService.create(wechatSession.getOpenid());
 
             openid.setUid(maskedUserId(openid.getId()));
             openidService.updateUid(openid.getId(), openid.getUid());
@@ -88,6 +79,7 @@ public class AuthCodeServiceImpl implements AuthCodeService {
                 .openid(openid.getOpenid())
                 .name(openid.getNickname())
                 .nickname(openid.getNickname())
+                .avatar(openid.getAvatar())
                 .createTime(String.valueOf(openid.getCreateTime().getTime()))
                 .updateTime(String.valueOf(openid.getUpdateTime().getTime()))
                 .authorities(authorities(openid.getRole()))

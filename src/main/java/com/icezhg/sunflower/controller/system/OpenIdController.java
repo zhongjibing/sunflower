@@ -32,7 +32,7 @@ public class OpenIdController {
 
     @PutMapping("/update")
     @Secured(Authority.System.Openid.EDIT)
-    @Operation(title = "banquet halls modification", type = OperationType.UPDATE)
+    @Operation(title = "openid user modification", type = OperationType.UPDATE)
     public Object edit(@Validated @RequestBody OpenidInfo info) {
         return this.openidService.update(info);
     }
@@ -51,7 +51,7 @@ public class OpenIdController {
 
     @PutMapping("/changeStatus")
     @Secured(Authority.System.Openid.STATUS)
-    @Operation(title = "guest rooms status change", type = OperationType.UPDATE)
+    @Operation(title = "openid user status change", type = OperationType.UPDATE)
     public int changeStatus(@RequestBody ChangeStatus change) {
         return this.openidService.changeStatus(change);
     }

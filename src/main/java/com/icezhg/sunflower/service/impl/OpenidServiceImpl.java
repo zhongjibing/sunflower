@@ -16,6 +16,7 @@ import com.icezhg.sunflower.service.AvatarPictureService;
 import com.icezhg.sunflower.service.ConfigService;
 import com.icezhg.sunflower.service.OpenidService;
 import com.icezhg.sunflower.util.SecurityUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -109,8 +110,10 @@ public class OpenidServiceImpl implements OpenidService {
     @Override
     public void update(BizOpenid info) {
         UserInfo userInfo = SecurityUtil.currentUserInfo();
-        AvatarPicture avatarPicture = new AvatarPicture(userInfo.getPicture(), info.getAvatar());
-        avatarPictureService.update(avatarPicture);
+        if (StringUtils.isNotBlank(info.getAvatar())) {
+            AvatarPicture avatarPicture = new AvatarPicture(userInfo.getPicture(), info.getAvatar());
+            avatarPictureService.update(avatarPicture);
+        }
 
         Openid openid = new Openid();
         openid.setId(SecurityUtil.currentUserId());

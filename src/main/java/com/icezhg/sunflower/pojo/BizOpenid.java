@@ -8,7 +8,6 @@ import lombok.Data;
  */
 @Data
 public class BizOpenid {
-    @NotBlank
     private String avatar;
     @NotBlank
     private String nickname;

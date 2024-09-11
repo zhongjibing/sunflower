@@ -6,7 +6,7 @@ import com.icezhg.sunflower.enums.OperationType;
 import com.icezhg.sunflower.pojo.ChangeStatus;
 import com.icezhg.sunflower.pojo.OpenidInfo;
 import com.icezhg.sunflower.pojo.PageResult;
-import com.icezhg.sunflower.pojo.query.OpenIdQuery;
+import com.icezhg.sunflower.pojo.query.OpenidQuery;
 import com.icezhg.sunflower.service.OpenidService;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.validation.annotation.Validated;
@@ -22,11 +22,11 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/open")
-public class OpenIdController {
+public class OpenidController {
 
     private final OpenidService openidService;
 
-    public OpenIdController(OpenidService openidService) {
+    public OpenidController(OpenidService openidService) {
         this.openidService = openidService;
     }
 
@@ -39,7 +39,7 @@ public class OpenIdController {
 
     @GetMapping("/list")
     @Secured(Authority.System.Openid.QUERY)
-    public PageResult list(OpenIdQuery query) {
+    public PageResult list(OpenidQuery query) {
         return new PageResult(openidService.count(query), openidService.find(query));
     }
 

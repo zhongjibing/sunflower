@@ -16,7 +16,7 @@ public class OpenUserRegisterEvent extends ApplicationEvent {
         super(openid);
     }
 
-    public Openid getOpenId() {
+    public Openid getOpenid() {
         return (Openid) getSource();
     }
 }

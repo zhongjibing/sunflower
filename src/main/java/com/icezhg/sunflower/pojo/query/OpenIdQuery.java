@@ -11,7 +11,7 @@ import java.util.Date;
  */
 @Getter
 @Setter
-public class OpenIdQuery extends PageQuery {
+public class OpenidQuery extends PageQuery {
     private String name;
     private String status;
     @DateTimeFormat(pattern = "yyyy-MM-dd")

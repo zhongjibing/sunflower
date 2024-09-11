@@ -15,13 +15,13 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * Created by zhongjibing on 2023/07/18.
  */
-@RestController
+@RestController("businessOpenidController")
 @RequestMapping("/business/open")
-public class OpenIdController {
+public class OpenidController {
 
     private final OpenidService openidService;
 
-    public OpenIdController(OpenidService openidService) {
+    public OpenidController(OpenidService openidService) {
         this.openidService = openidService;
     }
 

@@ -44,8 +44,10 @@ public class LoginRecordServiceImpl implements LoginRecordService {
     @Transactional
     public void saveLoginInfo(Long userId, String username, String status, String msg,
                               Map<String, String> attributes, int loginMethod) {
-        log.info("save login info: userId={}, username={}, status={}, msg={}, attributes={}", userId, username,
-                status, msg, attributes);
+        if (log.isDebugEnabled()) {
+            log.info("save login info: userId={}, username={}, status={}, msg={}, attributes={}", userId, username,
+                    status, msg, attributes);
+        }
 
         LoginRecord loginRecord = new LoginRecord();
         loginRecord.setUserId(userId != null ? userId : Constant.UNKNOWN_USER_ID);

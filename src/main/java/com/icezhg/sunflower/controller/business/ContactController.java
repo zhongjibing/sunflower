@@ -6,7 +6,7 @@ import com.icezhg.sunflower.enums.OperationType;
 import com.icezhg.sunflower.pojo.ContactInfo;
 import com.icezhg.sunflower.service.ContactService;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -25,7 +25,7 @@ public class ContactController {
         this.contactService = contactService;
     }
 
-    @PutMapping("/list")
+    @GetMapping("/list")
     @Secured(Authority.Wx.USER)
     @Operation(title = "openid user modification", type = OperationType.UPDATE)
     public List<ContactInfo> list() {

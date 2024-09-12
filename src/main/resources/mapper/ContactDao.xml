@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.icezhg.sunflower.dao.ContactMapper">
+<mapper namespace="com.icezhg.sunflower.dao.ContactDao">
 
     <resultMap id="BaseResultMap" type="com.icezhg.sunflower.domain.Contact">
         <id property="id" column="id" jdbcType="BIGINT"/>
@@ -91,8 +91,7 @@
         select <include refid="Base_Column_List"/>
         from t_contact
         <include refid="findCondition"/>
-        order by id asc
-        limit #{offset,jdbcType=INTEGER}, #{pageSize,jdbcType=INTEGER}
+        order by id desc
     </select>
 
 </mapper>

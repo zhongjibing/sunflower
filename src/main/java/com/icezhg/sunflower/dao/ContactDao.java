@@ -11,7 +11,7 @@ import java.util.Map;
  * Created by zhongjibing on 2023/08/03
  */
 @Repository
-public interface ContactMapper {
+public interface ContactDao {
 
     int insert(Contact record);
 

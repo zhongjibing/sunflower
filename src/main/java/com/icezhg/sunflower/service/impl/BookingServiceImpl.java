@@ -1,5 +1,6 @@
 package com.icezhg.sunflower.service.impl;
 
+import com.alibaba.fastjson2.JSONObject;
 import com.icezhg.commons.exception.InvalidAccessException;
 import com.icezhg.commons.util.IdGenerator;
 import com.icezhg.sunflower.dao.BookingDao;
@@ -13,9 +14,13 @@ import com.icezhg.sunflower.pojo.BookingObject;
 import com.icezhg.sunflower.pojo.ContactInfo;
 import com.icezhg.sunflower.pojo.query.Query;
 import com.icezhg.sunflower.service.BookingService;
+import com.icezhg.sunflower.service.ContactService;
 import com.icezhg.sunflower.util.SecurityUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,28 +36,49 @@ import java.util.stream.Collectors;
  */
 @Service
 public class BookingServiceImpl implements BookingService {
-
+    private static final Logger log = LoggerFactory.getLogger(BookingServiceImpl.class);
 
     private BookingDao bookingDao;
 
     private BookingDetailDao bookingDetailDao;
 
-    public BookingServiceImpl(BookingDao bookingDao, BookingDetailDao bookingDetailDao) {
+    private ContactService contactService;
+
+    @Autowired
+    public void setBookingDao(BookingDao bookingDao) {
         this.bookingDao = bookingDao;
+    }
+
+    @Autowired
+    public void setBookingDetailDao(BookingDetailDao bookingDetailDao) {
         this.bookingDetailDao = bookingDetailDao;
+    }
+
+    @Autowired
+    public void setContactService(ContactService contactService) {
+        this.contactService = contactService;
     }
 
     @Override
     @Transactional
     public List<BookingInfo> create(BookingObject bookingObject) {
-        Booking booking = buildBooking(bookingObject);
-        bookingDao.insert(booking);
+        contactService.save(bookingObject.getContactInfo());
 
-        List<BookingDetail> details = buildBookingDetails(booking, bookingObject.getBookingInfos());
-        if (!details.isEmpty()) {
-            bookingDetailDao.batchInsert(details);
+        try {
+            Booking booking = buildBooking(bookingObject);
+            log.info("save booking: {}", JSONObject.toJSONString(booking));
+            bookingDao.insert(booking);
+
+            List<BookingDetail> details = buildBookingDetails(booking, bookingObject.getBookingInfos());
+            log.info("save details: {}", JSONObject.toJSONString(details));
+            if (!details.isEmpty()) {
+                bookingDetailDao.batchInsert(details);
+            }
+            return details.stream().map(this::buildBookingInfo).collect(Collectors.toList());
+        } catch (Exception e) {
+            log.error("create error", e);
+            throw e;
         }
-        return details.stream().map(this::buildBookingInfo).collect(Collectors.toList());
     }
 
     private List<BookingDetail> buildBookingDetails(Booking booking, List<BookingInfo> bookingInfos) {

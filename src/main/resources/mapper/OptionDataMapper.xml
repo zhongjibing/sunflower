@@ -110,6 +110,12 @@
         where id = #{id,jdbcType=INTEGER}
     </update>
 
+    <update id="updateOptionType">
+        update t_option_data
+        set option_type = #{newOptionType,jdbcType=VARCHAR}
+        where option_type = #{oldOptionType,jdbcType=VARCHAR}
+    </update>
+
     <select id="findByType" parameterType="string" resultType="com.icezhg.sunflower.domain.OptionData">
         select <include refid="Base_Column_List"/>
         from t_option_data
@@ -126,7 +132,7 @@
     <sql id="findCondition">
         <where>
             <if test="optionType != null">
-                and locate(#{optionType,jdbcType=VARCHAR}, option_type) > 0
+                and option_type = #{optionType,jdbcType=VARCHAR}
             </if>
             <if test="optionLabel != null">
                 and locate(#{optionLabel,jdbcType=VARCHAR}, option_label) > 0

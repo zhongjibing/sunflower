@@ -1,6 +1,7 @@
 package com.icezhg.sunflower.dao;
 
 import com.icezhg.sunflower.domain.OptionData;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -28,4 +29,5 @@ public interface OptionDataDao {
 
     List<OptionData> find(Map<String, Object> toMap);
 
+    int updateOptionType(@Param("newOptionType") String newOptionType, @Param("oldOptionType") String oldOptionType);
 }

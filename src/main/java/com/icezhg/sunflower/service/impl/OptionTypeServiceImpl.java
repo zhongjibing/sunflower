@@ -5,11 +5,14 @@ import com.icezhg.sunflower.dao.OptionDataDao;
 import com.icezhg.sunflower.dao.OptionTypeDao;
 import com.icezhg.sunflower.domain.OptionData;
 import com.icezhg.sunflower.domain.OptionType;
+import com.icezhg.sunflower.pojo.Option;
 import com.icezhg.sunflower.pojo.OptionTypeInfo;
 import com.icezhg.sunflower.pojo.query.OptionQuery;
 import com.icezhg.sunflower.service.OptionTypeService;
 import com.icezhg.sunflower.util.SecurityUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -71,7 +74,15 @@ public class OptionTypeServiceImpl implements OptionTypeService {
     }
 
     @Override
+    @Transactional
     public OptionTypeInfo update(OptionTypeInfo typeInfo) {
+        if (StringUtils.isNotBlank(typeInfo.getOptionType())) {
+            OptionTypeInfo existing = findById(typeInfo.getId());
+            if (existing != null && !typeInfo.getOptionType().equals(existing.getOptionType())) {
+                optionDataDao.updateOptionType(typeInfo.getOptionType(), existing.getOptionType());
+            }
+        }
+
         OptionType optionType = buildOptionType(typeInfo);
         optionType.setUpdateBy(SecurityUtil.currentUserName());
         optionType.setUpdateTime(new Date());
@@ -112,5 +123,10 @@ public class OptionTypeServiceImpl implements OptionTypeService {
         OptionQuery query = new OptionQuery();
         query.setPageSize(Integer.MAX_VALUE);
         return find(query).stream().map(this::buildOptionTypeInfo).toList();
+    }
+
+    @Override
+    public List<Option> collectAll() {
+        return optionTypeDao.listAllOptions();
     }
 }

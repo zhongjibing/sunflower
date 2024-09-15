@@ -81,7 +81,7 @@
                 and locate(#{optionName,jdbcType=VARCHAR}, option_name) > 0
             </if>
             <if test="optionType != null">
-                and locate(#{optionType,jdbcType=VARCHAR}, optionType) > 0
+                and locate(#{optionType,jdbcType=VARCHAR}, option_type) > 0
             </if>
             <if test="status != null">
                 and status = #{status,jdbcType=VARCHAR}

@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.icezhg.sunflower.dao.OptionDataDao">
+
+    <sql id="Base_Column_List">
+        id, option_sort, option_label,
+        option_value, option_value_type, option_type,
+        css_class, list_class, is_default,
+        status, create_by, create_time,
+        update_by, update_time, remark
+    </sql>
+
+    <delete id="deleteByTypeIds" parameterType="list">
+        delete from
+            t_option_data
+        where option_type in (
+            select option_type from t_option_type where id in
+            <foreach collection="list" item="item" open="(" separator=", " close=")">#{item,jdbcType=INTEGER}</foreach>
+        )
+    </delete>
+
+    <delete id="deleteByIds" parameterType="list">
+        delete from
+            t_option_data
+        where id in
+        <foreach collection="list" item="item" open="(" separator=", " close=")">
+            #{item,jdbcType=INTEGER}
+        </foreach>
+    </delete>
+
+
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.icezhg.sunflower.domain.OptionData"
+            useGeneratedKeys="true">
+        insert into t_option_data
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="optionSort != null">option_sort,</if>
+            <if test="optionLabel != null">option_label,</if>
+            <if test="optionValue != null">option_value,</if>
+            <if test="optionValueType != null">option_value_type,</if>
+            <if test="optionType != null">option_type,</if>
+            <if test="cssClass != null">css_class,</if>
+            <if test="listClass != null">list_class,</if>
+            <if test="isDefault != null">is_default,</if>
+            <if test="status != null">status,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id,jdbcType=INTEGER},</if>
+            <if test="optionSort != null">#{optionSort,jdbcType=INTEGER},</if>
+            <if test="optionLabel != null">#{optionLabel,jdbcType=VARCHAR},</if>
+            <if test="optionValue != null">#{optionValue,jdbcType=VARCHAR},</if>
+            <if test="optionValueType != null">#{optionValueType,jdbcType=VARCHAR},</if>
+            <if test="optionType != null">#{optionType,jdbcType=VARCHAR},</if>
+            <if test="cssClass != null">#{cssClass,jdbcType=VARCHAR},</if>
+            <if test="listClass != null">#{listClass,jdbcType=VARCHAR},</if>
+            <if test="isDefault != null">#{isDefault,jdbcType=CHAR},</if>
+            <if test="status != null">#{status,jdbcType=CHAR},</if>
+            <if test="createBy != null">#{createBy,jdbcType=VARCHAR},</if>
+            <if test="createTime != null">#{createTime,jdbcType=TIMESTAMP},</if>
+            <if test="updateBy != null">#{updateBy,jdbcType=VARCHAR},</if>
+            <if test="updateTime != null">#{updateTime,jdbcType=TIMESTAMP},</if>
+            <if test="remark != null">#{remark,jdbcType=VARCHAR},</if>
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="com.icezhg.sunflower.domain.OptionData">
+        update t_option_data
+        <set>
+            <if test="optionSort != null">
+                option_sort = #{optionSort,jdbcType=INTEGER},
+            </if>
+            <if test="optionLabel != null">
+                option_label = #{optionLabel,jdbcType=VARCHAR},
+            </if>
+            <if test="optionValue != null">
+                option_value = #{optionValue,jdbcType=VARCHAR},
+            </if>
+            <if test="optionValueType != null">
+                option_value_type = #{optionValueType,jdbcType=VARCHAR},
+            </if>
+            <if test="cssClass != null">
+                css_class = #{cssClass,jdbcType=VARCHAR},
+            </if>
+            <if test="listClass != null">
+                list_class = #{listClass,jdbcType=VARCHAR},
+            </if>
+            <if test="isDefault != null">
+                is_default = #{isDefault,jdbcType=CHAR},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=CHAR},
+            </if>
+            <if test="updateBy != null">
+                update_by = #{updateBy,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="remark != null">
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <select id="findByType" parameterType="string" resultType="com.icezhg.sunflower.domain.OptionData">
+        select <include refid="Base_Column_List"/>
+        from t_option_data
+        where status = '0' and option_type = #{optionType}
+        order by option_sort asc
+    </select>
+
+    <select id="findById" parameterType="int" resultType="com.icezhg.sunflower.domain.OptionData">
+        select <include refid="Base_Column_List"/>
+        from t_option_data
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <sql id="findCondition">
+        <where>
+            <if test="optionType != null">
+                and locate(#{optionType,jdbcType=VARCHAR}, option_type) > 0
+            </if>
+            <if test="optionLabel != null">
+                and locate(#{optionLabel,jdbcType=VARCHAR}, option_label) > 0
+            </if>
+            <if test="status != null">
+                and status = #{status,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </sql>
+
+    <select id="count" parameterType="map" resultType="int">
+        select count(*) from t_option_data
+        <include refid="findCondition"/>
+    </select>
+
+    <select id="find" parameterType="map" resultType="com.icezhg.sunflower.domain.OptionData">
+        select
+        <include refid="Base_Column_List"/>
+        from t_option_data
+        <include refid="findCondition" />
+        order by id asc
+        limit #{offset,jdbcType=INTEGER}, #{pageSize,jdbcType=INTEGER}
+    </select>
+
+</mapper>

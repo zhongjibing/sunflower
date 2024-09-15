@@ -139,6 +139,13 @@ public interface Authority {
             String STATUS = "resource:room:status";
             String RESTORE = "resource:room:restore";
         }
+
+        interface Option {
+            String QUERY = "resource:option:query";
+            String ADD = "resource:option:add";
+            String EDIT = "resource:option:edit";
+            String DELETE = "resource:option:delete";
+        }
     }
 
     interface Inventory {

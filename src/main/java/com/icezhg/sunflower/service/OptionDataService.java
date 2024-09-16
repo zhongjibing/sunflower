@@ -2,6 +2,7 @@ package com.icezhg.sunflower.service;
 
 
 import com.icezhg.sunflower.domain.OptionData;
+import com.icezhg.sunflower.pojo.Option;
 import com.icezhg.sunflower.pojo.OptionDataInfo;
 import com.icezhg.sunflower.pojo.query.OptionQuery;
 
@@ -24,5 +25,5 @@ public interface OptionDataService {
 
     int deleteByIds(List<Integer> ids);
 
-
+    List<Option> collectAll();
 }

@@ -1,7 +1,6 @@
 package com.icezhg.sunflower.dao;
 
 import com.icezhg.sunflower.domain.OptionType;
-import com.icezhg.sunflower.pojo.Option;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -24,7 +23,5 @@ public interface OptionTypeDao {
     int count(Map<String, Object> toMap);
 
     List<OptionType> find(Map<String, Object> toMap);
-
-    List<Option> listAllOptions();
 
 }

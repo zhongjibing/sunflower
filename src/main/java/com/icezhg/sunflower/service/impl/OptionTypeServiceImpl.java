@@ -5,7 +5,6 @@ import com.icezhg.sunflower.dao.OptionDataDao;
 import com.icezhg.sunflower.dao.OptionTypeDao;
 import com.icezhg.sunflower.domain.OptionData;
 import com.icezhg.sunflower.domain.OptionType;
-import com.icezhg.sunflower.pojo.Option;
 import com.icezhg.sunflower.pojo.OptionTypeInfo;
 import com.icezhg.sunflower.pojo.query.OptionQuery;
 import com.icezhg.sunflower.service.OptionTypeService;
@@ -125,8 +124,4 @@ public class OptionTypeServiceImpl implements OptionTypeService {
         return find(query).stream().map(this::buildOptionTypeInfo).toList();
     }
 
-    @Override
-    public List<Option> collectAll() {
-        return optionTypeDao.listAllOptions();
-    }
 }

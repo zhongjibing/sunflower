@@ -3,6 +3,7 @@ package com.icezhg.sunflower.service.impl;
 
 import com.icezhg.sunflower.dao.OptionDataDao;
 import com.icezhg.sunflower.domain.OptionData;
+import com.icezhg.sunflower.pojo.Option;
 import com.icezhg.sunflower.pojo.OptionDataInfo;
 import com.icezhg.sunflower.pojo.query.OptionQuery;
 import com.icezhg.sunflower.service.OptionDataService;
@@ -97,5 +98,10 @@ public class OptionDataServiceImpl implements OptionDataService {
             dataInfo.setRemark(optionData.getRemark());
         }
         return dataInfo;
+    }
+
+    @Override
+    public List<Option> collectAll() {
+        return optionDataDao.listAllOptions();
     }
 }

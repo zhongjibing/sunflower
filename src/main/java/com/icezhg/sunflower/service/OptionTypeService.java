@@ -3,7 +3,6 @@ package com.icezhg.sunflower.service;
 
 import com.icezhg.sunflower.domain.OptionData;
 import com.icezhg.sunflower.domain.OptionType;
-import com.icezhg.sunflower.pojo.Option;
 import com.icezhg.sunflower.pojo.OptionTypeInfo;
 import com.icezhg.sunflower.pojo.query.OptionQuery;
 
@@ -32,5 +31,4 @@ public interface OptionTypeService {
 
     List<OptionTypeInfo> listOptions();
 
-    List<Option> collectAll();
 }

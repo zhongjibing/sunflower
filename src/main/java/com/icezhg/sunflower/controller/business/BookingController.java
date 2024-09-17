@@ -49,7 +49,6 @@ public class BookingController {
     @GetMapping("/list")
     @Secured(Authority.Wx.USER)
     public Object bookingList(BookingQuery query) {
-        query.setPageSize(Integer.MAX_VALUE);
         return bookingService.find(query);
     }
 

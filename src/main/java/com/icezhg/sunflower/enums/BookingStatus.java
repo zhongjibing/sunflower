@@ -9,7 +9,8 @@ public enum BookingStatus {
     PAYING(2, "待付款"),
     CONFIRMED(3, "已确认"),
     FINISHED(4, "已结束"),
-    CANCELED(5, "已取消");
+    CANCELED(5, "已取消"),
+    FULLY_BOOKED(9, "约满");
 
 
     private final int status;

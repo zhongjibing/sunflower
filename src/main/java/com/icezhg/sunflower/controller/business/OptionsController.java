@@ -16,6 +16,10 @@ public class OptionsController {
 
     private OptionDataService optionDataService;
 
+    public OptionsController(OptionDataService optionDataService) {
+        this.optionDataService = optionDataService;
+    }
+
     @GetMapping("/list")
     @Secured(Authority.Wx.USER)
     public Object collectAll() {

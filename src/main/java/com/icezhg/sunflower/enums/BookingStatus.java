@@ -5,7 +5,7 @@ package com.icezhg.sunflower.enums;
  */
 public enum BookingStatus {
     DRAFT(0, "草稿"),
-    CHECKING(1, "待确认"),
+    TO_BE_CONFIRMED(1, "待确认"),
     PAYING(2, "待付款"),
     CONFIRMED(3, "已确认"),
     FINISHED(4, "已结束"),

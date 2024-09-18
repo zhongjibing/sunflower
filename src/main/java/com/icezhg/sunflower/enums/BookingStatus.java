@@ -10,7 +10,8 @@ public enum BookingStatus {
     CONFIRMED(3, "已确认"),
     FINISHED(4, "已结束"),
     CANCELED(5, "已取消"),
-    FULLY_BOOKED(9, "约满");
+    TO_BE_CANCELED(6, "待取消"),
+    CONFIRM_CANCELED(7, "已取消");
 
 
     private final int status;

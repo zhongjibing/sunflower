@@ -5,12 +5,13 @@ package com.icezhg.sunflower.enums;
  */
 public enum BookingStatus {
     DRAFT(0, "草稿"),
-    CHECKING(1, "待确认"),
+    TO_BE_CONFIRMED(1, "待确认"),
     PAYING(2, "待付款"),
     CONFIRMED(3, "已确认"),
     FINISHED(4, "已结束"),
     CANCELED(5, "已取消"),
-    FULLY_BOOKED(9, "约满");
+    TO_BE_CANCELED(6, "待取消"),
+    CONFIRM_CANCELED(7, "已取消");
 
 
     private final int status;

@@ -104,7 +104,7 @@ public class BookingServiceImpl implements BookingService {
         detail.setGratis(StringUtils.defaultString(bookingInfo.getGratis()));
         detail.setContactName(StringUtils.defaultString(booking.getContactName()));
         detail.setContactMobile(StringUtils.defaultString(booking.getContactMobile()));
-        detail.setStatus(BookingStatus.CHECKING.getStatus());
+        detail.setStatus(BookingStatus.TO_BE_CONFIRMED.getStatus());
         detail.setChannel(booking.getChannel());
         detail.setHidden(Constant.NO);
         detail.setDeleted(Constant.NO);
@@ -196,19 +196,40 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public int hide(Long id) {
-        return 0;
+        BookingDetail detail = new BookingDetail();
+        detail.setId(id);
+        detail.setHidden(Constant.YES);
+        detail.setUpdateTime(new Date());
+        detail.setUpdateBy(SecurityUtil.currentUserName());
+        return bookingDetailDao.update(detail);
     }
 
     @Override
     public int delete(Long id) {
-        return 0;
+        assertDetailStatus(id, BookingStatus.DRAFT, BookingStatus.CANCELED, BookingStatus.CONFIRM_CANCELED);
+
+        BookingDetail detail = new BookingDetail();
+        detail.setId(id);
+        detail.setDeleted(Constant.YES);
+        detail.setUpdateTime(new Date());
+        detail.setUpdateBy(SecurityUtil.currentUserName());
+        return bookingDetailDao.update(detail);
     }
 
     @Override
     public void assertModifyStatus(Long detailId, BookingStatus status) {
+        assertDetailStatus(detailId, status);
+    }
+
+    private void assertDetailStatus(Long detailId, BookingStatus... statuses) {
         BookingDetail detail = bookingDetailDao.findById(detailId);
-        if (detail == null || !Objects.equals(detail.getStatus(), status.getStatus())) {
-            throw new InvalidAccessException("", "access denied");
+        if (detail != null) {
+            for (BookingStatus status : statuses) {
+                if (Objects.equals(detail.getStatus(), status.getStatus())) {
+                    return;
+                }
+            }
         }
+        throw new InvalidAccessException("", "access denied");
     }
 }

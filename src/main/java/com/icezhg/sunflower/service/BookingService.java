@@ -20,9 +20,13 @@ public interface BookingService {
 
     BookingInfo findById(Long detailId);
 
-    int confirm(BookingInfo bookingInfo);
+    int confirm(Long id);
 
-    int cancel(BookingInfo bookingInfo);
+    int cancel(Long id);
+
+    int hide(Long id);
+
+    int delete(Long id);
 
     void assertModifyStatus(Long detailId, BookingStatus status);
 }

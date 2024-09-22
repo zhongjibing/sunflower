@@ -3,6 +3,7 @@ package com.icezhg.sunflower.service.impl;
 import com.alibaba.fastjson2.JSONObject;
 import com.icezhg.commons.exception.InvalidAccessException;
 import com.icezhg.commons.util.IdGenerator;
+import com.icezhg.sunflower.common.Constant;
 import com.icezhg.sunflower.dao.BookingDao;
 import com.icezhg.sunflower.dao.BookingDetailDao;
 import com.icezhg.sunflower.domain.Booking;
@@ -105,6 +106,8 @@ public class BookingServiceImpl implements BookingService {
         detail.setContactMobile(StringUtils.defaultString(booking.getContactMobile()));
         detail.setStatus(BookingStatus.CHECKING.getStatus());
         detail.setChannel(booking.getChannel());
+        detail.setHidden(Constant.NO);
+        detail.setDeleted(Constant.NO);
         detail.setCreateBy(StringUtils.defaultString(booking.getCreateBy()));
         detail.setCreateTime(booking.getCreateTime());
         detail.setUpdateBy(StringUtils.defaultString(booking.getUpdateBy()));
@@ -172,9 +175,9 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public int confirm(BookingInfo bookingInfo) {
+    public int confirm(Long id) {
         BookingDetail detail = new BookingDetail();
-        detail.setId(bookingInfo.getDetailId());
+        detail.setId(id);
         detail.setStatus(BookingStatus.CONFIRMED.getStatus());
         detail.setUpdateTime(new Date());
         detail.setUpdateBy(SecurityUtil.currentUserName());
@@ -182,13 +185,23 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public int cancel(BookingInfo bookingInfo) {
+    public int cancel(Long id) {
         BookingDetail detail = new BookingDetail();
-        detail.setId(bookingInfo.getDetailId());
+        detail.setId(id);
         detail.setStatus(BookingStatus.CANCELED.getStatus());
         detail.setUpdateTime(new Date());
         detail.setUpdateBy(SecurityUtil.currentUserName());
         return bookingDetailDao.update(detail);
+    }
+
+    @Override
+    public int hide(Long id) {
+        return 0;
+    }
+
+    @Override
+    public int delete(Long id) {
+        return 0;
     }
 
     @Override

@@ -86,4 +86,14 @@ public class BookingDetail extends BaseEntity {
      */
     private Integer channel;
 
+    /**
+     * 隐藏
+     */
+    private Integer hidden;
+
+    /**
+     * 已删除
+     */
+    private Integer deleted;
+
 }

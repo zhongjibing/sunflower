@@ -20,6 +20,8 @@
         <result property="contactMobile" column="contact_mobile" jdbcType="VARCHAR"/>
         <result property="status" column="status" jdbcType="TINYINT"/>
         <result property="channel" column="channel" jdbcType="TINYINT"/>
+        <result property="hidden" column="hidden" jdbcType="TINYINT"/>
+        <result property="deleted" column="deleted" jdbcType="TINYINT"/>
         <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
         <result property="createBy" column="create_by" jdbcType="VARCHAR"/>
         <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
@@ -33,6 +35,7 @@
         end_date, detail, additions,
         attentions, gratis, contact_name,
         contact_mobile, `status`, `channel`,
+        hidden, deleted,
         create_time, create_by, update_time,
         update_by, remark
     </sql>
@@ -63,6 +66,8 @@
             <if test="contactMobile != null">contact_mobile,</if>
             <if test="status != null">status,</if>
             <if test="channel != null">channel,</if>
+            <if test="hidden != null">hidden,</if>
+            <if test="deleted != null">deleted,</if>
             <if test="createTime != null">create_time,</if>
             <if test="createBy != null">create_by,</if>
             <if test="updateTime != null">update_time,</if>
@@ -85,6 +90,8 @@
             <if test="contactMobile != null">#{contactMobile,jdbcType=VARCHAR},</if>
             <if test="status != null">#{status,jdbcType=TINYINT},</if>
             <if test="channel != null">#{channel,jdbcType=TINYINT},</if>
+            <if test="hidden != null">#{hidden,jdbcType=TINYINT},</if>
+            <if test="deleted != null">#{deleted,jdbcType=TINYINT},</if>
             <if test="createTime != null">#{createTime,jdbcType=TIMESTAMP},</if>
             <if test="createBy != null">#{createBy,jdbcType=VARCHAR},</if>
             <if test="updateTime != null">#{updateTime,jdbcType=TIMESTAMP},</if>
@@ -100,6 +107,7 @@
             end_date, detail, additions,
             attentions, gratis, contact_name,
             contact_mobile, `status`, `channel`,
+            hidden, deleted,
             create_time, create_by, update_time,
             update_by, remark
         ) values
@@ -109,6 +117,7 @@
             #{item.endDate,jdbcType=DATE}, #{item.detail,jdbcType=VARCHAR}, #{item.additions,jdbcType=VARCHAR} ,
             #{item.attentions,jdbcType=VARCHAR}, #{item.gratis,jdbcType=VARCHAR}, #{item.contactName,jdbcType=VARCHAR} ,
             #{item.contactMobile,jdbcType=VARCHAR}, #{item.status,jdbcType=TINYINT}, #{item.channel,jdbcType=TINYINT} ,
+            #{item.hidden,jdbcType=TINYINT}, #{item.deleted,jdbcType=TINYINT},
             #{item.createTime,jdbcType=TIMESTAMP}, #{item.createBy,jdbcType=VARCHAR},
             #{item.updateTime,jdbcType=TIMESTAMP} ,
             #{item.updateBy,jdbcType=VARCHAR}, #{item.remark,jdbcType=VARCHAR}
@@ -145,6 +154,12 @@
             <if test="status != null">
                 `status` = #{status,jdbcType=TINYINT},
             </if>
+            <if test="hidden != null">
+                hidden = #{hidden,jdbcType=TINYINT},
+            </if>
+            <if test="deleted != null">
+                deleted = #{deleted,jdbcType=TINYINT},
+            </if>
             <if test="updateTime != null">
                 update_time = #{updateTime,jdbcType=TIMESTAMP},
             </if>
@@ -178,6 +193,7 @@
             <if test="channel != null">
                 and `channel` = #{channel,jdbcType=TINYINT}
             </if>
+            and hidden = 0 and deleted = 0
             <if test="beginTime != null and endTime != null">
                 and create_time between #{beginTime,jdbcType=TIMESTAMP} and #{endTime,jdbcType=TIMESTAMP}
             </if>

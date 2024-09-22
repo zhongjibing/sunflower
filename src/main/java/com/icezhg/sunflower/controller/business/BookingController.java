@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -58,10 +59,31 @@ public class BookingController {
         return bookingService.findById(id);
     }
 
-    @PutMapping("/cancel")
+    @PostMapping("/hide")
+    @Secured(Authority.Wx.USER)
+    @Operation(title = "booking hidden", type = OperationType.UPDATE)
+    public int hide(@RequestParam Long id) {
+        return bookingService.hide(id);
+    }
+
+    @PostMapping("/delete")
+    @Secured(Authority.Wx.USER)
+    @Operation(title = "booking deleted", type = OperationType.UPDATE)
+    public int delete(@RequestParam Long id) {
+        return bookingService.delete(id);
+    }
+
+    @PostMapping("/cancel")
     @Secured(Authority.Wx.USER)
     @Operation(title = "booking canceled", type = OperationType.UPDATE)
-    public int bookingCancel(@RequestBody BookingInfo bookingInfo) {
-        return bookingService.cancel(bookingInfo);
+    public int cancel(@RequestParam Long id) {
+        return bookingService.cancel(id);
+    }
+
+    @PostMapping("/confirm")
+    @Secured(Authority.Wx.ADMIN)
+    @Operation(title = "booking confirmed", type = OperationType.UPDATE)
+    public int confirm(@RequestParam Long id) {
+        return bookingService.confirm(id);
     }
 }

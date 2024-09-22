@@ -191,10 +191,12 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public int cancel(Long id) {
         assertDetailStatus(id, BookingStatus.TO_BE_CONFIRMED, BookingStatus.CONFIRMED);
-
+        BookingDetail existing = bookingDetailDao.findById(id);
+        int cancelStatus = Objects.equals(existing.getStatus(), BookingStatus.TO_BE_CONFIRMED.getStatus()) ?
+                BookingStatus.CONFIRMED.getStatus() : BookingStatus.TO_BE_CANCELED.getStatus();
         BookingDetail detail = new BookingDetail();
         detail.setId(id);
-        detail.setStatus(BookingStatus.CANCELED.getStatus());
+        detail.setStatus(cancelStatus);
         detail.setUpdateTime(new Date());
         detail.setUpdateBy(SecurityUtil.currentUserName());
         return bookingDetailDao.update(detail);

@@ -103,7 +103,7 @@ public class BookingServiceImpl implements BookingService {
         detail.setGratis(StringUtils.defaultString(bookingInfo.getGratis()));
         detail.setContactName(StringUtils.defaultString(booking.getContactName()));
         detail.setContactMobile(StringUtils.defaultString(booking.getContactMobile()));
-        detail.setStatus(BookingStatus.TO_BE_CONFIRMED.getStatus());
+        detail.setStatus(BookingStatus.CHECKING.getStatus());
         detail.setChannel(booking.getChannel());
         detail.setCreateBy(StringUtils.defaultString(booking.getCreateBy()));
         detail.setCreateTime(booking.getCreateTime());

@@ -176,9 +176,13 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public int confirm(Long id) {
+        assertDetailStatus(id, BookingStatus.TO_BE_CONFIRMED, BookingStatus.TO_BE_CANCELED);
+        BookingDetail existing = bookingDetailDao.findById(id);
+        int confirmStatus = Objects.equals(existing.getStatus(), BookingStatus.TO_BE_CONFIRMED.getStatus()) ?
+                BookingStatus.CONFIRMED.getStatus() : BookingStatus.CONFIRM_CANCELED.getStatus();
         BookingDetail detail = new BookingDetail();
         detail.setId(id);
-        detail.setStatus(BookingStatus.CONFIRMED.getStatus());
+        detail.setStatus(confirmStatus);
         detail.setUpdateTime(new Date());
         detail.setUpdateBy(SecurityUtil.currentUserName());
         return bookingDetailDao.update(detail);
@@ -186,6 +190,8 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public int cancel(Long id) {
+        assertDetailStatus(id, BookingStatus.TO_BE_CONFIRMED, BookingStatus.CONFIRMED);
+
         BookingDetail detail = new BookingDetail();
         detail.setId(id);
         detail.setStatus(BookingStatus.CANCELED.getStatus());
@@ -196,6 +202,9 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public int hide(Long id) {
+        assertDetailStatus(id, BookingStatus.DRAFT, BookingStatus.CANCELED, BookingStatus.CONFIRM_CANCELED,
+                BookingStatus.FINISHED);
+
         BookingDetail detail = new BookingDetail();
         detail.setId(id);
         detail.setHidden(Constant.YES);

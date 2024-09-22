@@ -53,6 +53,12 @@ public class BookingController {
         return bookingService.find(query);
     }
 
+    @GetMapping("/all")
+    @Secured(Authority.Wx.ADMIN)
+    public Object bookingListAll(BookingQuery query) {
+        return bookingService.findAll(query);
+    }
+
     @GetMapping("/{id:\\d+}")
     @Secured(Authority.Wx.USER)
     public Object bookingInfo(@PathVariable Long id) {

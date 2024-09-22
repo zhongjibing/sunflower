@@ -18,6 +18,8 @@ public interface BookingService {
 
     List<BookingInfo> find(Query query);
 
+    List<BookingInfo> findAll(Query query);
+
     BookingInfo findById(Long detailId);
 
     int confirm(Long id);

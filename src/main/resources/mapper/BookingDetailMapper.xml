@@ -226,4 +226,18 @@
         order by create_time desc, id asc
         limit #{offset,jdbcType=INTEGER}, #{pageSize,jdbcType=INTEGER}
     </select>
+
+    <select id="groupQuery">
+        select
+            start_date,
+            date_format(start_date, '%Y') year,
+            date_format(start_date, '%m') month,
+            date_format(start_date, '%d') day,
+            type,
+            count(*)
+        from
+            t_booking_detail
+        group by start_date,
+                 type
+    </select>
 </mapper>

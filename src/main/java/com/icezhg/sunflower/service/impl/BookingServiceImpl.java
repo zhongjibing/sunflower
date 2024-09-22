@@ -169,6 +169,11 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
+    public List<BookingInfo> findAll(Query query) {
+        return bookingDetailDao.find(query.toMap()).stream().map(this::buildBookingInfo).collect(Collectors.toList());
+    }
+
+    @Override
     public BookingInfo findById(Long detailId) {
         BookingDetail detail = bookingDetailDao.findById(detailId);
         return detail != null ? buildBookingInfo(detail) : null;
@@ -191,12 +196,10 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public int cancel(Long id) {
         assertDetailStatus(id, BookingStatus.TO_BE_CONFIRMED, BookingStatus.CONFIRMED);
-        BookingDetail existing = bookingDetailDao.findById(id);
-        int cancelStatus = Objects.equals(existing.getStatus(), BookingStatus.TO_BE_CONFIRMED.getStatus()) ?
-                BookingStatus.CONFIRMED.getStatus() : BookingStatus.TO_BE_CANCELED.getStatus();
+
         BookingDetail detail = new BookingDetail();
         detail.setId(id);
-        detail.setStatus(cancelStatus);
+        detail.setStatus(BookingStatus.CANCELED.getStatus());
         detail.setUpdateTime(new Date());
         detail.setUpdateBy(SecurityUtil.currentUserName());
         return bookingDetailDao.update(detail);

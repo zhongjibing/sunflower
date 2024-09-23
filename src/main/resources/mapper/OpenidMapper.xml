@@ -142,6 +142,9 @@
             <if test="name != null">
                 and LOCATE(#{name,jdbcType=VARCHAR}, nickname) > 0
             </if>
+            <if test="uid != null">
+                and uid = #{uid,jdbcType=VARCHAR}
+            </if>
             <if test="status != null">
                 and `status` = #{status,jdbcType=CHAR}
             </if>

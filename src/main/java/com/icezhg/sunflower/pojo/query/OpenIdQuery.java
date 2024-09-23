@@ -13,6 +13,7 @@ import java.util.Date;
 @Setter
 public class OpenidQuery extends PageQuery {
     private String name;
+    private String uid;
     private String status;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date beginTime;

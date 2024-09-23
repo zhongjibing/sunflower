@@ -10,6 +10,7 @@ import com.icezhg.sunflower.enums.WxRole;
 import com.icezhg.sunflower.pojo.BizOpenid;
 import com.icezhg.sunflower.pojo.ChangeStatus;
 import com.icezhg.sunflower.pojo.OpenidInfo;
+import com.icezhg.sunflower.pojo.OpenidUser;
 import com.icezhg.sunflower.pojo.query.Query;
 import com.icezhg.sunflower.security.UserInfo;
 import com.icezhg.sunflower.service.AvatarPictureService;
@@ -102,8 +103,10 @@ public class OpenidServiceImpl implements OpenidService {
     }
 
     @Override
-    public OpenidInfo update(OpenidInfo info) {
-        this.openidDao.update(buildOpenid(info));
+    public OpenidInfo update(OpenidUser info) {
+        Openid openid = buildOpenid(info);
+        openid.setUpdateTime(new Date());
+        this.openidDao.update(openid);
         return buildOpenidInfo(findById(info.getId()));
     }
 
@@ -132,20 +135,25 @@ public class OpenidServiceImpl implements OpenidService {
         this.openidDao.updateUid(id, uid);
     }
 
+    @Override
+    public int changeRole(Long id, WxRole role) {
+        Openid openid = new Openid();
+        openid.setId(id);
+        openid.setRole(role.getRole());
+        openid.setUpdateTime(new Date());
+        return this.openidDao.update(openid);
+    }
+
     private AvatarPicture defaultAvatarPicture() {
         return new AvatarPicture(configService.findConfig(SysConfig.DEFAULT_AVATAR_PICTURE));
     }
 
-    private Openid buildOpenid(OpenidInfo info) {
+    private Openid buildOpenid(OpenidUser info) {
         Openid openid = new Openid();
         openid.setId(info.getId());
         openid.setNickname(info.getNickname());
         openid.setMobile(info.getMobile());
-        openid.setAvatar(info.getAvatar());
-        openid.setRole(info.getRole());
-        openid.setStatus(info.getStatus());
         openid.setRemark(info.getRemark());
-        openid.setUpdateTime(new Date());
         return openid;
     }
 

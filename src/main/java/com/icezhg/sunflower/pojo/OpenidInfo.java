@@ -1,6 +1,7 @@
 package com.icezhg.sunflower.pojo;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.Date;
 
@@ -8,22 +9,8 @@ import java.util.Date;
  * Created by zhongjibing on 2023/07/18.
  */
 @Data
-public class OpenidInfo {
-
-    /**
-     * id
-     */
-    private Long id;
-
-    /**
-     * 昵称
-     */
-    private String nickname;
-
-    /**
-     * 手机号
-     */
-    private String mobile;
+@EqualsAndHashCode(callSuper = true)
+public class OpenidInfo extends OpenidUser {
 
     /**
      * 头像
@@ -59,11 +46,6 @@ public class OpenidInfo {
      * 更新时间
      */
     private Date updateTime;
-
-    /**
-     * 备注
-     */
-    private String remark;
 
     /**
      * 最后登录时间

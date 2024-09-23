@@ -1,9 +1,11 @@
 package com.icezhg.sunflower.service;
 
 import com.icezhg.sunflower.domain.Openid;
+import com.icezhg.sunflower.enums.WxRole;
 import com.icezhg.sunflower.pojo.BizOpenid;
 import com.icezhg.sunflower.pojo.ChangeStatus;
 import com.icezhg.sunflower.pojo.OpenidInfo;
+import com.icezhg.sunflower.pojo.OpenidUser;
 import com.icezhg.sunflower.pojo.query.Query;
 
 import java.util.List;
@@ -26,11 +28,13 @@ public interface OpenidService {
 
     int changeStatus(ChangeStatus change);
 
-    OpenidInfo update(OpenidInfo info);
+    OpenidInfo update(OpenidUser info);
 
     void update(BizOpenid info);
 
     void updateLastLoginTime(String openid);
 
     void updateUid(Long id, String uid);
+
+    int changeRole(Long id, WxRole role);
 }

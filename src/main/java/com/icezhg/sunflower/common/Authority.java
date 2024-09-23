@@ -65,6 +65,7 @@ public interface Authority {
             String QUERY = "system:openid:query";
             String EDIT = "system:openid:edit";
             String STATUS = "system:openid:status";
+            String AUTH = "system:openid:auth";
         }
 
     }

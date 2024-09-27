@@ -89,8 +89,8 @@
             l.method, l.request_method, l.request_url,
             l.request_ip, l.request_location, l.parameter,
             l.result, l.error_msg, l.status,
-            l.cost, u.username, l.create_time
-        from t_operation_log l left join sys_user u on l.user_id = u.id
+            l.cost, ifnull(u.username, o.openid) username, l.create_time
+        from t_operation_log l left join sys_user u on l.user_id = u.id left join sys_openid o on l.user_id = o.id
         <include refid="findCondition"/>
         ORDER BY l.id DESC
         LIMIT #{offset,jdbcType=INTEGER}, #{pageSize,jdbcType=INTEGER}
